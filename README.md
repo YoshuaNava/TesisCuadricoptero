@@ -1,9 +1,9 @@
-TesisCuadricoptero
+Estabilización de un cuadricoptero mediante una red neuronal artificial
 ==================
 
+Documentos, códigos, imagenes y videos de la tesis. 
 
-Documentos, códigos, imagenes y videos de la tesis "Estabilización de un cuadricóptero 
-mediante una red neuronal artificial", realizada por Luis Vicens y Yoshua Nava.
+Trabajo realizado por Luis Vicens y Yoshua Nava, estudiantes de Ingeniería Informática de la Universidad Católica Andrés Bello.
 
 
 
