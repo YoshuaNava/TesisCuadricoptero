@@ -1,4 +1,4 @@
-Estabilización de un cuadricoptero mediante una red neuronal artificial
+Estabilización de un cuadricoptero mediante un algoritmo Proporcional-Integral-Derivativo
 ==================
 
 Documentos, códigos, imagenes y videos de la tesis. 
