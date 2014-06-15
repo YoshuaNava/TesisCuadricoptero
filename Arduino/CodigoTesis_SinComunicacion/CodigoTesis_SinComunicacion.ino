@@ -51,7 +51,7 @@ float DT = 0;
 
 //GENERALES:
 #define ALTURAMAX 30 //altura maxima expresada en centimetros
-#define MAX_VALOR_INTEGRAL 1000
+#define MAX_VALOR_INTEGRAL 180
 //FIN GENERALES
 
 
@@ -129,15 +129,15 @@ void loop() {
   }
   
   velocidadBasePWM = 70;
-  kPpitch = 0;
-  kIpitch = 0;
+  kPpitch = 0.3;
+  kIpitch = 0.003;
   kDpitch = 0;
 
   kProll = 0.3;
-  kIroll = 0;
+  kIroll = 0.001;
   kDroll = 0;
-  anguloDeseado = 10;
-  calibrarPR = 2;
+  anguloDeseado = 20;
+  calibrarPR = 1;
   
   i=0;
   while(i < velocidadBasePWM)
@@ -291,7 +291,6 @@ void FiltroComplementario() {
     anguloYPR[0] = (float) (K_COMP * G_anguloYPR[0] + (1-K_COMP) * A_anguloYPR[0]);
     anguloYPR[1] = (float) (K_COMP * G_anguloYPR[1] + (1-K_COMP) * A_anguloYPR[1]);
     anguloYPR[2] = (float) (K_COMP * G_anguloYPR[2] + (1-K_COMP) * A_anguloYPR[2]);
-
     
 //    Serial.println("Angulos");
 //    Serial.println(G_anguloYPR[2]);
