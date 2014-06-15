@@ -17,7 +17,7 @@
 #define PUERTOMOTORIZQUIERDO 10 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 9 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 5 //puerto de PWM del motor superior
-#define PWM_MAXIMO 120 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
@@ -30,7 +30,7 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.93
+#define K_COMP 0.91
 L3G gyro;
 LSM303 compass;
 char report[80];
@@ -123,20 +123,21 @@ void loop() {
   while (i<50)
   {
     FiltroComplementario();
+    
     Serial.flush();
     i++;
   }
   
   velocidadBasePWM = 70;
-  kPpitch = 0.4;
+  kPpitch = 0;
   kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 0;
+  kProll = 0.3;
   kIroll = 0;
   kDroll = 0;
-  anguloDeseado = 0;
-  calibrarPR = 1;
+  anguloDeseado = 10;
+  calibrarPR = 2;
   
   i=0;
   while(i < velocidadBasePWM)
@@ -172,8 +173,8 @@ void loop() {
 
 void PID()
 {
-  errorPitch = (float) anguloYPR[1]/10 - anguloDeseado;
-  integralPitch = integralPitch + errorPitch;
+  errorPitch = (float) anguloDeseado - anguloYPR[1];
+  integralPitch = 0.1*integralPitch + errorPitch;
   if(integralPitch > MAX_VALOR_INTEGRAL)
   {
     integralPitch = MAX_VALOR_INTEGRAL;
@@ -186,8 +187,8 @@ void PID()
   errorPrevioPitch = errorPitch;
   correccionPitch = kPpitch*errorPitch + kIpitch*integralPitch + kDpitch*derivadaPitch;
 
-  errorRoll = (float) anguloYPR[2]/10 - anguloDeseado;
-  integralRoll = integralRoll + errorRoll;
+  errorRoll = (float) anguloDeseado - anguloYPR[2];
+  integralRoll = 0.1*integralRoll + errorRoll;
   if(integralRoll > MAX_VALOR_INTEGRAL)
   {
     integralRoll = MAX_VALOR_INTEGRAL;
@@ -254,6 +255,11 @@ void PID()
   {
     motorIzquierdo = 0;  
   }
+  
+  Serial.println("Angulos y error");
+  Serial.println(String(anguloYPR[1])+' '+String(anguloYPR[2]));
+  Serial.println(String(errorPitch)+' '+String(errorRoll));
+  Serial.println();
 }
 
 void FiltroComplementario() {
@@ -279,12 +285,13 @@ void FiltroComplementario() {
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (float) atan2(-A_aceleracionYPR[1], A_aceleracionYPR[0]);
     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-    A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0]*A_aceleracionYPR[0] + A_aceleracionYPR[1]*A_aceleracionYPR[1]));
+    A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], A_aceleracionYPR[0]);
     A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
     
     anguloYPR[0] = (float) (K_COMP * G_anguloYPR[0] + (1-K_COMP) * A_anguloYPR[0]);
     anguloYPR[1] = (float) (K_COMP * G_anguloYPR[1] + (1-K_COMP) * A_anguloYPR[1]);
     anguloYPR[2] = (float) (K_COMP * G_anguloYPR[2] + (1-K_COMP) * A_anguloYPR[2]);
+
     
 //    Serial.println("Angulos");
 //    Serial.println(G_anguloYPR[2]);
