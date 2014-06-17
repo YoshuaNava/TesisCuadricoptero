@@ -1,3 +1,4 @@
+
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
@@ -30,7 +31,7 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.85
+#define K_COMP 0.95
 L3G gyro;
 LSM303 compass;
 char report[80];
@@ -134,20 +135,20 @@ void loop() {
     offsetInicialAngulos[1] = 0;
     offsetInicialAngulos[2] = 0;
   
-  velocidadBasePWM = 40;
+  velocidadBasePWM = 60;
   kPpitch = 0.3;
   kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 0.2;
+  kProll = 0.25;
   kIroll = 0;
   kDroll = 0;
-  anguloDeseadoPitch = 0;
-  anguloDeseadoRoll = 10;
+  anguloDeseadoPitch = 10;
+  anguloDeseadoRoll = 0;
   calibrarYPR = 'R';
   
   i=0;
-  while(i < velocidadBasePWM)
+  while(i < velocidadBasePWM/2)
   {
     if(calibrarYPR == '_')
     {
@@ -232,7 +233,7 @@ void PID()
   if(calibrarYPR == 'R')
   {
     motorDerecho = velocidadBasePWM - correccionRoll;
-    motorIzquierdo = (velocidadBasePWM + correccionRoll)*.7;
+    motorIzquierdo = (velocidadBasePWM + correccionRoll)*0.73;
     motorDelantero = 0;
     motorTrasero = 0;  
   }
@@ -270,11 +271,11 @@ void PID()
     motorIzquierdo = 0;  
   }
   
-  Serial.println("Angulos y error");
-  Serial.println(String((int)(anguloYPR[1]-offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]-offsetInicialAngulos[2])));
-  Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
-  Serial.println(String((int)motorIzquierdo)+' '+String((int)motorDerecho));
-  Serial.println();
+//  Serial.println("Angulos y error");
+//  Serial.println(String((int)(anguloYPR[1]-offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]-offsetInicialAngulos[2])));
+//  Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
+//  Serial.println(String((int)motorIzquierdo)+' '+String((int)motorDerecho));
+//  Serial.println();
 }
 
 void FiltroComplementario() {
