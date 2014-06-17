@@ -15,8 +15,8 @@
 //MOTORES:
 #define PUERTOMOTORDERECHO 11 //puerto de PWM del motor derecho
 #define PUERTOMOTORIZQUIERDO 10 //puerto de PWM del motor izquierdo
-#define PUERTOMOTORINFERIOR 9 //puerto de PWM del motor inferior
-#define PUERTOMOTORSUPERIOR 5 //puerto de PWM del motor superior
+#define PUERTOMOTORINFERIOR 5 //puerto de PWM del motor inferior
+#define PUERTOMOTORSUPERIOR 9 //puerto de PWM del motor superior
 #define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -34,6 +34,8 @@ int motorTrasero = 0;
 L3G gyro;
 LSM303 compass;
 char report[80];
+float offsetInicialAngulos[3] = {
+  0,0,0};
 float G_velocidadYPR[3] = {
   0,0,0};
 float G_anguloYPR[3] = {
@@ -58,13 +60,14 @@ float DT = 0;
 
 //VARIABLES GLOBALES:
 int velocidadBasePWM = 0;
-int anguloDeseado = 0;
+int anguloDeseadoPitch = 0;
+int anguloDeseadoRoll = 0;
 int correccionPitchPWM = 0; //Compensacion en PWM para estabilizar al robot en el eje de Pitch.
 int correccionRollPWM = 0; //Compensacion en PWM para estabilizar al robot en el eje de Roll.
 long USDuracion=0; // Tiempo que tarda en rebotar el ultrasonido
 long USAltura=0; // Distancia medida por el sensor de ultrasonido
 
-int calibrarPR = 0;
+char calibrarYPR = '_';
 
 //CONTROL:
 float kPpitch = 0;
@@ -123,33 +126,37 @@ void loop() {
   while (i<50)
   {
     FiltroComplementario();
-    
     Serial.flush();
     i++;
   }
+
+    offsetInicialAngulos[0] = 0;
+    offsetInicialAngulos[1] = 0;
+    offsetInicialAngulos[2] = -4;
   
-  velocidadBasePWM = 70;
+  velocidadBasePWM = 0;
   kPpitch = 0.3;
-  kIpitch = 0.003;
+  kIpitch = 0;
   kDpitch = 0;
 
   kProll = 0.3;
   kIroll = 0.001;
   kDroll = 0;
-  anguloDeseado = 20;
-  calibrarPR = 1;
+  anguloDeseadoPitch = 0;
+  anguloDeseadoRoll = 0;
+  calibrarYPR = 'R';
   
   i=0;
   while(i < velocidadBasePWM)
   {
-    if(calibrarPR == 1)
+    if(calibrarYPR == 'P')
     {
       motorDerecho = 0;
       motorIzquierdo = 0;
       motorDelantero = i;
       motorTrasero = i;
     }
-    if(calibrarPR == 2)
+    if(calibrarYPR == 'Y')
     {
       motorDerecho = i;
       motorIzquierdo = i;
@@ -173,7 +180,7 @@ void loop() {
 
 void PID()
 {
-  errorPitch = (float) anguloDeseado - anguloYPR[1];
+  errorPitch = (float) (anguloDeseadoPitch - (anguloYPR[1] - offsetInicialAngulos[1]));
   integralPitch = 0.1*integralPitch + errorPitch;
   if(integralPitch > MAX_VALOR_INTEGRAL)
   {
@@ -187,7 +194,7 @@ void PID()
   errorPrevioPitch = errorPitch;
   correccionPitch = kPpitch*errorPitch + kIpitch*integralPitch + kDpitch*derivadaPitch;
 
-  errorRoll = (float) anguloDeseado - anguloYPR[2];
+  errorRoll = (float) (anguloDeseadoRoll - (anguloYPR[2]- offsetInicialAngulos[2]));
   integralRoll = 0.1*integralRoll + errorRoll;
   if(integralRoll > MAX_VALOR_INTEGRAL)
   {
@@ -201,21 +208,21 @@ void PID()
   errorPrevioRoll = errorRoll;
   correccionRoll = kProll*errorRoll + kIroll*integralRoll + kDroll*derivadaRoll;
 
-  if(calibrarPR == 0)
+  if(calibrarYPR == '_')
   {
     motorDerecho = 0;
     motorIzquierdo = 0;
     motorDelantero = 0;
     motorTrasero = 0;
   }
-  if(calibrarPR == 1)
+  if(calibrarYPR == 'P')
   {
     motorDerecho = 0;
     motorIzquierdo = 0;
     motorDelantero = velocidadBasePWM + correccionPitch;
     motorTrasero = velocidadBasePWM - correccionPitch;
   }
-  if(calibrarPR == 2)
+  if(calibrarYPR == 'R')
   {
     motorDerecho = velocidadBasePWM + correccionRoll;
     motorIzquierdo = velocidadBasePWM - correccionRoll;
@@ -257,8 +264,8 @@ void PID()
   }
   
   Serial.println("Angulos y error");
-  Serial.println(String(anguloYPR[1])+' '+String(anguloYPR[2]));
-  Serial.println(String(errorPitch)+' '+String(errorRoll));
+  Serial.println(String((int)(anguloYPR[1]- offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]- offsetInicialAngulos[2])));
+  Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
   Serial.println();
 }
 
