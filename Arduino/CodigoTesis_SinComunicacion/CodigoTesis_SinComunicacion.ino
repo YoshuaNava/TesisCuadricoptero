@@ -30,7 +30,7 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.91
+#define K_COMP 0.85
 L3G gyro;
 LSM303 compass;
 char report[80];
@@ -132,23 +132,30 @@ void loop() {
 
     offsetInicialAngulos[0] = 0;
     offsetInicialAngulos[1] = 0;
-    offsetInicialAngulos[2] = -4;
+    offsetInicialAngulos[2] = 0;
   
-  velocidadBasePWM = 0;
+  velocidadBasePWM = 40;
   kPpitch = 0.3;
   kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 0.3;
-  kIroll = 0.001;
+  kProll = 0.2;
+  kIroll = 0;
   kDroll = 0;
   anguloDeseadoPitch = 0;
-  anguloDeseadoRoll = 0;
+  anguloDeseadoRoll = 10;
   calibrarYPR = 'R';
   
   i=0;
   while(i < velocidadBasePWM)
   {
+    if(calibrarYPR == '_')
+    {
+      motorDerecho = 0;
+      motorIzquierdo = 0;
+      motorDelantero = 0;
+      motorTrasero = 0;
+    }
     if(calibrarYPR == 'P')
     {
       motorDerecho = 0;
@@ -156,7 +163,7 @@ void loop() {
       motorDelantero = i;
       motorTrasero = i;
     }
-    if(calibrarYPR == 'Y')
+    if(calibrarYPR == 'R')
     {
       motorDerecho = i;
       motorIzquierdo = i;
@@ -224,8 +231,8 @@ void PID()
   }
   if(calibrarYPR == 'R')
   {
-    motorDerecho = velocidadBasePWM + correccionRoll;
-    motorIzquierdo = velocidadBasePWM - correccionRoll;
+    motorDerecho = velocidadBasePWM - correccionRoll;
+    motorIzquierdo = (velocidadBasePWM + correccionRoll)*.7;
     motorDelantero = 0;
     motorTrasero = 0;  
   }
@@ -264,8 +271,9 @@ void PID()
   }
   
   Serial.println("Angulos y error");
-  Serial.println(String((int)(anguloYPR[1]- offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]- offsetInicialAngulos[2])));
+  Serial.println(String((int)(anguloYPR[1]-offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]-offsetInicialAngulos[2])));
   Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
+  Serial.println(String((int)motorIzquierdo)+' '+String((int)motorDerecho));
   Serial.println();
 }
 
@@ -313,6 +321,10 @@ void AplicarPWMmotores()
 {
   //        motorDerecho = anguloYPR[1]*0.3 + 60;
   //        motorIzquierdo = -anguloYPR[1]*0.3 + 60;        
+    //motorDerecho = 0;
+    //motorIzquierdo = 0;
+    motorDelantero = 0;
+    motorTrasero = 0;
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
