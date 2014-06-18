@@ -37,6 +37,8 @@ LSM303 compass;
 char report[80];
 float offsetInicialAngulos[3] = {
   0,0,0};
+float anguloDeseadoYPR[3] = {
+  0,0,0};
 float G_velocidadYPR[3] = {
   0,0,0};
 float G_anguloYPR[3] = {
@@ -47,7 +49,10 @@ float A_anguloYPR[3] = {
   0,0,0};
 float anguloYPR[3] = {
   0,0,0};
-
+float velocidadDeseadaYPR[3] = {
+  0,0,0};
+float correccionPWM_YPR[3] = {
+  0,0,0};
 long tiempo = 0;
 float DT = 0;
 //FIN IMU
@@ -61,16 +66,19 @@ float DT = 0;
 
 //VARIABLES GLOBALES:
 int velocidadBasePWM = 0;
-int anguloDeseadoPitch = 0;
-int anguloDeseadoRoll = 0;
-int correccionPitchPWM = 0; //Compensacion en PWM para estabilizar al robot en el eje de Pitch.
-int correccionRollPWM = 0; //Compensacion en PWM para estabilizar al robot en el eje de Roll.
 long USDuracion=0; // Tiempo que tarda en rebotar el ultrasonido
 long USAltura=0; // Distancia medida por el sensor de ultrasonido
 
 char calibrarYPR = '_';
 
 //CONTROL:
+float kPpitch_velocidad = 0;
+float kIpitch_velocidad = 0;
+float kDpitch_velocidad = 0;
+float errorPitch_velocidad = 0;
+float integralPitch_velocidad = 0;
+float derivadaPitch_velocidad = 0;
+float errorPrevioPitch_velocidad = 0;
 float kPpitch = 0;
 float kIpitch = 0;
 float kDpitch = 0;
@@ -78,8 +86,14 @@ float errorPitch = 0;
 float integralPitch = 0;
 float derivadaPitch = 0;
 float errorPrevioPitch = 0;
-int correccionPitch = 0;
 
+float kProll_velocidad = 0;
+float kIroll_velocidad = 0;
+float kDroll_velocidad = 0;
+float errorRoll_velocidad = 0;
+float integralRoll_velocidad = 0;
+float derivadaRoll_velocidad = 0;
+float errorPrevioRoll_velocidad = 0;
 float kProll = 0;
 float kIroll = 0;
 float kDroll = 0;
@@ -87,11 +101,9 @@ float errorRoll = 0;
 float integralRoll = 0;
 float derivadaRoll = 0;
 float errorPrevioRoll = 0;
-int correccionRoll = 0;
 
-float kPyaw = 0;
-float errorYaw = 0;
-int correccionYaw = 0;
+float kPyaw_velocidad = 0;
+float errorYaw_velocidad = 0;
 float errorAltura = 0;
 int correccionAltura = 0;
 //FIN CONTROL
@@ -134,17 +146,19 @@ void loop() {
     offsetInicialAngulos[0] = 0;
     offsetInicialAngulos[1] = 0;
     offsetInicialAngulos[2] = 0;
+    anguloDeseadoYPR[0] = 0;
+    anguloDeseadoYPR[1] = 0;
+    anguloDeseadoYPR[2] = 0;
+
   
   velocidadBasePWM = 60;
-  kPpitch = 0.3;
-  kIpitch = 0;
-  kDpitch = 0;
+  kPpitch_velocidad = 0.3;
+  kIpitch_velocidad = 0;
+  kDpitch_velocidad = 0;
 
-  kProll = 0.25;
-  kIroll = 0;
-  kDroll = 0;
-  anguloDeseadoPitch = 10;
-  anguloDeseadoRoll = 0;
+  kProll_velocidad = 0.25;
+  kIroll_velocidad = 0;
+  kDroll_velocidad = 0;
   calibrarYPR = 'R';
   
   i=0;
@@ -181,14 +195,17 @@ void loop() {
     USAltura = 0;
 
     FiltroComplementario();
-    PID();
+    PID_PosicionAngular();
+    PID_VelocidadAngular();
     AplicarPWMmotores();
   }
 }
 
-void PID()
+
+
+void PID_PosicionAngular()
 {
-  errorPitch = (float) (anguloDeseadoPitch - (anguloYPR[1] - offsetInicialAngulos[1]));
+  errorPitch = (float) (anguloDeseadoYPR[1] - (anguloYPR[1] - offsetInicialAngulos[1]));
   integralPitch = 0.1*integralPitch + errorPitch;
   if(integralPitch > MAX_VALOR_INTEGRAL)
   {
@@ -200,9 +217,9 @@ void PID()
   }
   derivadaPitch = errorPitch - errorPrevioPitch;
   errorPrevioPitch = errorPitch;
-  correccionPitch = kPpitch*errorPitch + kIpitch*integralPitch + kDpitch*derivadaPitch;
+  velocidadDeseadaYPR[1] = kPpitch*errorPitch + kIpitch*integralPitch + kDpitch*derivadaPitch;
 
-  errorRoll = (float) (anguloDeseadoRoll - (anguloYPR[2]- offsetInicialAngulos[2]));
+  errorRoll = (float) (anguloDeseadoYPR[2] - (anguloYPR[2] - offsetInicialAngulos[2]));
   integralRoll = 0.1*integralRoll + errorRoll;
   if(integralRoll > MAX_VALOR_INTEGRAL)
   {
@@ -214,9 +231,78 @@ void PID()
   }
   derivadaRoll = errorRoll - errorPrevioRoll;
   errorPrevioRoll = errorRoll;
-  correccionRoll = kProll*errorRoll + kIroll*integralRoll + kDroll*derivadaRoll;
+  velocidadDeseadaYPR[2] = kProll*errorRoll + kIroll*integralRoll + kDroll*derivadaRoll;
+}
 
-  if(calibrarYPR == '_')
+
+void PID_VelocidadAngular()
+{  
+  errorPitch_velocidad = (float) (velocidadDeseadaYPR[1] - G_velocidadYPR[1]);
+  integralPitch_velocidad = 0.1*integralPitch_velocidad + errorPitch_velocidad;
+  if(integralPitch_velocidad > MAX_VALOR_INTEGRAL)
+  {
+    integralPitch_velocidad = MAX_VALOR_INTEGRAL;
+  }
+  else if (integralPitch_velocidad < -MAX_VALOR_INTEGRAL)
+  {
+    integralPitch_velocidad = -MAX_VALOR_INTEGRAL;
+  }
+  derivadaPitch_velocidad = errorPitch_velocidad - errorPrevioPitch_velocidad;
+  errorPrevioPitch_velocidad = errorPitch_velocidad;
+  correccionPWM_YPR[1] = kPpitch_velocidad*errorPitch_velocidad + kIpitch_velocidad*integralPitch_velocidad + kDpitch_velocidad*derivadaPitch_velocidad;
+
+  errorRoll_velocidad = (float) (velocidadDeseadaYPR[2] - G_velocidadYPR[2]);
+  integralRoll_velocidad = 0.1*integralRoll_velocidad + errorRoll_velocidad;
+  if(integralRoll_velocidad > MAX_VALOR_INTEGRAL)
+  {
+    integralRoll_velocidad = MAX_VALOR_INTEGRAL;
+  }
+  else if (integralRoll_velocidad < -MAX_VALOR_INTEGRAL)
+  {
+    integralRoll_velocidad = -MAX_VALOR_INTEGRAL;
+  }
+  derivadaRoll_velocidad = errorRoll_velocidad - errorPrevioRoll_velocidad;
+  errorPrevioRoll_velocidad = errorRoll_velocidad;
+  correccionPWM_YPR[2] = kProll_velocidad*errorRoll_velocidad + kIroll_velocidad*integralRoll_velocidad + kDroll_velocidad*derivadaRoll_velocidad;
+}
+
+
+void FiltroComplementario() {
+  gyro.read();
+  compass.read();
+
+  DT= (double)(micros()-tiempo)/1000000;
+  
+  if(DT > 0.005)
+  {
+    G_velocidadYPR[0] = (float) gyro.g.z * G_GYRO;
+    G_velocidadYPR[1] = (float) gyro.g.y * G_GYRO;
+    G_velocidadYPR[2] = (float) gyro.g.x * G_GYRO;
+    G_anguloYPR[0] = anguloYPR[0] + G_velocidadYPR[0] * DT;
+    G_anguloYPR[1] = anguloYPR[1] + G_velocidadYPR[1] * DT;
+    G_anguloYPR[2] = anguloYPR[2] + G_velocidadYPR[2] * DT;
+    
+    A_aceleracionYPR[0] = (float) compass.a.z * G_ACC;
+    A_aceleracionYPR[1] = (float) compass.a.y * G_ACC;
+    A_aceleracionYPR[2] = (float) compass.a.x * G_ACC;
+    A_anguloYPR[0] = 0;
+    A_anguloYPR[1] = (float) atan2(-A_aceleracionYPR[1], A_aceleracionYPR[0]);
+    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
+    A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], A_aceleracionYPR[0]);
+    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    
+    anguloYPR[0] = (float) (K_COMP * G_anguloYPR[0] + (1-K_COMP) * A_anguloYPR[0]);
+    anguloYPR[1] = (float) (K_COMP * G_anguloYPR[1] + (1-K_COMP) * A_anguloYPR[1]);
+    anguloYPR[2] = (float) (K_COMP * G_anguloYPR[2] + (1-K_COMP) * A_anguloYPR[2]);
+        
+    tiempo=micros();
+  }
+}
+
+
+void AplicarPWMmotores()
+{
+    if(calibrarYPR == '_')
   {
     motorDerecho = 0;
     motorIzquierdo = 0;
@@ -227,13 +313,13 @@ void PID()
   {
     motorDerecho = 0;
     motorIzquierdo = 0;
-    motorDelantero = velocidadBasePWM + correccionPitch;
-    motorTrasero = velocidadBasePWM - correccionPitch;
+    motorDelantero = velocidadBasePWM + correccionPWM_YPR[1];
+    motorTrasero = velocidadBasePWM - correccionPWM_YPR[1];
   }
   if(calibrarYPR == 'R')
   {
-    motorDerecho = velocidadBasePWM - correccionRoll;
-    motorIzquierdo = (velocidadBasePWM + correccionRoll)*0.73;
+    motorDerecho = velocidadBasePWM - correccionPWM_YPR[2];
+    motorIzquierdo = velocidadBasePWM + correccionPWM_YPR[2];
     motorDelantero = 0;
     motorTrasero = 0;  
   }
@@ -276,56 +362,7 @@ void PID()
 //  Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
 //  Serial.println(String((int)motorIzquierdo)+' '+String((int)motorDerecho));
 //  Serial.println();
-}
 
-void FiltroComplementario() {
-  gyro.read();
-  compass.read();
-
-  DT= (double)(micros()-tiempo)/1000000;
-  
-  if(DT > 0.005)
-  {
-    G_velocidadYPR[0] = (float) gyro.g.z * G_GYRO;
-    G_velocidadYPR[1] = (float) gyro.g.y * G_GYRO;
-    G_velocidadYPR[2] = (float) gyro.g.x * G_GYRO;
-    G_anguloYPR[0] = anguloYPR[0] + G_velocidadYPR[0] * DT;
-    G_anguloYPR[1] = anguloYPR[1] + G_velocidadYPR[1] * DT;
-    G_anguloYPR[2] = anguloYPR[2] + G_velocidadYPR[2] * DT;
-    
-    A_aceleracionYPR[0] = (float) compass.a.z * G_ACC;
-    A_aceleracionYPR[1] = (float) compass.a.y * G_ACC;
-    A_aceleracionYPR[2] = (float) compass.a.x * G_ACC;
-    
-    
-    A_anguloYPR[0] = 0;
-    A_anguloYPR[1] = (float) atan2(-A_aceleracionYPR[1], A_aceleracionYPR[0]);
-    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-    A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], A_aceleracionYPR[0]);
-    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
-    
-    anguloYPR[0] = (float) (K_COMP * G_anguloYPR[0] + (1-K_COMP) * A_anguloYPR[0]);
-    anguloYPR[1] = (float) (K_COMP * G_anguloYPR[1] + (1-K_COMP) * A_anguloYPR[1]);
-    anguloYPR[2] = (float) (K_COMP * G_anguloYPR[2] + (1-K_COMP) * A_anguloYPR[2]);
-    
-//    Serial.println("Angulos");
-//    Serial.println(G_anguloYPR[2]);
-//    Serial.println(G_anguloYPR[1]);
-//    Serial.println(G_anguloYPR[0]);
-//    Serial.println();
-    
-    tiempo=micros();
-  }
-}
-
-void AplicarPWMmotores()
-{
-  //        motorDerecho = anguloYPR[1]*0.3 + 60;
-  //        motorIzquierdo = -anguloYPR[1]*0.3 + 60;        
-    //motorDerecho = 0;
-    //motorIzquierdo = 0;
-    motorDelantero = 0;
-    motorTrasero = 0;
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
