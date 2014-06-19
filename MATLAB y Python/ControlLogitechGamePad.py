@@ -55,28 +55,16 @@ if (joystick_count == 1):
     pygame.event.pump()
     #necessary for os to pass joystick events
 
-    xaxis = joystick_object.get_axis(0)
-    yaxis = joystick_object.get_axis(1)
-    wheel = joystick_object.get_axis(2)
-    trigger = joystick_object.get_button(0)
-    top = joystick_object.get_button(1)
-    #from above, you have number of axes and buttons
-    #could assign more if your joystick has more
+    estado_boton_QUIT = joystick_object.get_button(BOTON_9)    
     
-
-    print '%f %f %f %d %d' %(xaxis, yaxis, wheel, trigger, top)
-    #print values to console for debugging
-    #analog channels (axes) range -1 to 1
-    #digital channels (buttons) are 1 or 0
-    
-    while True:
+    while (estado_boton_QUIT == 0):
         eventos = pygame.event.get()
         for evento in eventos:
             if evento.type == pygame.JOYAXISMOTION:                
                 movimientoX_trackpad = joystick_object.get_axis(TRACKPAD_x)
                 movimientoY_trackpad = -joystick_object.get_axis(TRACKPAD_y)
                 if (movimientoX_trackpad != 0):
-                    print 'Trackpad, Posicion en x= %f' %movimientoX_trackpad
+                    print 'Trackpad, Posicion en x= %f' %round(movimientoX_trackpad)
                 if (movimientoY_trackpad != 0):
                     print 'Trackpad, Posicion en y= %f' %movimientoY_trackpad
 
@@ -88,10 +76,19 @@ if (joystick_count == 1):
                     print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
 
             if evento.type == pygame.JOYBUTTONDOWN:
-                print 'Boton %d, Valor %d' %(BOTON_1+1,joystick_object.get_button(BOTON_1))
-                print 'Boton %d, Valor %d' %(BOTON_2+1,joystick_object.get_button(BOTON_2))
-                print 'Boton %d, Valor %d' %(BOTON_3+1,joystick_object.get_button(BOTON_3))
-                print 'Boton %d, Valor %d' %(BOTON_4+1,joystick_object.get_button(BOTON_4))
+                estado_boton_1 = joystick_object.get_button(BOTON_1)
+                estado_boton_2 = joystick_object.get_button(BOTON_2)
+                estado_boton_3 = joystick_object.get_button(BOTON_3)
+                estado_boton_4 = joystick_object.get_button(BOTON_4)
+
+                estado_boton_QUIT = joystick_object.get_button(BOTON_9)
+                estado_boton_START = joystick_object.get_button(BOTON_10)
+                
+                print 'Boton 1, Valor %d' %(estado_boton_1)
+                print 'Boton 2, Valor %d' %(estado_boton_2)
+                print 'Boton 3, Valor %d' %(estado_boton_3)
+                print 'Boton 4, Valor %d' %(estado_boton_4)
+                print 'Boton START, Valor %d' %(estado_boton_START)
 
 
 
