@@ -35,13 +35,14 @@ RUEDA_IZQUIERDA = 2
 CODIGO_COMANDO = 'C'
 CODIGO_INCREMENTO_CONSTANTES = 'K'
 
-incremento_kP_velocidad = 0.1
-incremento_kD_velocidad = 0.1
-multiplicadorConstantes = 100
+incremento_kP_velocidad = 0.01
+incremento_kD_velocidad = 0.01
+multiplicadorConstantes = 1000
 
-strPuerto = "/dev/ttyUSB1"
+strPuerto = "/dev/ttyUSB0"
 tasaBaudios = 115200
 calibrarYPR = 'R'
+MAXIMO_ANGULO = 90
 
 
 
@@ -129,9 +130,9 @@ if (joystick_object != None):
                 movimientoY_ruedaDerecha = -joystick_object.get_axis(RUEDA_DERECHA_y)
                 if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                     print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
-                    print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha                   
-                    comandoPitch = int(movimientoY_ruedaDerecha*90.0) + 90
-                    comandoRoll = int(movimientoX_ruedaDerecha*90.0) + 90
+                    print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
+                    comandoPitch = int(movimientoY_ruedaDerecha*MAXIMO_ANGULO) + 90
+                    comandoRoll = int(movimientoX_ruedaDerecha*MAXIMO_ANGULO) + 90
                     checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
                     print 'Comando de pitch= %d' %(comandoPitch-90)
                     print 'Comando de roll= %d' %(comandoRoll-90)
