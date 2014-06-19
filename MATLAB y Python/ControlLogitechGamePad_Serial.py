@@ -14,6 +14,29 @@ import struct
 import math
 import time
 
+BOTON_1 = 0
+BOTON_2 = 1
+BOTON_3 = 2
+BOTON_4 = 3
+BOTON_5 = 4
+BOTON_6 = 5
+BOTON_7 = 6
+BOTON_8 = 7
+BOTON_9 = 8
+BOTON_10 = 9
+BOTON_11 = 10
+BOTON_10 = 11
+TRACKPAD_x = 0
+TRACKPAD_y = 1
+RUEDA_DERECHA_x = 2
+RUEDA_DERECHA_y = 3
+RUEDA_IZQUIERDA = 2
+
+strPuerto = "/dev/ttyUSB0"
+tasaBaudios = 115200
+calibrarYPR = 'R'
+
+
 
 def NumDigitos(numero):
     if  numero == 0:
@@ -39,78 +62,49 @@ def EnviarComandoCuadricoptero(puerto, comandoPitch, comandoRoll, calibrarYPR, c
     puerto.write(calibrarYPR)
     EnviarEnteroSerial(puerto,checksum)
     
+def DetectarJoystick():
+    pygame.joystick.init() #initialize joystick module
+    pygame.joystick.get_init() #verify initialization (boolean)    
+    joystick_count = pygame.joystick.get_count()#get number of joysticks
+    print('%d joystick(s) connected' %joystick_count)#print number
+    
+    if (joystick_count == 1):
+        joystick_object = pygame.joystick.Joystick(0)
+        #create an instance of a joystick
+        #first joystick is [0] in the list
+        #haven't had much luck with multiple joysticks
+    
+        joystick_object.get_name()
+        print joystick_object.get_name()
+        #grab joystick name - flightstick, gravis...
+        #can (and is in this case) be done before initialization
+    
+        joystick_object.init()
+    
+        joystick_object.get_init()
+        #verify initialization (maybe cool to do some
+        #error trapping with this so game doesn't crash
+    
+        num_axes = joystick_object.get_numaxes()
+        num_buttons = joystick_object.get_numbuttons()
+    
+        print 'Joystick has %d axes and %d buttons' %(num_axes, num_buttons)
+    
+        pygame.event.pump()
+        #necessary for os to pass joystick events
+        return joystick_object
 
 
 
-strPuerto = "/dev/ttyUSB0"
-tasaBaudios = 115200
 
-puertoSerial = serial.Serial(strPuerto, tasaBaudios)
-
-calibrarYPR = 'R'
-
-"""
-puertoSerial.write(str(3))
-puertoSerial.write(',');
-puertoSerial.write(str(200))
-puertoSerial.write('-');
-puertoSerial.write(str(3))
-puertoSerial.write(',');
-puertoSerial.write(str(203))
-puertoSerial.write('!');
-"""
-BOTON_1 = 0
-BOTON_2 = 1
-BOTON_3 = 2
-BOTON_4 = 3
-BOTON_5 = 4
-BOTON_6 = 5
-BOTON_7 = 6
-BOTON_8 = 7
-BOTON_9 = 8
-BOTON_10 = 9
-BOTON_11 = 10
-BOTON_10 = 11
-
-TRACKPAD_x = 0
-TRACKPAD_y = 1
-RUEDA_DERECHA_x = 2
-RUEDA_DERECHA_y = 3
-RUEDA_IZQUIERDA = 2
 
 pygame.display.init()
 
-pygame.joystick.init() #initialize joystick module
-pygame.joystick.get_init() #verify initialization (boolean)
+puertoSerial = serial.Serial(strPuerto, tasaBaudios)
 
-joystick_count = pygame.joystick.get_count()#get number of joysticks
-print('%d joystick(s) connected' %joystick_count)#print number
+joystick_object = DetectarJoystick()
 
-if (joystick_count == 1):
-    joystick_object = pygame.joystick.Joystick(0)
-    #create an instance of a joystick
-    #first joystick is [0] in the list
-    #haven't had much luck with multiple joysticks
-
-    joystick_object.get_name()
-    print joystick_object.get_name()
-    #grab joystick name - flightstick, gravis...
-    #can (and is in this case) be done before initialization
-
-    joystick_object.init()
-
-    joystick_object.get_init()
-    #verify initialization (maybe cool to do some
-    #error trapping with this so game doesn't crash
-
-    num_axes = joystick_object.get_numaxes()
-    num_buttons = joystick_object.get_numbuttons()
-
-    print 'Joystick has %d axes and %d buttons' %(num_axes, num_buttons)
-
-    pygame.event.pump()
-    #necessary for os to pass joystick events
-
+if (joystick_object != None):
     estado_boton_QUIT = joystick_object.get_button(BOTON_9)    
     
     while (estado_boton_QUIT == 0):
@@ -156,6 +150,30 @@ if (joystick_count == 1):
                 print 'Boton R1, Valor %d' %(estado_boton_R1)
 
 
+
+    calibrarYPR = '_'
+    comandoPitch = 90
+    comandoRoll = 90
+    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
+    print 'Comando de pitch= %d' %comandoPitch
+    print 'Comando de roll= %d' %comandoRoll
+    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
+    print 'Checksum= %d' %checksum
+    
+    EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
+    time.sleep(0.01)
+
+    calibrarYPR = '_'
+    comandoPitch = 90
+    comandoRoll = 90
+    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
+    print 'Comando de pitch= %d' %comandoPitch
+    print 'Comando de roll= %d' %comandoRoll
+    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
+    print 'Checksum= %d' %checksum
+    
+    EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
+    time.sleep(0.01)
 
 
 joystick_object.quit()
