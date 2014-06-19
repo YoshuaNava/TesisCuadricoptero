@@ -222,6 +222,102 @@ void RecibirComando()
     char comando = Serial.read();
     if (comando == 'K')
     {
+      int checksumCalculado = 0;
+      char operacion = ' ', terminoPID = ' ';
+      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
+      int incremento_k_velocidad = 0, incremento_k_velocidad_low = 0, incremento_k_velocidad_high = 0;
+      int multiplicador, multiplicador_low = 0, multiplicador_high = 0;
+      if(Serial.available() > 0)
+      {
+         operacion = Serial.read(); 
+      }
+      if(Serial.available() > 0)
+      {
+         terminoPID = Serial.read();
+      }
+      if(Serial.available() > 0)
+      {
+        incremento_k_velocidad_low = Serial.read();
+        incremento_k_velocidad_high = Serial.read();
+        incremento_k_velocidad = incremento_k_velocidad_high*256 + incremento_k_velocidad_low;
+      }
+      if(Serial.available() > 0)
+      {
+        multiplicador_low = Serial.read();
+        multiplicador_high = Serial.read();
+        multiplicador = multiplicador_high*256 + multiplicador_low;
+      }
+      if(Serial.available() > 0)
+      {
+        checksumRecibido_low = Serial.read();
+        checksumRecibido_high = Serial.read();
+        checksumRecibido = checksumRecibido_high*256 + checksumRecibido_low;
+      }    
+      
+      checksumCalculado = incremento_k_velocidad + terminoPID + operacion;
+      Serial.println("Hola");
+      Serial.println(checksumCalculado);
+      Serial.println(checksumRecibido);
+      Serial.println();
+      
+      if(checksumCalculado == checksumRecibido)
+      {
+        if(calibrarYPR == 'P')
+        {
+          Serial.println("Pitch. Constantes originales:");
+          Serial.println(kPpitch_velocidad);
+          Serial.println(kDpitch_velocidad);
+          Serial.println();
+          if((operacion == '+') && (terminoPID == 'P'))
+          {
+            kPpitch_velocidad += incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '+') && (terminoPID == 'D'))
+          {
+            kDpitch_velocidad += incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '-') && (terminoPID == 'P'))
+          {
+            kPpitch_velocidad -= incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '-') && (terminoPID == 'D'))
+          {
+            kDpitch_velocidad -= incremento_k_velocidad/multiplicador;
+          }          
+          Serial.println("Pitch. Constantes modificadas:");
+          Serial.println(kPpitch_velocidad);
+          Serial.println(kDpitch_velocidad);
+          Serial.println();
+        }
+      
+        if(calibrarYPR == 'R')
+        {
+          Serial.println("Roll. Constantes originales:");
+          Serial.println(kProll_velocidad);
+          Serial.println(kDroll_velocidad);
+          Serial.println();
+          if((operacion == '+') && (terminoPID == 'P'))
+          {
+            kProll_velocidad += incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '+') && (terminoPID == 'D'))
+          {
+            kDroll_velocidad += incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '-') && (terminoPID == 'P'))
+          {
+            kProll_velocidad -= incremento_k_velocidad/multiplicador;
+          }
+          if((operacion == '-') && (terminoPID == 'D'))
+          {
+            kDroll_velocidad -= incremento_k_velocidad/multiplicador;
+          }
+          Serial.println("Roll. Constantes modificadas:");
+          Serial.println(kProll_velocidad);
+          Serial.println(kDroll_velocidad);
+          Serial.println();
+        }
+      }
     }
     
     if (comando == 'C')
@@ -236,10 +332,6 @@ void RecibirComando()
         anguloRecibidoPitch_low = Serial.read();
         anguloRecibidoPitch_high = Serial.read();
         anguloRecibidoPitch = anguloRecibidoPitch_high*256 + anguloRecibidoPitch_low;
-        Serial.println("Angulo de pitch");
-        Serial.println(anguloRecibidoPitch_low);
-        Serial.println(anguloRecibidoPitch_high);
-        Serial.println(anguloRecibidoPitch);
       }
       if(Serial.available() > 0)
       {
@@ -262,17 +354,73 @@ void RecibirComando()
       
       if(checksumRecibido == checksumCalculado)
       {
-        Serial.println("Valores recibidos");
-        Serial.println(String((int)anguloRecibidoPitch-90) + ' ' + String((int)anguloRecibidoRoll-90) + ' ' + String((char)calibrarYPR_recibido));
-        Serial.println(checksumCalculado-180);
-        Serial.println();
+//        Serial.println("Valores recibidos");
+//        Serial.println(String((int)anguloRecibidoPitch-90) + ' ' + String((int)anguloRecibidoRoll-90) + ' ' + String((char)calibrarYPR_recibido));
+//        Serial.println(checksumCalculado-180);
+//        Serial.println();
 
         anguloDeseadoYPR[0] = 0;
         anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
         anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
+        if(calibrarYPR == '_')
+        {
+          Serial.println("ENCENDER");
+        }
         calibrarYPR = calibrarYPR_recibido;
+        if(calibrarYPR == 'P')
+        {
+          Serial.println(anguloDeseadoYPR[1]);
+        }
+        if(calibrarYPR == 'R')
+        {
+          Serial.println(anguloDeseadoYPR[1]);
+        }
+
       }
     }
+
+    if (comando == '~')
+    {
+            int checksumCalculado = 0, calibrarYPR_recibido = ' ';
+      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
+      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
+      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
+
+      if(Serial.available() > 0)
+      {
+        anguloRecibidoPitch_low = Serial.read();
+        anguloRecibidoPitch_high = Serial.read();
+        anguloRecibidoPitch = anguloRecibidoPitch_high*256 + anguloRecibidoPitch_low;
+      }
+      if(Serial.available() > 0)
+      {
+        anguloRecibidoRoll_low = Serial.read();
+        anguloRecibidoRoll_high = Serial.read();
+        anguloRecibidoRoll = anguloRecibidoRoll_high*256 + anguloRecibidoRoll_low;
+      }
+      if(Serial.available() > 0)
+      {
+        calibrarYPR_recibido = Serial.read();
+      }
+      if(Serial.available() > 0)
+      {
+        checksumRecibido_low = Serial.read();
+        checksumRecibido_high = Serial.read();
+        checksumRecibido = checksumRecibido_high*256 + checksumRecibido_low;
+      }
+      
+      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll+ calibrarYPR_recibido;
+      
+      if(checksumRecibido == checksumCalculado)
+      {
+        anguloDeseadoYPR[0] = 0;
+        anguloDeseadoYPR[1] = 0;
+        anguloDeseadoYPR[2] = 0;
+        calibrarYPR = '_';
+        Serial.println("APAGAR!");
+      }
+    }
+
   }
   
   Serial.flush();

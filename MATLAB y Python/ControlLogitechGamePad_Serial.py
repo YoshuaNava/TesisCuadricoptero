@@ -32,7 +32,14 @@ RUEDA_DERECHA_x = 2
 RUEDA_DERECHA_y = 3
 RUEDA_IZQUIERDA = 2
 
-strPuerto = "/dev/ttyUSB0"
+CODIGO_COMANDO = 'C'
+CODIGO_INCREMENTO_CONSTANTES = 'K'
+
+incremento_kP_velocidad = 0.001
+incremento_kD_velocidad = 0.001
+multiplicadorConstantes = 10000
+
+strPuerto = "/dev/ttyUSB1"
 tasaBaudios = 115200
 calibrarYPR = 'R'
 
@@ -44,23 +51,23 @@ def NumDigitos(numero):
     else:
         return int(math.log10(numero))+1
 
+
 def EnviarEnteroSerial(puerto, numero):
     numero_low = int(numero % 256)
     numero_high = int(numero / 256)
-    print numero_low
-    print numero_high
+    #print numero_low
+    #print numero_high
     puerto.write(struct.pack('B',numero_low))
     puerto.write(struct.pack('B',numero_high))
     
 
-def EnviarComandoCuadricoptero(puerto, comandoPitch, comandoRoll, calibrarYPR, checksum):
-    puerto.write('C')    
-    print 'PITCH'
+def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum):
+    puerto.write(codigo)
     EnviarEnteroSerial(puerto,comandoPitch)
-    print 'ROLL'
     EnviarEnteroSerial(puerto,comandoRoll)
     puerto.write(calibrarYPR)
     EnviarEnteroSerial(puerto,checksum)
+
     
 def DetectarJoystick():
     pygame.joystick.init() #initialize joystick module
@@ -122,24 +129,63 @@ if (joystick_object != None):
                 movimientoY_ruedaDerecha = -joystick_object.get_axis(RUEDA_DERECHA_y)
                 if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                     print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
-                    print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
+                    print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha                   
                     comandoPitch = int(movimientoY_ruedaDerecha*90.0) + 90
                     comandoRoll = int(movimientoX_ruedaDerecha*90.0) + 90
                     checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
-                    print 'Comando de pitch= %d' %comandoPitch
-                    print 'Comando de roll= %d' %comandoRoll
+                    print 'Comando de pitch= %d' %(comandoPitch-90)
+                    print 'Comando de roll= %d' %(comandoRoll-90)
                     print 'Modo de ejecucion= %c' %ord(calibrarYPR)
                     print 'Checksum= %d' %checksum
                     
-                    EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
-                    time.sleep(0.01)
+                    EnviarComandoCuadricoptero(puertoSerial, CODIGO_COMANDO, comandoPitch, comandoRoll, calibrarYPR, checksum)
+                    
 
             if evento.type == pygame.JOYBUTTONDOWN:
                 estado_boton_1 = joystick_object.get_button(BOTON_1)
+                if(estado_boton_1 == 1):
+                    codigo = 'K'
+                    checksum = incremento_kP_velocidad*multiplicadorConstantes + ord('+') + ord('P')
+                    puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
+                    puertoSerial.write('+')
+                    puertoSerial.write('P')
+                    EnviarEnteroSerial(puertoSerial,incremento_kP_velocidad*multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,checksum)
+                    print("Incrementar proporcional de PItch")
                 estado_boton_2 = joystick_object.get_button(BOTON_2)
+                if(estado_boton_2 == 1):
+                    checksum = incremento_kD_velocidad*multiplicadorConstantes + ord('+') + ord('D')
+                    puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
+                    puertoSerial.write('+')
+                    puertoSerial.write('D')
+                    EnviarEnteroSerial(puertoSerial,incremento_kD_velocidad*multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,checksum)
+                    print("Incrementar derivada de Pitch")
                 estado_boton_3 = joystick_object.get_button(BOTON_3)
+                if(estado_boton_3 == 1):
+                    checksum = incremento_kP_velocidad*multiplicadorConstantes + ord('-') + ord('P')
+                    puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
+                    puertoSerial.write('-')
+                    puertoSerial.write('P')
+                    EnviarEnteroSerial(puertoSerial,incremento_kP_velocidad*multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,checksum)
+                    print("Decrementar proporcional de Pitch")
                 estado_boton_4 = joystick_object.get_button(BOTON_4)
-
+                if(estado_boton_4 == 1):
+                    codigo = 'K'
+                    checksum = incremento_kD_velocidad*multiplicadorConstantes + ord('-') + ord('D')
+                    puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
+                    puertoSerial.write('-')
+                    puertoSerial.write('D')
+                    EnviarEnteroSerial(puertoSerial,incremento_kD_velocidad*multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,multiplicadorConstantes)
+                    EnviarEnteroSerial(puertoSerial,checksum)
+                    print("Decrementar derivada de Pitch")
+                    
+                    
                 estado_boton_QUIT = joystick_object.get_button(BOTON_9)
                 estado_boton_R1 = joystick_object.get_button(BOTON_6)
                 
@@ -150,31 +196,32 @@ if (joystick_object != None):
                 print 'Boton R1, Valor %d' %(estado_boton_R1)
 
 
+codigo = '~'
+calibrarYPR = '_'
+comandoPitch = 90
+comandoRoll = 90
+checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
+print 'Comando de pitch= %d' %comandoPitch
+print 'Comando de roll= %d' %comandoRoll
+print 'Modo de ejecucion= %c' %ord(calibrarYPR)
+print 'Checksum= %d' %checksum
 
-    calibrarYPR = '_'
-    comandoPitch = 90
-    comandoRoll = 90
-    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
-    print 'Comando de pitch= %d' %comandoPitch
-    print 'Comando de roll= %d' %comandoRoll
-    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
-    print 'Checksum= %d' %checksum
+EnviarComandoCuadricoptero(puertoSerial, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum)
+time.sleep(0.01)
+
+codigo = '~'
+calibrarYPR = '_'
+comandoPitch = 90
+comandoRoll = 90
+checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
+print 'Comando de pitch= %d' %comandoPitch
+print 'Comando de roll= %d' %comandoRoll
+print 'Modo de ejecucion= %c' %ord(calibrarYPR)
+print 'Checksum= %d' %checksum
+
+EnviarComandoCuadricoptero(puertoSerial, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum)
+time.sleep(0.01)
     
-    EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
-    time.sleep(0.01)
-
-    calibrarYPR = '_'
-    comandoPitch = 90
-    comandoRoll = 90
-    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
-    print 'Comando de pitch= %d' %comandoPitch
-    print 'Comando de roll= %d' %comandoRoll
-    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
-    print 'Checksum= %d' %checksum
-    
-    EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
-    time.sleep(0.01)
-
 
 joystick_object.quit()
 #destroy objects and clean up
