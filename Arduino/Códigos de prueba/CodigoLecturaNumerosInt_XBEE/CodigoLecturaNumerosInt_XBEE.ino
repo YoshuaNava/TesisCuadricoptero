@@ -8,7 +8,7 @@ volatile long numCambiosColor = 0;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(38400);
+  Serial.begin(115200);
 }
 
 void loop() {
