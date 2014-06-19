@@ -208,6 +208,7 @@ void loop() {
     USAltura = 0;
 
     FiltroComplementario();
+    RecibirComando();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores();
@@ -277,7 +278,7 @@ void RecibirComando()
     
     if (comando == 'c')
     {
-      volatile int checksumRecibido = 0, checksumCalculado = 0, anguloRecibidoRoll = 0, anguloRecibidoPitch = 0, anguloRecibidoYaw = 0, calibrarYPR_recibido = ' ';
+      int checksumRecibido = 0, checksumCalculado = 0, anguloRecibidoRoll = 0, anguloRecibidoPitch = 0, anguloRecibidoYaw = 0, calibrarYPR_recibido = ' ';
       if(Serial.available() > 0)
       {
         anguloRecibidoPitch = RecibirNumero();      
@@ -303,16 +304,24 @@ void RecibirComando()
       
       if(checksumRecibido == checksumCalculado)
       {
-        anguloDeseadoYPR[0] = anguloRecibidoYaw;
-        anguloDeseadoYPR[1] = anguloRecibidoPitch;
-        anguloDeseadoYPR[2] = anguloRecibidoRoll;
+        Serial.println("Valores recibidos");
+        Serial.println(String((int)anguloRecibidoPitch) + ' ' + String((int)anguloRecibidoRoll) + ' ' + String((int)anguloRecibidoYaw) + ' ' + String((char)calibrarYPR_recibido));
+        Serial.println(checksumCalculado);
+        Serial.println();
+
+        anguloDeseadoYPR[0] = anguloRecibidoYaw - 90;
+        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
+        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
         calibrarYPR = calibrarYPR_recibido;
       }
     }
   }
+  
+  Serial.flush();
 }
 
 
+//Formato: NumeroDigitos,Cifra-NumeroDigitosChecksum,Checksum!
 int RecibirNumero()
 {
   byte entrada = '_';
@@ -326,7 +335,7 @@ int RecibirNumero()
   int checksum = 0;
     
   //  Serial.println("****************************************************");
-  while (entrada != '!')
+  while ((entrada != '!') && (Serial.available() > 0))
   {
     if (Serial.available() > 0)
     {
@@ -334,7 +343,7 @@ int RecibirNumero()
 
       if (entrada == 44)
       {
-        Serial.println("Coma");
+//        Serial.println("Coma");
         posDecimalesRecibidas = 1;
       }
       else
@@ -352,10 +361,10 @@ int RecibirNumero()
             {
               if (posDecimales >= 0)
               {
-                Serial.println("Digito:");
-                Serial.println(ConvertirASCII_Int(entrada));
-                Serial.println("Numero hasta el momento:");
-                Serial.println(numero);
+//                Serial.println("Digito:");
+//                Serial.println(ConvertirASCII_Int(entrada));
+//                Serial.println("Numero hasta el momento:");
+//                Serial.println(numero);
   
                 numero = numero + ConvertirASCII_Int(entrada) * Potencia(10, posDecimales);
                 posDecimales--;
@@ -365,8 +374,8 @@ int RecibirNumero()
             {
               posDecimalesNum = ConvertirASCII_Int(entrada);
               posDecimales = posDecimalesNum - 1;
-              Serial.println("Posiciones Decimales");
-              Serial.println(posDecimales);
+//              Serial.println("Posiciones Decimales");
+//              Serial.println(posDecimales);
             }
           }
         }
@@ -378,10 +387,10 @@ int RecibirNumero()
             {
               if (posDecimales >= 0)
               {
-                Serial.println("Digito:");
-                Serial.println(ConvertirASCII_Int(entrada));
-                Serial.println("Checksum hasta el momento:");
-                Serial.println(checksum);
+//                Serial.println("Digito:");
+//                Serial.println(ConvertirASCII_Int(entrada));
+//                Serial.println("Checksum hasta el momento:");
+//                Serial.println(checksum);
   
                 checksum = checksum + ConvertirASCII_Int(entrada) * Potencia(10, posDecimales);
                 posDecimales--;
@@ -390,15 +399,30 @@ int RecibirNumero()
             else
             {
               posDecimales = ConvertirASCII_Int(entrada)-1;
-              Serial.println("Posiciones Decimales");
-              Serial.println(posDecimales);
+//              Serial.println("Posiciones Decimales");
+//              Serial.println(posDecimales);
             }
           }        
         }
       }
     }
   }
+
+  if(posDecimalesNum + numero == checksum)
+  {
+//    Serial.println("Numero recibido fi:");
+//    Serial.println(numero);
+//    Serial.println("Checksum");
+//    Serial.println(checksum);
+    return numero;
+  }
+  else
+  {
+    return 0;
+  }
+
 }
+
 
 int ConvertirASCII_Int(byte valor)
 {
@@ -601,18 +625,18 @@ void AplicarPWMmotores()
 //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
 //  Serial.println();
 
-  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
-  {
-    Serial.print(float(anguloYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(velocidadDeseadaYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(DT*1000));
-    Serial.print(" ");
-    Serial.print(float(correccionPWM_YPR[2]));
-    Serial.print("\n");
-    tiempoUltimoMuestreo = millis();
-  }
+//  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
+//  {
+//    Serial.print(float(anguloYPR[2]));
+//    Serial.print(" ");
+//    Serial.print(float(velocidadDeseadaYPR[2]));
+//    Serial.print(" ");
+//    Serial.print(float(DT*1000));
+//    Serial.print(" ");
+//    Serial.print(float(correccionPWM_YPR[2]));
+//    Serial.print("\n");
+//    tiempoUltimoMuestreo = millis();
+//  }
   
 
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);

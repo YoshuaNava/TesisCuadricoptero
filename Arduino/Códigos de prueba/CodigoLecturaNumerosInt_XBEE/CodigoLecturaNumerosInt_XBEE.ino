@@ -167,7 +167,7 @@ int RecibirNumero()
   
   if(posDecimalesNum + numero == checksum)
   {
-    Serial.println("Numero recibido:");
+    Serial.println("Numero recibido fi:");
     Serial.println(numero);
     Serial.println("Checksum");
     Serial.println(checksum);
