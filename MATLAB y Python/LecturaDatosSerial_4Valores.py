@@ -20,7 +20,7 @@ class AnalogPlot:
     # constr
     def __init__(self, strPort, maxLen):
         # open serial port
-        self.ser = serial.Serial(strPort,115200)
+        self.ser = serial.Serial(strPort, 115200)
          
         self.ax = deque([0.0]*maxLen)
         self.ay = deque([0.0]*maxLen)
@@ -38,14 +38,14 @@ class AnalogPlot:
      
     # add data
     def add(self, data):
-        assert(len(data) == 2)
+        assert(len(data) == 4)
         self.addToBuf(self.ax, data[0])
         self.addToBuf(self.ay, data[1])
-        self.addToBuf(self.az, data[1])
-        self.addToBuf(self.aw, data[1])
+        self.addToBuf(self.az, data[2])
+        self.addToBuf(self.aw, data[3])
      
     # update plot
-    def update(self, frameNum, a0, a1):
+    def update(self, frameNum, a0, a1, a2, a3):
         try:
             line = self.ser.readline()
             data = [float(val) for val in line.split()]
@@ -91,10 +91,10 @@ def main():
         # set up animation
         fig = plt.figure()
         ax = plt.axes(xlim=(0, 100), ylim=(-91, 91))
-        a0, = ax.plot([], [])
-        a1, = ax.plot([], [])
-        a2, = ax.plot([], [])
-        a3, = ax.plot([], [])
+        a0, = ax.plot([], [],'b')
+        a1, = ax.plot([], [],'r')
+        a2, = ax.plot([], [],'y',linewidth=2.0)
+        a3, = ax.plot([], [],'g',linewidth=2.0)
         anim = animation.FuncAnimation(fig, analogPlot.update,
                                        fargs=(a0, a1, a2, a3),
                                         interval=50)

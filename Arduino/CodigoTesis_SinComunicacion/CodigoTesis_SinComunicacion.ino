@@ -160,7 +160,7 @@ void loop() {
   kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 5;
+  kProll = 1;
   kIroll = 0;
   kDroll = 0;
 
@@ -378,7 +378,11 @@ void AplicarPWMmotores()
   {
     Serial.print(float(anguloYPR[2]));
     Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[2]));
+    Serial.print(float(velocidadDeseadaYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(DT*1000));
+    Serial.print(" ");
+    Serial.print(float(correccionPWM_YPR[2]));
     Serial.print("\n");
     tiempoUltimoMuestreo = millis();
   }
