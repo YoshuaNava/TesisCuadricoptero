@@ -24,6 +24,8 @@ class AnalogPlot:
          
         self.ax = deque([0.0]*maxLen)
         self.ay = deque([0.0]*maxLen)
+        self.az = deque([0.0]*maxLen)
+        self.aw = deque([0.0]*maxLen)
         self.maxLen = maxLen
      
     # add to buffer
@@ -39,6 +41,8 @@ class AnalogPlot:
         assert(len(data) == 2)
         self.addToBuf(self.ax, data[0])
         self.addToBuf(self.ay, data[1])
+        self.addToBuf(self.az, data[1])
+        self.addToBuf(self.aw, data[1])
      
     # update plot
     def update(self, frameNum, a0, a1):
@@ -46,10 +50,12 @@ class AnalogPlot:
             line = self.ser.readline()
             data = [float(val) for val in line.split()]
             # print data
-            if(len(data) == 2):
+            if(len(data) == 4):
                 self.add(data)
                 a0.set_data(range(self.maxLen), self.ax)
                 a1.set_data(range(self.maxLen), self.ay)
+                a2.set_data(range(self.maxLen), self.az)
+                a3.set_data(range(self.maxLen), self.aw)
         except ValueError:
             print line
         except KeyboardInterrupt:
@@ -87,8 +93,10 @@ def main():
         ax = plt.axes(xlim=(0, 100), ylim=(-91, 91))
         a0, = ax.plot([], [])
         a1, = ax.plot([], [])
+        a2, = ax.plot([], [])
+        a3, = ax.plot([], [])
         anim = animation.FuncAnimation(fig, analogPlot.update,
-                                       fargs=(a0, a1),
+                                       fargs=(a0, a1, a2, a3),
                                         interval=50)
          
         # show plot

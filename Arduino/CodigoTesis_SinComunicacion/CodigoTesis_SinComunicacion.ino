@@ -32,7 +32,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.95
-#define DT_muestreo 0.05
+#define DT_muestreo 20
 
 L3G gyro;
 LSM303 compass;
@@ -116,7 +116,7 @@ int correccionAltura = 0;
  
  void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
   Wire.begin();
 
   if (!gyro.init())
@@ -152,7 +152,7 @@ void loop() {
     offsetInicialAngulos[2] = 0;
     anguloDeseadoYPR[0] = 0;
     anguloDeseadoYPR[1] = 0;
-    anguloDeseadoYPR[2] = 0;
+    anguloDeseadoYPR[2] = -20;
 
   
   velocidadBasePWM = 60;
@@ -160,7 +160,7 @@ void loop() {
   kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 0;
+  kProll = 5;
   kIroll = 0;
   kDroll = 0;
 
@@ -168,9 +168,9 @@ void loop() {
   kIpitch_velocidad = 0;
   kDpitch_velocidad = 0;
 
-  kProll_velocidad = 0.07;
+  kProll_velocidad = 0.02;
   kIroll_velocidad = 0;
-  kDroll_velocidad = 0;
+  kDroll_velocidad = 0.01;
   calibrarYPR = 'R';
   
   i=0;
@@ -289,22 +289,21 @@ void FiltroComplementario() {
   G_velocidadYPR[0] = (float) gyro.g.z * G_GYRO;
   G_velocidadYPR[1] = (float) gyro.g.y * G_GYRO;
   G_velocidadYPR[2] = (float) gyro.g.x * G_GYRO;
-  G_anguloYPR[0] = anguloYPR[0] + G_velocidadYPR[0] * DT;
-  G_anguloYPR[1] = anguloYPR[1] + G_velocidadYPR[1] * DT;
-  G_anguloYPR[2] = anguloYPR[2] + G_velocidadYPR[2] * DT;
+
   
   A_aceleracionYPR[0] = (float) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (float) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (float) compass.a.x * G_ACC;
   A_anguloYPR[0] = 0;
-  A_anguloYPR[1] = (float) atan2(-A_aceleracionYPR[1], A_aceleracionYPR[0]);
+  A_anguloYPR[1] = (float) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0]*A_aceleracionYPR[0] + A_aceleracionYPR[2]*A_aceleracionYPR[2]));
   A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-  A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], A_aceleracionYPR[0]);
+  A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0]*A_aceleracionYPR[0] + A_aceleracionYPR[1]*A_aceleracionYPR[1]));
   A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
   
-  anguloYPR[0] = (float) (K_COMP * G_anguloYPR[0] + (1-K_COMP) * A_anguloYPR[0]);
-  anguloYPR[1] = (float) (K_COMP * G_anguloYPR[1] + (1-K_COMP) * A_anguloYPR[1]);
-  anguloYPR[2] = (float) (K_COMP * G_anguloYPR[2] + (1-K_COMP) * A_anguloYPR[2]);
+  
+  anguloYPR[0] = (float) (K_COMP * (anguloYPR[0] + G_velocidadYPR[0]*DT) + (1-K_COMP) * A_anguloYPR[0]);
+  anguloYPR[1] = (float) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1]*DT) + (1-K_COMP) * A_anguloYPR[1]);
+  anguloYPR[2] = (float) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2]*DT) + (1-K_COMP) * A_anguloYPR[2]);
       
   tiempo=micros();
 }
@@ -377,9 +376,9 @@ void AplicarPWMmotores()
 
   if(millis() - tiempoUltimoMuestreo > DT_muestreo)
   {
-    Serial.print(float(errorRoll));
+    Serial.print(float(anguloYPR[2]));
     Serial.print(" ");
-    Serial.print(float(motorIzquierdo));
+    Serial.print(float(G_velocidadYPR[2]));
     Serial.print("\n");
     tiempoUltimoMuestreo = millis();
   }
