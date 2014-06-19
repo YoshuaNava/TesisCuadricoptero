@@ -220,76 +220,32 @@ void RecibirComando()
   if (Serial.available() > 0)
   {
     char comando = Serial.read();
-    if (comando == 'k')
+    if (comando == 'K')
     {
-      volatile int checksumRecibido = 0, checksumCalculado = 0, divisor = 1, anguloRecibidoPitch = 0, anguloRecibidoRoll = 0, anguloRecibidoYaw = 0, kPIDrecibidoRoll_velocidad[3] = {0,0,0}, kPIDrecibidoPitch_velocidad[3] = {0,0,0}, calibrarYPR_recibido = ' ';
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoRoll_velocidad[0] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoRoll_velocidad[1] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoRoll_velocidad[2] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoPitch_velocidad[0] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoPitch_velocidad[1] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        kPIDrecibidoPitch_velocidad[2] = RecibirNumero();
-      }
-      if(Serial.available() > 0)
-      {
-        divisor = RecibirNumero();        
-      }    
-      if(Serial.available() > 0)
-      {
-        anguloRecibidoPitch = RecibirNumero();      
-      }
-      if(Serial.available() > 0)
-      {
-        anguloRecibidoRoll = RecibirNumero();      
-      }
-      if(Serial.available() > 0)
-      {
-        anguloRecibidoYaw = RecibirNumero();      
-      }
-      if(Serial.available() > 0)
-      {
-        calibrarYPR_recibido = Serial.read();
-      }
-      if(Serial.available() > 0)
-      {
-        checksumRecibido = RecibirNumero();
-      }
-      checksumCalculado = kPIDrecibidoPitch_velocidad[0] + kPIDrecibidoPitch_velocidad[1] + kPIDrecibidoPitch_velocidad[2];
-      checksumCalculado += kPIDrecibidoRoll_velocidad[0] + kPIDrecibidoRoll_velocidad[1] + kPIDrecibidoRoll_velocidad[2];
-      checksumCalculado += divisor + anguloRecibidoPitch + anguloRecibidoRoll + anguloRecibidoYaw;
     }
     
-    if (comando == 'c')
+    if (comando == 'C')
     {
-      int checksumRecibido = 0, checksumCalculado = 0, anguloRecibidoRoll = 0, anguloRecibidoPitch = 0, anguloRecibidoYaw = 0, calibrarYPR_recibido = ' ';
+      int checksumCalculado = 0, calibrarYPR_recibido = ' ';
+      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
+      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
+      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
+
       if(Serial.available() > 0)
       {
-        anguloRecibidoPitch = RecibirNumero();      
+        anguloRecibidoPitch_low = Serial.read();
+        anguloRecibidoPitch_high = Serial.read();
+        anguloRecibidoPitch = anguloRecibidoPitch_high*256 + anguloRecibidoPitch_low;
+        Serial.println("Angulo de pitch");
+        Serial.println(anguloRecibidoPitch_low);
+        Serial.println(anguloRecibidoPitch_high);
+        Serial.println(anguloRecibidoPitch);
       }
       if(Serial.available() > 0)
       {
-        anguloRecibidoRoll = RecibirNumero();      
-      }
-      if(Serial.available() > 0)
-      {
-        anguloRecibidoYaw = RecibirNumero();      
+        anguloRecibidoRoll_low = Serial.read();
+        anguloRecibidoRoll_high = Serial.read();
+        anguloRecibidoRoll = anguloRecibidoRoll_high*256 + anguloRecibidoRoll_low;
       }
       if(Serial.available() > 0)
       {
@@ -297,19 +253,21 @@ void RecibirComando()
       }
       if(Serial.available() > 0)
       {
-        checksumRecibido = RecibirNumero();
+        checksumRecibido_low = Serial.read();
+        checksumRecibido_high = Serial.read();
+        checksumRecibido = checksumRecibido_high*256 + checksumRecibido_low;
       }
       
-      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll + anguloRecibidoYaw + calibrarYPR_recibido;
+      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll+ calibrarYPR_recibido;
       
       if(checksumRecibido == checksumCalculado)
       {
         Serial.println("Valores recibidos");
-        Serial.println(String((int)anguloRecibidoPitch) + ' ' + String((int)anguloRecibidoRoll) + ' ' + String((int)anguloRecibidoYaw) + ' ' + String((char)calibrarYPR_recibido));
-        Serial.println(checksumCalculado);
+        Serial.println(String((int)anguloRecibidoPitch-90) + ' ' + String((int)anguloRecibidoRoll-90) + ' ' + String((char)calibrarYPR_recibido));
+        Serial.println(checksumCalculado-180);
         Serial.println();
 
-        anguloDeseadoYPR[0] = anguloRecibidoYaw - 90;
+        anguloDeseadoYPR[0] = 0;
         anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
         anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
         calibrarYPR = calibrarYPR_recibido;
@@ -319,152 +277,6 @@ void RecibirComando()
   
   Serial.flush();
 }
-
-
-//Formato: NumeroDigitos,Cifra-NumeroDigitosChecksum,Checksum!
-int RecibirNumero()
-{
-  byte entrada = '_';
-
-  int digitos = 0;
-  int numero = 0;
-  int posDecimalesRecibidas = 0;
-  int numeroRecibido = 0;
-  int posDecimales = 0;
-  int posDecimalesNum = 0;
-  int checksum = 0;
-    
-  //  Serial.println("****************************************************");
-  while ((entrada != '!') && (Serial.available() > 0))
-  {
-    if (Serial.available() > 0)
-    {
-      entrada = Serial.read();
-
-      if (entrada == 44)
-      {
-//        Serial.println("Coma");
-        posDecimalesRecibidas = 1;
-      }
-      else
-      {
-        if(entrada == 45)
-        {
-          numeroRecibido = 1;
-          posDecimalesRecibidas = 0;
-        }
-        if(numeroRecibido == 0)
-        {
-          if ((entrada >= 48) && (entrada <= 57))
-          {
-            if (posDecimalesRecibidas)
-            {
-              if (posDecimales >= 0)
-              {
-//                Serial.println("Digito:");
-//                Serial.println(ConvertirASCII_Int(entrada));
-//                Serial.println("Numero hasta el momento:");
-//                Serial.println(numero);
-  
-                numero = numero + ConvertirASCII_Int(entrada) * Potencia(10, posDecimales);
-                posDecimales--;
-              }
-            }
-            else
-            {
-              posDecimalesNum = ConvertirASCII_Int(entrada);
-              posDecimales = posDecimalesNum - 1;
-//              Serial.println("Posiciones Decimales");
-//              Serial.println(posDecimales);
-            }
-          }
-        }
-        else
-        {
-          if ((entrada >= 48) && (entrada <= 57))
-          {
-            if (posDecimalesRecibidas)
-            {
-              if (posDecimales >= 0)
-              {
-//                Serial.println("Digito:");
-//                Serial.println(ConvertirASCII_Int(entrada));
-//                Serial.println("Checksum hasta el momento:");
-//                Serial.println(checksum);
-  
-                checksum = checksum + ConvertirASCII_Int(entrada) * Potencia(10, posDecimales);
-                posDecimales--;
-              }
-            }
-            else
-            {
-              posDecimales = ConvertirASCII_Int(entrada)-1;
-//              Serial.println("Posiciones Decimales");
-//              Serial.println(posDecimales);
-            }
-          }        
-        }
-      }
-    }
-  }
-
-  if(posDecimalesNum + numero == checksum)
-  {
-//    Serial.println("Numero recibido fi:");
-//    Serial.println(numero);
-//    Serial.println("Checksum");
-//    Serial.println(checksum);
-    return numero;
-  }
-  else
-  {
-    return 0;
-  }
-
-}
-
-
-int ConvertirASCII_Int(byte valor)
-{
-  switch (valor)
-  {
-    case 48:
-      return 0;
-    case 49:
-      return 1;
-    case 50:
-      return 2;
-    case 51:
-      return 3;
-    case 52:
-      return 4;
-    case 53:
-      return 5;
-    case 54:
-      return 6;
-    case 55:
-      return 7;
-    case 56:
-      return 8;
-    case 57:
-      return 9;
-  }
-}
-
-int Potencia(int base, int exponente)
-{
-  int i;
-  int resultado = 1;
-  while (exponente > 0)
-  {
-    resultado = resultado * base;
-    exponente --;
-  }
-
-  return resultado;
-
-}
-
 
 
 void PID_PosicionAngular()

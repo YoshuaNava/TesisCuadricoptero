@@ -12,6 +12,7 @@ from pygame.locals import *
 import serial
 import struct
 import math
+import time
 
 
 def NumDigitos(numero):
@@ -20,40 +21,23 @@ def NumDigitos(numero):
     else:
         return int(math.log10(numero))+1
 
-def EnviarNumeroSerial(puerto, numero):
-    numeroString = str(numero)
-    checksum = NumDigitos(numero)+numero
-    checksumString = str(checksum)
-    longitudChecksumString = str(NumDigitos(checksum))
-    puerto.write(str(len(numeroString)))
-    puerto.write(',')
-    puerto.write(numeroString)
-    puerto.write('-')
-    puerto.write(longitudChecksumString)
-    puerto.write(',')
-    puerto.write(checksumString)
-    puerto.write('!')
-    print str(len(numeroString)) + ',' + numeroString + '-' + longitudChecksumString + ',' + checksumString + '!'
+def EnviarEnteroSerial(puerto, numero):
+    numero_low = int(numero % 256)
+    numero_high = int(numero / 256)
+    print numero_low
+    print numero_high
+    puerto.write(struct.pack('B',numero_low))
+    puerto.write(struct.pack('B',numero_high))
+    
 
 def EnviarComandoCuadricoptero(puerto, comandoPitch, comandoRoll, calibrarYPR, checksum):
-    puertoSerial.write('c')
-    print 'c'
-    EnviarNumeroSerial(puertoSerial,comandoPitch+90)
-    EnviarNumeroSerial(puertoSerial,comandoRoll+90)
-    puertoSerial.write(calibrarYPR)
-    print calibrarYPR
-    EnviarNumeroSerial(puertoSerial,checksum)
-    print '\n'
-
-    puertoSerial.write('c')
-    print 'c'
-    EnviarNumeroSerial(puertoSerial,comandoPitch+90)
-    EnviarNumeroSerial(puertoSerial,comandoRoll+90)
-    puertoSerial.write(calibrarYPR)
-    print calibrarYPR
-    EnviarNumeroSerial(puertoSerial,checksum)
-    print '\n'
-
+    puerto.write('C')    
+    print 'PITCH'
+    EnviarEnteroSerial(puerto,comandoPitch)
+    print 'ROLL'
+    EnviarEnteroSerial(puerto,comandoRoll)
+    puerto.write(calibrarYPR)
+    EnviarEnteroSerial(puerto,checksum)
     
 
 
@@ -145,8 +129,8 @@ if (joystick_count == 1):
                 if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                     print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                     print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
-                    comandoPitch = int(movimientoY_ruedaDerecha*90.0)
-                    comandoRoll = int(movimientoX_ruedaDerecha*90.0)
+                    comandoPitch = int(movimientoY_ruedaDerecha*90.0) + 90
+                    comandoRoll = int(movimientoX_ruedaDerecha*90.0) + 90
                     checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
                     print 'Comando de pitch= %d' %comandoPitch
                     print 'Comando de roll= %d' %comandoRoll
@@ -154,7 +138,7 @@ if (joystick_count == 1):
                     print 'Checksum= %d' %checksum
                     
                     EnviarComandoCuadricoptero(puertoSerial, comandoPitch, comandoRoll, calibrarYPR, checksum)
-                    
+                    time.sleep(0.01)
 
             if evento.type == pygame.JOYBUTTONDOWN:
                 estado_boton_1 = joystick_object.get_button(BOTON_1)
