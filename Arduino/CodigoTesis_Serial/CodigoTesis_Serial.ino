@@ -148,14 +148,14 @@ void loop() {
   }
 
     offsetInicialAngulos[0] = 0;
-    offsetInicialAngulos[1] = -38;
-    offsetInicialAngulos[2] = 36;
+    offsetInicialAngulos[1] = -36;
+    offsetInicialAngulos[2] = 16;
 //    anguloDeseadoYPR[0] = 0;
 //    anguloDeseadoYPR[1] = 0;
 //    anguloDeseadoYPR[2] = -20;
 
   
-  velocidadBasePWM = 60;
+  velocidadBasePWM = 50;
   kPpitch = 0.7;
   kIpitch = 0.001;
   kDpitch = 0;
@@ -166,13 +166,13 @@ void loop() {
 
   kPpitch_velocidad = 0.2;
 //  kIpitch_velocidad = 0;
-//  kDpitch_velocidad = 0;
+  kDpitch_velocidad = 0.1;
 //
   kProll_velocidad = 0.2;
 //  kIroll_velocidad = 0;
-//  kDroll_velocidad = 0.01;
+  kDroll_velocidad = 0.1;
 
-  calibrarYPR = 'R';    
+  calibrarYPR = '_';    
   
   i=0;
   while(i < velocidadBasePWM/2)
@@ -197,6 +197,13 @@ void loop() {
       motorIzquierdo = i;
       motorDelantero = 0;
       motorTrasero = 0;  
+    }
+    if(calibrarYPR == 'T')
+    {
+      motorDerecho = i;
+      motorIzquierdo = i;
+      motorDelantero = i;
+      motorTrasero = i;  
     }
     AplicarPWMmotores();
     FiltroComplementario();
@@ -567,6 +574,14 @@ void AplicarPWMmotores()
     motorDelantero = 0;
     motorTrasero = 0;  
   }
+  if(calibrarYPR == 'T')
+  {
+    motorDerecho = velocidadBasePWM + correccionPWM_YPR[2];
+    motorIzquierdo = velocidadBasePWM - correccionPWM_YPR[2];
+    motorDelantero = velocidadBasePWM + correccionPWM_YPR[1];
+    motorTrasero = velocidadBasePWM - correccionPWM_YPR[1];
+  }
+
 
   if (motorDelantero>PWM_MAXIMO)
   {

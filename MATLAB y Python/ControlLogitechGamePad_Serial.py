@@ -39,7 +39,7 @@ incremento_kP_velocidad = 0.01
 incremento_kD_velocidad = 0.01
 multiplicadorConstantes = 1000
 
-strPuerto = "/dev/ttyUSB0"
+strPuerto = "/dev/ttyUSB2"
 tasaBaudios = 115200
 calibrarYPR = 'R'
 MAXIMO_ANGULO = 90
