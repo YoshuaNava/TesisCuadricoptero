@@ -82,13 +82,13 @@ if (joystick_count == 1):
                 estado_boton_4 = joystick_object.get_button(BOTON_4)
 
                 estado_boton_QUIT = joystick_object.get_button(BOTON_9)
-                estado_boton_START = joystick_object.get_button(BOTON_10)
+                estado_boton_R1 = joystick_object.get_button(BOTON_6)
                 
                 print 'Boton 1, Valor %d' %(estado_boton_1)
                 print 'Boton 2, Valor %d' %(estado_boton_2)
                 print 'Boton 3, Valor %d' %(estado_boton_3)
                 print 'Boton 4, Valor %d' %(estado_boton_4)
-                print 'Boton START, Valor %d' %(estado_boton_START)
+                print 'Boton R1, Valor %d' %(estado_boton_R1)
 
 
 
