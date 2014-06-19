@@ -32,6 +32,8 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.95
+#define DT_muestreo 0.05
+
 L3G gyro;
 LSM303 compass;
 char report[80];
@@ -70,6 +72,8 @@ long USDuracion=0; // Tiempo que tarda en rebotar el ultrasonido
 long USAltura=0; // Distancia medida por el sensor de ultrasonido
 
 char calibrarYPR = '_';
+
+long tiempoUltimoMuestreo = 0;
 
 //CONTROL:
 float kPpitch_velocidad = 0;
@@ -112,7 +116,7 @@ int correccionAltura = 0;
  
  void setup() {
   // put your setup code here, to run once:
-  Serial.begin(57600);
+  Serial.begin(9600);
   Wire.begin();
 
   if (!gyro.init())
@@ -164,9 +168,9 @@ void loop() {
   kIpitch_velocidad = 0;
   kDpitch_velocidad = 0;
 
-  kProll_velocidad = 0.008;
+  kProll_velocidad = 0.07;
   kIroll_velocidad = 0;
-  kDroll_velocidad = 0.004;
+  kDroll_velocidad = 0;
   calibrarYPR = 'R';
   
   i=0;
@@ -370,6 +374,16 @@ void AplicarPWMmotores()
 //  Serial.println(String((int)correccionPWM_YPR[1]) + ' ' + String((int)correccionPWM_YPR[2]));
 //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
 //  Serial.println();
+
+  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
+  {
+    Serial.print(float(errorRoll));
+    Serial.print(" ");
+    Serial.print(float(motorIzquierdo));
+    Serial.print("\n");
+    tiempoUltimoMuestreo = millis();
+  }
+  
 
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
