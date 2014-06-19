@@ -255,66 +255,57 @@ void RecibirComando()
       }    
       
       checksumCalculado = incremento_k_velocidad + terminoPID + operacion;
-      Serial.println("Hola");
-      Serial.println(checksumCalculado);
-      Serial.println(checksumRecibido);
-      Serial.println();
       
       if(checksumCalculado == checksumRecibido)
       {
         if(calibrarYPR == 'P')
         {
-          Serial.println("Pitch. Constantes originales:");
-          Serial.println(kPpitch_velocidad);
-          Serial.println(kDpitch_velocidad);
-          Serial.println();
           if((operacion == '+') && (terminoPID == 'P'))
           {
-            kPpitch_velocidad += incremento_k_velocidad/multiplicador;
+            kPpitch_velocidad += (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '+') && (terminoPID == 'D'))
           {
-            kDpitch_velocidad += incremento_k_velocidad/multiplicador;
+            kDpitch_velocidad += (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '-') && (terminoPID == 'P'))
           {
-            kPpitch_velocidad -= incremento_k_velocidad/multiplicador;
+            kPpitch_velocidad -= (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '-') && (terminoPID == 'D'))
           {
-            kDpitch_velocidad -= incremento_k_velocidad/multiplicador;
+            kDpitch_velocidad -= (float) incremento_k_velocidad/multiplicador;
           }          
           Serial.println("Pitch. Constantes modificadas:");
-          Serial.println(kPpitch_velocidad);
-          Serial.println(kDpitch_velocidad);
+          Serial.println(kPpitch_velocidad,5);
+          Serial.println(kDpitch_velocidad,5);
           Serial.println();
         }
       
         if(calibrarYPR == 'R')
         {
-          Serial.println("Roll. Constantes originales:");
-          Serial.println(kProll_velocidad);
-          Serial.println(kDroll_velocidad);
-          Serial.println();
           if((operacion == '+') && (terminoPID == 'P'))
           {
-            kProll_velocidad += incremento_k_velocidad/multiplicador;
+            kProll_velocidad += (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '+') && (terminoPID == 'D'))
           {
-            kDroll_velocidad += incremento_k_velocidad/multiplicador;
+            kDroll_velocidad += (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '-') && (terminoPID == 'P'))
           {
-            kProll_velocidad -= incremento_k_velocidad/multiplicador;
+            kProll_velocidad -= (float) incremento_k_velocidad/multiplicador;
           }
           if((operacion == '-') && (terminoPID == 'D'))
           {
-            kDroll_velocidad -= incremento_k_velocidad/multiplicador;
+            kDroll_velocidad -= (float) incremento_k_velocidad/multiplicador;
           }
+//          Serial.println("Incremento");
+//          Serial.print((float)incremento_k_velocidad/multiplicador,5);
+//          Serial.println();
           Serial.println("Roll. Constantes modificadas:");
-          Serial.println(kProll_velocidad);
-          Serial.println(kDroll_velocidad);
+          Serial.println(kProll_velocidad,5);
+          Serial.println(kDroll_velocidad,5);
           Serial.println();
         }
       }

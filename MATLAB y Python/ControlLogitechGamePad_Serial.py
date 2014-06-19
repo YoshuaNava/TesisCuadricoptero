@@ -35,9 +35,9 @@ RUEDA_IZQUIERDA = 2
 CODIGO_COMANDO = 'C'
 CODIGO_INCREMENTO_CONSTANTES = 'K'
 
-incremento_kP_velocidad = 0.001
-incremento_kD_velocidad = 0.001
-multiplicadorConstantes = 10000
+incremento_kP_velocidad = 0.01
+incremento_kD_velocidad = 0.01
+multiplicadorConstantes = 1000
 
 strPuerto = "/dev/ttyUSB1"
 tasaBaudios = 115200
