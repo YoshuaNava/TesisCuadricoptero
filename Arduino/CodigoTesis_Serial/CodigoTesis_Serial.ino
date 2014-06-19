@@ -150,9 +150,9 @@ void loop() {
     offsetInicialAngulos[0] = 0;
     offsetInicialAngulos[1] = 0;
     offsetInicialAngulos[2] = 0;
-    anguloDeseadoYPR[0] = 0;
-    anguloDeseadoYPR[1] = 0;
-    anguloDeseadoYPR[2] = -20;
+//    anguloDeseadoYPR[0] = 0;
+//    anguloDeseadoYPR[1] = 0;
+//    anguloDeseadoYPR[2] = -20;
 
   
   velocidadBasePWM = 60;
@@ -164,13 +164,13 @@ void loop() {
   kIroll = 0;
   kDroll = 0;
 
-  kPpitch_velocidad = 0;
-  kIpitch_velocidad = 0;
-  kDpitch_velocidad = 0;
-
-  kProll_velocidad = 0.02;
-  kIroll_velocidad = 0;
-  kDroll_velocidad = 0.01;
+//  kPpitch_velocidad = 0;
+//  kIpitch_velocidad = 0;
+//  kDpitch_velocidad = 0;
+//
+//  kProll_velocidad = 0.02;
+//  kIroll_velocidad = 0;
+//  kDroll_velocidad = 0.01;
   calibrarYPR = 'R';
   
   i=0;
@@ -263,18 +263,34 @@ void RecibirComando()
           if((operacion == '+') && (terminoPID == 'P'))
           {
             kPpitch_velocidad += (float) incremento_k_velocidad/multiplicador;
+            if(kPpitch_velocidad < 0)
+            {
+              kPpitch_velocidad = 0;
+            }
           }
           if((operacion == '+') && (terminoPID == 'D'))
           {
             kDpitch_velocidad += (float) incremento_k_velocidad/multiplicador;
+            if(kDpitch_velocidad < 0)
+            {
+              kDpitch_velocidad = 0;
+            }
           }
           if((operacion == '-') && (terminoPID == 'P'))
           {
             kPpitch_velocidad -= (float) incremento_k_velocidad/multiplicador;
+            if(kPpitch_velocidad < 0)
+            {
+              kPpitch_velocidad = 0;
+            }
           }
           if((operacion == '-') && (terminoPID == 'D'))
           {
             kDpitch_velocidad -= (float) incremento_k_velocidad/multiplicador;
+            if(kDpitch_velocidad < 0)
+            {
+              kDpitch_velocidad = 0;
+            }
           }          
           Serial.println("Pitch. Constantes modificadas:");
           Serial.println(kPpitch_velocidad,5);
@@ -287,18 +303,34 @@ void RecibirComando()
           if((operacion == '+') && (terminoPID == 'P'))
           {
             kProll_velocidad += (float) incremento_k_velocidad/multiplicador;
+            if(kProll_velocidad < 0)
+            {
+              kProll_velocidad = 0;
+            }
           }
           if((operacion == '+') && (terminoPID == 'D'))
           {
             kDroll_velocidad += (float) incremento_k_velocidad/multiplicador;
+            if(kDroll_velocidad < 0)
+            {
+              kDroll_velocidad = 0;
+            }
           }
           if((operacion == '-') && (terminoPID == 'P'))
           {
             kProll_velocidad -= (float) incremento_k_velocidad/multiplicador;
+            if(kProll_velocidad < 0)
+            {
+              kProll_velocidad = 0;
+            }
           }
           if((operacion == '-') && (terminoPID == 'D'))
           {
             kDroll_velocidad -= (float) incremento_k_velocidad/multiplicador;
+            if(kDroll_velocidad < 0)
+            {
+              kProll_velocidad = 0;
+            }
           }
 //          Serial.println("Incremento");
 //          Serial.print((float)incremento_k_velocidad/multiplicador,5);
@@ -364,7 +396,7 @@ void RecibirComando()
         }
         if(calibrarYPR == 'R')
         {
-          Serial.println(anguloDeseadoYPR[1]);
+          Serial.println(anguloDeseadoYPR[2]);
         }
 
       }
