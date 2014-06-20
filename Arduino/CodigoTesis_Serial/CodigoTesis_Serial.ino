@@ -7,10 +7,11 @@
 //IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
 
 //ULTRASONIDO:
-#define USTRIGPIN 6 //puerto de trigger del ultrasonido.
-#define USECHOPIN 7 //puerto de echo del ultradonido.
+#define USTRIGPIN 14 //puerto de trigger del ultrasonido.
+#define USECHOPIN 15 //puerto de echo del ultradonido.
 #define USRANGOMAXIMO 200 // rango maximo de ultrasonido
 #define USRANGOMINIMO 0 // rango minimo de ultrasonido
+#define ALTURA_MAXIMA 150
 //FIN ULTRASONIDO
 
 //MOTORES:
@@ -213,6 +214,7 @@ void loop() {
   
   while (true)
   {
+    CalcularAltura();
     USAltura = 0;
 
     FiltroComplementario();
@@ -550,6 +552,30 @@ void FiltroComplementario() {
   tiempo=micros();
 }
 
+
+void CalcularAltura()
+{
+  long duracion = 0, distancia = 0;
+  digitalWrite(USTRIGPIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(USTRIGPIN, HIGH);
+  delayMicroseconds(10);  
+  digitalWrite(USTRIGPIN, LOW);
+  duracion = pulseIn(USECHOPIN, HIGH);
+  distancia = (duracion/2)/58.2;
+  delay(10);
+
+  if(distancia < ALTURA_MAXIMA)
+  {
+    USAltura = distancia;
+    Serial.print(USAltura);
+    Serial.println("cm");
+  }
+  else
+  {
+    USAltura = 0;
+  }
+}
 
 void AplicarPWMmotores()
 {
