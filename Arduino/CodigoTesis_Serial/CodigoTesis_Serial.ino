@@ -148,14 +148,14 @@ void loop() {
   }
 
     offsetInicialAngulos[0] = 0;
-    offsetInicialAngulos[1] = -36;
-    offsetInicialAngulos[2] = 16;
+    offsetInicialAngulos[1] = -89;
+    offsetInicialAngulos[2] = -85;
 //    anguloDeseadoYPR[0] = 0;
 //    anguloDeseadoYPR[1] = 0;
 //    anguloDeseadoYPR[2] = -20;
 
   
-  velocidadBasePWM = 50;
+  velocidadBasePWM = 80;
   kPpitch = 0.7;
   kIpitch = 0.001;
   kDpitch = 0;
@@ -164,13 +164,13 @@ void loop() {
   kIroll = 0.001;
   kDroll = 0;
 
-  kPpitch_velocidad = 0.2;
+  kPpitch_velocidad = 0.16;
 //  kIpitch_velocidad = 0;
-  kDpitch_velocidad = 0.1;
+  kDpitch_velocidad = 0.12;
 //
-  kProll_velocidad = 0.2;
+  kProll_velocidad = 0.11;
 //  kIroll_velocidad = 0;
-  kDroll_velocidad = 0.1;
+  kDroll_velocidad = 0.09;
 
   calibrarYPR = '_';    
   
