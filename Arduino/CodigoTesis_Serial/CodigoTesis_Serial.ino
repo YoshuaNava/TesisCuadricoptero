@@ -56,6 +56,7 @@ float velocidadDeseadaYPR[3] = {
   0,0,0};
 float correccionPWM_YPR[3] = {
   0,0,0};
+int alturaDeseada = 0;
 long tiempo = 0;
 float DT = 0;
 //FIN IMU
@@ -69,12 +70,9 @@ float DT = 0;
 
 //VARIABLES GLOBALES:
 int velocidadBasePWM = 0;
-long USDuracion=0; // Tiempo que tarda en rebotar el ultrasonido
-long USAltura=0; // Distancia medida por el sensor de ultrasonido
-
-char calibrarYPR = '_';
-
+float USAltura=0; // Distancia medida por el sensor de ultrasonido
 long tiempoUltimoMuestreo = 0;
+char calibrarYPR = '_';
 
 //CONTROL:
 float kPpitch_velocidad = 0;
@@ -109,6 +107,8 @@ float errorPrevioRoll = 0;
 
 float kPyaw_velocidad = 0;
 float errorYaw_velocidad = 0;
+
+float kPaltura = 0;
 float errorAltura = 0;
 int correccionAltura = 0;
 //FIN CONTROL
@@ -215,10 +215,11 @@ void loop() {
   while (true)
   {
     CalcularAltura();
-    USAltura = 0;
+//    USAltura = 0;
 
     FiltroComplementario();
     RecibirComando();
+    PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores();
@@ -523,6 +524,17 @@ void PID_VelocidadAngular()
   correccionPWM_YPR[2] = kProll_velocidad*errorRoll_velocidad + kIroll_velocidad*integralRoll_velocidad + kDroll_velocidad*derivadaRoll_velocidad;
 }
 
+void PIDAltura() {
+  errorAltura = (float) (alturaDeseada - USAltura);
+  correccionAltura = errorAltura*kPaltura;
+  velocidadBasePWM = velocidadBasePWM + correccionAltura;
+//  Serial.println("PID de altura");
+//  Serial.println(errorAltura);
+//  Serial.println(correccionAltura);
+//  Serial.println(velocidadBasePWM);
+//  Serial.println();
+}
+
 
 void FiltroComplementario() {
   gyro.read();
@@ -555,7 +567,8 @@ void FiltroComplementario() {
 
 void CalcularAltura()
 {
-  long duracion = 0, distancia = 0;
+  long duracion = 0;
+  float distancia = 0;
   digitalWrite(USTRIGPIN, LOW);
   delayMicroseconds(2);
   digitalWrite(USTRIGPIN, HIGH);
@@ -568,8 +581,8 @@ void CalcularAltura()
   if(distancia < ALTURA_MAXIMA)
   {
     USAltura = distancia;
-    Serial.print(USAltura);
-    Serial.println("cm");
+//    Serial.print(USAltura);
+//    Serial.println("cm");
   }
   else
   {
