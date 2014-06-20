@@ -149,20 +149,20 @@ void loop() {
   }
 
     offsetInicialAngulos[0] = 0;
-    offsetInicialAngulos[1] = -89;
-    offsetInicialAngulos[2] = -85;
+    offsetInicialAngulos[1] = 0;
+    offsetInicialAngulos[2] = 0;
 //    anguloDeseadoYPR[0] = 0;
 //    anguloDeseadoYPR[1] = 0;
 //    anguloDeseadoYPR[2] = -20;
 
   
-  velocidadBasePWM = 80;
-  kPpitch = 0.7;
-  kIpitch = 0.001;
+  velocidadBasePWM = 140;
+  kPpitch = 1.5;
+  kIpitch = 0.1;
   kDpitch = 0;
 
-  kProll = 0.7;
-  kIroll = 0.001;
+  kProll = 1.5;
+  kIroll = 0.1;
   kDroll = 0;
 
   kPpitch_velocidad = 0.16;
@@ -173,7 +173,7 @@ void loop() {
 //  kIroll_velocidad = 0;
   kDroll_velocidad = 0.09;
 
-  calibrarYPR = '_';    
+  calibrarYPR = '_';
   
   i=0;
   while(i < velocidadBasePWM/2)
@@ -677,9 +677,9 @@ void AplicarPWMmotores()
 //  }
   
 
-  analogWrite(PUERTOMOTORDERECHO, motorDerecho);
+  analogWrite(PUERTOMOTORDERECHO, motorDerecho*0.9);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
-  analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
+  analogWrite(PUERTOMOTORSUPERIOR, motorDelantero*0.8);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);      
 
   //Serial.println(anguloYPR[1]/10);
