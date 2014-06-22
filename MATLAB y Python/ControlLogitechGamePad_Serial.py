@@ -30,7 +30,7 @@ TRACKPAD_x = 0
 TRACKPAD_y = 1
 RUEDA_DERECHA_x = 2
 RUEDA_DERECHA_y = 3
-RUEDA_IZQUIERDA = 2
+RUEDA_IZQUIERDA = 4
 
 CODIGO_COMANDO = 'C'
 CODIGO_INCREMENTO_CONSTANTES = 'K'
@@ -48,7 +48,7 @@ MAXIMO_ANGULO = 90
 
 def NumDigitos(numero):
     if  numero == 0:
-        return 0
+        return 1
     else:
         return int(math.log10(numero))+1
 
