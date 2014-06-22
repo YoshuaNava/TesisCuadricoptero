@@ -663,23 +663,23 @@ void AplicarPWMmotores()
 //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
 //  Serial.println();
 
-  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
-  {
-    Serial.print(float(anguloYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(velocidadDeseadaYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(anguloDeseadoYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(correccionPWM_YPR[2]));
-    Serial.print("\n");
-    tiempoUltimoMuestreo = millis();
-  }
+//  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
+//  {
+//    Serial.print(float(anguloYPR[2]));
+//    Serial.print(" ");
+//    Serial.print(float(velocidadDeseadaYPR[2]));
+//    Serial.print(" ");
+//    Serial.print(float(anguloDeseadoYPR[2]));
+//    Serial.print(" ");
+//    Serial.print(float(correccionPWM_YPR[2]));
+//    Serial.print("\n");
+//    tiempoUltimoMuestreo = millis();
+//  }
   
 
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
-  analogWrite(PUERTOMOTORSUPERIOR, motorDelantero*0.8);
+  analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);      
 
   //Serial.println(anguloYPR[1]/10);

@@ -1,0 +1,6 @@
+* Investigar sobre modo API de los XBEE.
+* Segundo circuito de control de motores.
+* Mejorar el ciclo de ejecución del controlador para que se mantenga leyendo 
+datos.
+* Incluir la lectura y graficación de datos de sensores.
+* Interfaz en Python.
