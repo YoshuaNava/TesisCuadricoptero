@@ -32,7 +32,7 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.95
+#define K_COMP 0.9
 #define DT_muestreo 20
 
 L3G gyro;
@@ -156,7 +156,7 @@ void loop() {
 //    anguloDeseadoYPR[2] = -20;
 
   
-  velocidadBasePWM = 140;
+  velocidadBasePWM = 100;
   kPpitch = 1.5;
   kIpitch = 0.1;
   kDpitch = 0;
@@ -165,15 +165,15 @@ void loop() {
   kIroll = 0.1;
   kDroll = 0;
 
-  kPpitch_velocidad = 0.16;
+  kPpitch_velocidad = 0.1;
 //  kIpitch_velocidad = 0;
-  kDpitch_velocidad = 0.12;
+  kDpitch_velocidad = 0.05;
 //
-  kProll_velocidad = 0.11;
+  kProll_velocidad = 0.1;
 //  kIroll_velocidad = 0;
-  kDroll_velocidad = 0.09;
+  kDroll_velocidad = 0.05;
 
-  calibrarYPR = '_';
+  calibrarYPR = 'T';
   
   i=0;
   while(i < velocidadBasePWM/2)
@@ -663,21 +663,21 @@ void AplicarPWMmotores()
 //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
 //  Serial.println();
 
-//  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
-//  {
-//    Serial.print(float(anguloYPR[2]));
-//    Serial.print(" ");
-//    Serial.print(float(velocidadDeseadaYPR[2]));
-//    Serial.print(" ");
-//    Serial.print(float(DT*1000));
-//    Serial.print(" ");
-//    Serial.print(float(correccionPWM_YPR[2]));
-//    Serial.print("\n");
-//    tiempoUltimoMuestreo = millis();
-//  }
+  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
+  {
+    Serial.print(float(anguloYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(velocidadDeseadaYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(anguloDeseadoYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(correccionPWM_YPR[2]));
+    Serial.print("\n");
+    tiempoUltimoMuestreo = millis();
+  }
   
 
-  analogWrite(PUERTOMOTORDERECHO, motorDerecho*0.9);
+  analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero*0.8);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);      
