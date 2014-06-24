@@ -420,16 +420,15 @@ void RecibirComando()
         {
           Serial.println("ENCENDER");
         }
-        calibrarYPR = calibrarYPR_recibido;
-        if(calibrarYPR == 'P')
+
+        if(calibrarYPR_recibido == 'P')
         {
           Serial.println(anguloDeseadoYPR[1]);
         }
-        if(calibrarYPR == 'R')
+        if(calibrarYPR_recibido == 'R')
         {
           Serial.println(anguloDeseadoYPR[2]);
         }
-
       }
     }
 
