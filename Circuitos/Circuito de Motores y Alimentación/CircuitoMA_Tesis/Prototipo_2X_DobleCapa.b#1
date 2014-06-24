@@ -125,9 +125,6 @@
 <wire x1="0" y1="84" x2="0" y2="0" width="0" layer="20"/>
 <text x="16" y="4" size="0.8128" layer="16" rot="MR0">GND</text>
 <text x="31" y="4" size="0.8128" layer="16" rot="MR0">+11.1V</text>
-<text x="24.5" y="80" size="1.27" layer="1">Luis Vicens</text>
-<text x="24.5" y="77.5" size="1.27" layer="1">Yoshua Nava</text>
-<text x="26" y="75" size="1.4224" layer="1">UCAB</text>
 </plain>
 <libraries>
 <library name="optocoupler">
