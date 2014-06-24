@@ -34,6 +34,7 @@ int motorTrasero = 0;
 #define G_ACC 0.0573
 #define K_COMP 0.9
 #define DT_muestreo 20
+#define DT_PID_altura 70
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 5
 
@@ -76,6 +77,7 @@ float USAltura=0; // Distancia medida por el sensor de ultrasonido
 long tiempoUltimoMuestreo = 0;
 long tiempoUltimoCicloVelocidadAngular = 0;
 long tiempoUltimoCicloPosicionAngular = 0;
+long tiempoUltimoCicloAltura = 0;
 char calibrarYPR = '_';
 
 //CONTROL:
@@ -225,7 +227,11 @@ void loop() {
 
     FiltroComplementario();
     RecibirComando();
-    PIDAltura();
+    if(millis() - tiempoUltimoCicloAltura > DT_PID_altura)
+    {
+      PIDAltura();
+      tiempoUltimoCicloAltura = millis();
+    }  
     if(millis() - tiempoUltimoCicloPosicionAngular > DT_PID_posicionAngular)
     {
       PID_PosicionAngular();
@@ -504,6 +510,8 @@ void PID_PosicionAngular()
   derivadaRoll = errorRoll - errorPrevioRoll;
   errorPrevioRoll = errorRoll;
   velocidadDeseadaYPR[2] = kProll*errorRoll + kIroll*integralRoll + kDroll*derivadaRoll;
+  
+  Serial.println(velocidadDeseadaYPR[1]);
 }
 
 
@@ -539,7 +547,6 @@ void PID_VelocidadAngular()
   
   errorYaw_velocidad = (float) (velocidadDeseadaYPR[0] - G_velocidadYPR[0]);
   correccionPWM_YPR[0] = kPyaw_velocidad*errorYaw_velocidad;
-  Serial.println(correccionPWM_YPR[0]);
 }
 
 void PIDAltura() {
