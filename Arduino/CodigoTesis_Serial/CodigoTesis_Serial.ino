@@ -34,6 +34,8 @@ int motorTrasero = 0;
 #define G_ACC 0.0573
 #define K_COMP 0.9
 #define DT_muestreo 20
+#define DT_PID_posicionAngular 50
+#define DT_PID_velocidadAngular 5
 
 L3G gyro;
 LSM303 compass;
@@ -72,6 +74,8 @@ float DT = 0;
 int velocidadBasePWM = 0;
 float USAltura=0; // Distancia medida por el sensor de ultrasonido
 long tiempoUltimoMuestreo = 0;
+long tiempoUltimoCicloVelocidadAngular = 0;
+long tiempoUltimoCicloPosicionAngular = 0;
 char calibrarYPR = '_';
 
 //CONTROL:
@@ -156,22 +160,24 @@ void loop() {
 //    anguloDeseadoYPR[2] = -20;
 
   
-  velocidadBasePWM = 100;
-  kPpitch = 1.5;
-  kIpitch = 0.1;
+  velocidadBasePWM = 80;
+  kPpitch = 1.0;
+  kIpitch = 0;
   kDpitch = 0;
 
-  kProll = 1.5;
-  kIroll = 0.1;
+  kProll = 1.0;
+  kIroll = 0;
   kDroll = 0;
 
   kPpitch_velocidad = 0.1;
 //  kIpitch_velocidad = 0;
-  kDpitch_velocidad = 0.05;
+  kDpitch_velocidad = 0;
 //
   kProll_velocidad = 0.1;
 //  kIroll_velocidad = 0;
-  kDroll_velocidad = 0.05;
+  kDroll_velocidad = 0;
+  
+  kPyaw_velocidad = 0.1;
 
   calibrarYPR = 'T';
   
@@ -220,8 +226,16 @@ void loop() {
     FiltroComplementario();
     RecibirComando();
     PIDAltura();
-    PID_PosicionAngular();
-    PID_VelocidadAngular();
+    if(millis() - tiempoUltimoCicloPosicionAngular > DT_PID_posicionAngular)
+    {
+      PID_PosicionAngular();
+      tiempoUltimoCicloPosicionAngular = millis();
+    }
+    if(millis() - tiempoUltimoCicloVelocidadAngular > DT_PID_velocidadAngular)
+    {
+      PID_VelocidadAngular();
+      tiempoUltimoCicloVelocidadAngular = millis();
+    }
     AplicarPWMmotores();
   }
 }
@@ -522,6 +536,10 @@ void PID_VelocidadAngular()
   derivadaRoll_velocidad = errorRoll_velocidad - errorPrevioRoll_velocidad;
   errorPrevioRoll_velocidad = errorRoll_velocidad;
   correccionPWM_YPR[2] = kProll_velocidad*errorRoll_velocidad + kIroll_velocidad*integralRoll_velocidad + kDroll_velocidad*derivadaRoll_velocidad;
+  
+  errorYaw_velocidad = (float) (velocidadDeseadaYPR[0] - G_velocidadYPR[0]);
+  correccionPWM_YPR[0] = kPyaw_velocidad*errorYaw_velocidad;
+  Serial.println(correccionPWM_YPR[0]);
 }
 
 void PIDAltura() {
@@ -615,10 +633,10 @@ void AplicarPWMmotores()
   }
   if(calibrarYPR == 'T')
   {
-    motorDerecho = velocidadBasePWM + correccionPWM_YPR[2];
-    motorIzquierdo = velocidadBasePWM - correccionPWM_YPR[2];
-    motorDelantero = velocidadBasePWM + correccionPWM_YPR[1];
-    motorTrasero = velocidadBasePWM - correccionPWM_YPR[1];
+    motorDerecho = velocidadBasePWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorIzquierdo = velocidadBasePWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorDelantero = velocidadBasePWM + correccionPWM_YPR[1] - correccionPWM_YPR[0];
+    motorTrasero = velocidadBasePWM - correccionPWM_YPR[1] - correccionPWM_YPR[0];
   }
 
 
