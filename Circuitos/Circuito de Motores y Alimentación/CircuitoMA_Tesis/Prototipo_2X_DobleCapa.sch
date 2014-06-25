@@ -8166,9 +8166,9 @@ type 0309, grid 2.5 mm</description>
 <part name="GND__BATERIA" library="SparkFun-Connectors" deviceset="M01" device="-SMTSO-256-ET"/>
 <part name="SUPPLY12" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY13" library="supply2" deviceset="GND" device=""/>
-<part name="R4" library="rcl" deviceset="R-US_" device="0207/7" value="10Ohm"/>
+<part name="R4" library="rcl" deviceset="R-US_" device="0207/7" value="1KOhm"/>
 <part name="ARDUINO" library="pinhead" deviceset="PINHD-1X8" device="/90"/>
-<part name="R1" library="rcl" deviceset="R-US_" device="0207/7" value="10Ohm"/>
+<part name="R1" library="rcl" deviceset="R-US_" device="0207/7" value="1KOhm"/>
 <part name="C3" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF"/>
 <part name="C1" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF">
 <attribute name="PROD_ID" value="CAP-08370"/>
@@ -8179,8 +8179,8 @@ type 0309, grid 2.5 mm</description>
 <part name="C4" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ">
 <attribute name="PROD_ID" value="CAP-08370"/>
 </part>
-<part name="R2" library="rcl" deviceset="R-US_" device="0207/7" value="10Ohm"/>
-<part name="R3" library="rcl" deviceset="R-US_" device="0207/7" value="10Ohm"/>
+<part name="R2" library="rcl" deviceset="R-US_" device="0207/7" value="1KOhm"/>
+<part name="R3" library="rcl" deviceset="R-US_" device="0207/7" value="1KOhm"/>
 <part name="H1" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H2" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H3" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
