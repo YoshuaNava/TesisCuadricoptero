@@ -634,6 +634,50 @@ Source: http://www.fairchildsemi.com/ds/4N/4N35-M.pdf</description>
 <rectangle x1="0.889" y1="-2.921" x2="1.651" y2="-1.905" layer="21"/>
 <rectangle x1="3.429" y1="-2.921" x2="4.191" y2="-1.905" layer="21"/>
 </package>
+<package name="1X02">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<wire x1="-1.905" y1="1.27" x2="-0.635" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="-0.635" y1="1.27" x2="0" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="0" y1="0.635" x2="0" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="0" y1="-0.635" x2="-0.635" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="0.635" x2="-2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="1.27" x2="-2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-0.635" x2="-1.905" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-0.635" y1="-1.27" x2="-1.905" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="0" y1="0.635" x2="0.635" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="0.635" y1="1.27" x2="1.905" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="1.27" x2="2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="0.635" x2="2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-0.635" x2="1.905" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-1.27" x2="0.635" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="0.635" y1="-1.27" x2="0" y2="-0.635" width="0.1524" layer="21"/>
+<pad name="1" x="-1.27" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="1.27" y="0" drill="1.016" shape="long" rot="R90"/>
+<text x="-2.6162" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-2.54" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-1.524" y1="-0.254" x2="-1.016" y2="0.254" layer="51"/>
+<rectangle x1="1.016" y1="-0.254" x2="1.524" y2="0.254" layer="51"/>
+</package>
+<package name="1X02/90">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<wire x1="-2.54" y1="-1.905" x2="0" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="0" y1="-1.905" x2="0" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="0" y1="0.635" x2="-2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="0.635" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="6.985" x2="-1.27" y2="1.27" width="0.762" layer="21"/>
+<wire x1="0" y1="-1.905" x2="2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-1.905" x2="2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="0.635" x2="0" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="6.985" x2="1.27" y2="1.27" width="0.762" layer="21"/>
+<pad name="1" x="-1.27" y="-3.81" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="1.27" y="-3.81" drill="1.016" shape="long" rot="R90"/>
+<text x="-3.175" y="-3.81" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="4.445" y="-3.81" size="1.27" layer="27" rot="R90">&gt;VALUE</text>
+<rectangle x1="-1.651" y1="0.635" x2="-0.889" y2="1.143" layer="21"/>
+<rectangle x1="0.889" y1="0.635" x2="1.651" y2="1.143" layer="21"/>
+<rectangle x1="-1.651" y1="-2.921" x2="-0.889" y2="-1.905" layer="21"/>
+<rectangle x1="0.889" y1="-2.921" x2="1.651" y2="-1.905" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="PINHD8">
@@ -663,6 +707,16 @@ Source: http://www.fairchildsemi.com/ds/4N/4N35-M.pdf</description>
 <pin name="2" x="-2.54" y="2.54" visible="pad" length="short" direction="pas" function="dot"/>
 <pin name="3" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 <pin name="4" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas" function="dot"/>
+</symbol>
+<symbol name="PINHD2">
+<wire x1="-6.35" y1="-2.54" x2="1.27" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="5.08" x2="-6.35" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="-6.35" y1="5.08" x2="-6.35" y2="-2.54" width="0.4064" layer="94"/>
+<text x="-6.35" y="5.715" size="1.778" layer="95">&gt;NAME</text>
+<text x="-6.35" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-2.54" y="2.54" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="2" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -727,6 +781,32 @@ Source: http://www.fairchildsemi.com/ds/4N/4N35-M.pdf</description>
 <connect gate="A" pin="2" pad="2"/>
 <connect gate="A" pin="3" pad="3"/>
 <connect gate="A" pin="4" pad="4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PINHD-1X2" prefix="JP" uservalue="yes">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="PINHD2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1X02">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="/90" package="1X02/90">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -4704,107 +4784,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </deviceset>
 </devicesets>
 </library>
-<library name="gm-switches">
-<description>&lt;b&gt;Switches&lt;/b&gt;
-&lt;ul&gt;
-&lt;li&gt;SPST, SPDT, DPDT, 3PDT
-&lt;/ul&gt;</description>
-<packages>
-<package name="SPST">
-<pad name="2" x="1.27" y="0" drill="0.7" shape="square"/>
-<pad name="1" x="-1.27" y="0" drill="0.7" shape="square"/>
-<text x="-2.54" y="1.27" size="1.27" layer="25" ratio="12">&gt;NAME</text>
-<text x="-2.54" y="-1.27" size="0.8128" layer="21" ratio="12">1</text>
-<text x="1.905" y="-1.27" size="0.8128" layer="21" ratio="12">2</text>
-</package>
-</packages>
-<symbols>
-<symbol name="SPST">
-<wire x1="0" y1="-3.175" x2="0" y2="-1.905" width="0.254" layer="94"/>
-<wire x1="0" y1="-1.905" x2="-2.413" y2="2.413" width="0.254" layer="94"/>
-<circle x="0" y="2.54" radius="0.762" width="0.4064" layer="94"/>
-<text x="3.81" y="-4.445" size="1.778" layer="95" rot="R90">&gt;NAME</text>
-<pin name="P" x="0" y="-5.08" visible="pad" length="short" direction="pas" rot="R90"/>
-<pin name="S" x="0" y="5.08" visible="pad" length="short" direction="pas" rot="R270"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="SPST" prefix="SW">
-<gates>
-<gate name="G$1" symbol="SPST" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SPST">
-<connects>
-<connect gate="G$1" pin="P" pad="1"/>
-<connect gate="G$1" pin="S" pad="2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
-<library name="con-molex">
-<description>&lt;b&gt;Molex Connectors&lt;/b&gt;&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="22-23-2021">
-<description>.100" (2.54mm) Center Headers - 2 Pin</description>
-<wire x1="-2.54" y1="3.175" x2="2.54" y2="3.175" width="0.254" layer="21"/>
-<wire x1="2.54" y1="3.175" x2="2.54" y2="1.27" width="0.254" layer="21"/>
-<wire x1="2.54" y1="1.27" x2="2.54" y2="-3.175" width="0.254" layer="21"/>
-<wire x1="2.54" y1="-3.175" x2="-2.54" y2="-3.175" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="-3.175" x2="-2.54" y2="1.27" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="1.27" x2="-2.54" y2="3.175" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="21"/>
-<pad name="1" x="-1.27" y="0" drill="1" shape="long" rot="R90"/>
-<pad name="2" x="1.27" y="0" drill="1" shape="long" rot="R90"/>
-<text x="-2.54" y="3.81" size="1.016" layer="25" ratio="10">&gt;NAME</text>
-<text x="-2.54" y="-5.08" size="1.016" layer="27" ratio="10">&gt;VALUE</text>
-</package>
-</packages>
-<symbols>
-<symbol name="MV">
-<wire x1="1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
-<text x="2.54" y="-0.762" size="1.524" layer="95">&gt;NAME</text>
-<text x="-0.762" y="1.397" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="S" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
-</symbol>
-<symbol name="M">
-<wire x1="1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
-<text x="2.54" y="-0.762" size="1.524" layer="95">&gt;NAME</text>
-<pin name="S" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="22-23-2021" prefix="X">
-<description>.100" (2.54mm) Center Header - 2 Pin</description>
-<gates>
-<gate name="-1" symbol="MV" x="0" y="0" addlevel="always" swaplevel="1"/>
-<gate name="-2" symbol="M" x="0" y="-2.54" addlevel="always" swaplevel="1"/>
-</gates>
-<devices>
-<device name="" package="22-23-2021">
-<connects>
-<connect gate="-1" pin="S" pad="1"/>
-<connect gate="-2" pin="S" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="MF" value="MOLEX" constant="no"/>
-<attribute name="MPN" value="22-23-2021" constant="no"/>
-<attribute name="OC_FARNELL" value="1462926" constant="no"/>
-<attribute name="OC_NEWARK" value="25C3832" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="SparkFun-Capacitors">
 <description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
 In this library you'll find resistors, capacitors, inductors, test points, jumper pads, etc.&lt;br&gt;&lt;br&gt;
@@ -5163,13 +5142,10 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <part name="+11,1V__BATERIA" library="SparkFun-Connectors" deviceset="M01" device="-SMTSO-256-ET"/>
 <part name="GND__BATERIA" library="SparkFun-Connectors" deviceset="M01" device="-SMTSO-256-ET"/>
 <part name="SUPPLY12" library="supply2" deviceset="GND" device=""/>
-<part name="POWER" library="gm-switches" deviceset="SPST" device=""/>
-<part name="X1" library="con-molex" deviceset="22-23-2021" device=""/>
 <part name="SUPPLY13" library="supply2" deviceset="GND" device=""/>
 <part name="R4" library="rcl" deviceset="R-US_" device="0207/7" value="10kOhm"/>
 <part name="ARDUINO" library="pinhead" deviceset="PINHD-1X8" device="/90"/>
 <part name="R1" library="rcl" deviceset="R-US_" device="0207/7" value="10kOhm"/>
-<part name="VCC" library="gm-switches" deviceset="SPST" device=""/>
 <part name="C3" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF"/>
 <part name="C1" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF">
 <attribute name="PROD_ID" value="CAP-08370"/>
@@ -5186,6 +5162,8 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <part name="H2" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H3" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H4" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
+<part name="JP2" library="pinhead" deviceset="PINHD-1X2" device="/90"/>
+<part name="JP1" library="pinhead" deviceset="PINHD-1X2" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5221,14 +5199,10 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <instance part="+11,1V__BATERIA" gate="G$1" x="208.28" y="58.42" rot="R180"/>
 <instance part="GND__BATERIA" gate="G$1" x="208.28" y="35.56" rot="R180"/>
 <instance part="SUPPLY12" gate="GND" x="185.42" y="30.48"/>
-<instance part="POWER" gate="G$1" x="73.66" y="-45.72"/>
-<instance part="X1" gate="-1" x="76.2" y="-63.5" rot="R270"/>
-<instance part="X1" gate="-2" x="73.66" y="-63.5" rot="MR270"/>
 <instance part="SUPPLY13" gate="GND" x="96.52" y="-58.42"/>
 <instance part="R4" gate="G$1" x="48.26" y="-10.16" rot="R90"/>
 <instance part="ARDUINO" gate="A" x="-55.88" y="40.64" rot="R180"/>
 <instance part="R1" gate="G$1" x="48.26" y="73.66" rot="R90"/>
-<instance part="VCC" gate="G$1" x="-33.02" y="12.7" rot="R270"/>
 <instance part="C3" gate="G$1" x="182.88" y="0"/>
 <instance part="C1" gate="G$1" x="167.64" y="0"/>
 <instance part="C2" gate="G$1" x="175.26" y="0"/>
@@ -5239,6 +5213,8 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <instance part="H2" gate="G$1" x="30.48" y="-45.72"/>
 <instance part="H3" gate="G$1" x="2.54" y="-63.5"/>
 <instance part="H4" gate="G$1" x="30.48" y="-63.5"/>
+<instance part="JP2" gate="G$1" x="71.12" y="-60.96" rot="R270"/>
+<instance part="JP1" gate="G$1" x="-33.02" y="2.54" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -5277,19 +5253,6 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <pinref part="OK4" gate="G$1" pin="A"/>
 <wire x1="-12.7" y1="2.54" x2="12.7" y2="2.54" width="0.1524" layer="91"/>
 <pinref part="ARDUINO" gate="A" pin="5"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="LM7809" gate="A" pin="OUT"/>
-<wire x1="203.2" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="15.24" x2="205.74" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="-33.02" x2="218.44" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="-33.02" x2="218.44" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="POWER" gate="G$1" pin="S"/>
-<wire x1="73.66" y1="-40.64" x2="73.66" y2="-33.02" width="0.1524" layer="91"/>
-<pinref part="C4" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="GND" class="1">
@@ -5377,11 +5340,11 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 <wire x1="185.42" y1="35.56" x2="200.66" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="X1" gate="-1" pin="S"/>
-<wire x1="76.2" y1="-60.96" x2="76.2" y2="-53.34" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="-53.34" x2="96.52" y2="-53.34" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="-53.34" x2="96.52" y2="-53.34" width="0.1524" layer="91"/>
 <pinref part="SUPPLY13" gate="GND" pin="GND"/>
 <wire x1="96.52" y1="-53.34" x2="96.52" y2="-55.88" width="0.1524" layer="91"/>
+<pinref part="JP2" gate="G$1" pin="1"/>
+<wire x1="73.66" y1="-53.34" x2="73.66" y2="-58.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="SUPPLY6" gate="GND" pin="GND"/>
@@ -5579,25 +5542,33 @@ Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.
 </net>
 <net name="N$18" class="0">
 <segment>
-<pinref part="POWER" gate="G$1" pin="P"/>
-<pinref part="X1" gate="-2" pin="S"/>
-<wire x1="73.66" y1="-50.8" x2="73.66" y2="-60.96" width="0.1524" layer="91"/>
+<pinref part="LM7809" gate="A" pin="OUT"/>
+<wire x1="203.2" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="15.24" x2="205.74" y2="5.08" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="-33.02" x2="218.44" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="-33.02" x2="218.44" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="C4" gate="G$1" pin="1"/>
+<pinref part="JP2" gate="G$1" pin="2"/>
+<wire x1="71.12" y1="-33.02" x2="71.12" y2="-58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$20" class="0">
 <segment>
-<wire x1="-27.94" y1="12.7" x2="-25.4" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="-25.4" y1="12.7" x2="-25.4" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="ARDUINO" gate="A" pin="3"/>
 <wire x1="-25.4" y1="35.56" x2="-53.34" y2="35.56" width="0.1524" layer="91"/>
-<pinref part="VCC" gate="G$1" pin="S"/>
+<pinref part="JP1" gate="G$1" pin="1"/>
+<wire x1="-30.48" y1="5.08" x2="-30.48" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="-30.48" y1="12.7" x2="-25.4" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="XBEE" gate="A" pin="2"/>
-<wire x1="-53.34" y1="12.7" x2="-38.1" y2="12.7" width="0.1524" layer="91"/>
-<pinref part="VCC" gate="G$1" pin="P"/>
+<wire x1="-53.34" y1="12.7" x2="-33.02" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="JP1" gate="G$1" pin="2"/>
+<wire x1="-33.02" y1="12.7" x2="-33.02" y2="5.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
