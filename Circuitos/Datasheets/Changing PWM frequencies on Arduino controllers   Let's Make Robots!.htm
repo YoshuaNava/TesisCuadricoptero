@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0036)http://letsmakerobots.com/node/40136 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Changing PWM frequencies on Arduino controllers | Let's Make Robots!</title>
+  
+<link rel="shortcut icon" href="http://letsmakerobots.com/files/favicon.ico" type="image/x-icon">
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/cck/content.css";</style>
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/date/date.css";</style>
+<style type="text/css" media="all">@import "/sites/default/modules/lmr_chill/lmr_chill.css";</style>
+<style type="text/css" media="all">@import "/sites/default/modules/lmr_components/lmr_components.css";</style>
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/cck/fieldgroup.css";</style>
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/panels/css/panels.css";</style>
+<style type="text/css" media="all">@import "/modules/comment/comment.css";</style>
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/google_cse/google_cse.css";</style>
+<style type="text/css" media="all">@import "/sites/all/modules/contrib/openid/openid.css";</style>
+<style type="text/css" media="all">@import "/sites/default/themes/LMRv3/LMRv3/reset-fonts-grids.css";</style>
+<style type="text/css" media="all">@import "/sites/default/themes/LMRv3/LMRv3/basic.css";</style>
+<style type="text/css" media="print">@import "/sites/default/themes/LMRv3/LMRv3/print.css";</style>
+<style type="text/css" media="screen">@import "/sites/default/themes/LMRv3/LMRv3/style.css";</style>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/jquery.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/drupal.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/compat.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/lmr_chill.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/lmr_components.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/panels.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/collapse.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/lmr.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/openid.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/jquery.qtip.min.js"></script>
+<script type="text/javascript">Drupal.extend({ settings: { "googleanalytics": { "trackOutgoing": 1, "trackMailto": 1, "trackDownload": 1, "trackDownloadExtensions": "7z|aac|avi|csv|doc|exe|flv|gif|gz|jpe?g|js|mp(3|4|e?g)|mov|pdf|phps|png|ppt|rar|sit|tar|torrent|txt|wma|wmv|xls|xml|zip", "LegacyVersion": 0 }, "googleCSE": { "locale": [ "en-US" ] } } });</script>
+
+  <script type="text/javascript"> </script>
+    <meta name="description" content="At Let&#39;s Make Robots, you can share your homemade robots with the world. Share your cool ideas and stunning designs here or see the clever inventions of others">
+  <meta name="keywords" content="robots, homemade robots, ambient intelligence, ubiquitous computing, internet of things, Everyware, Context-aware computing, Mobile computing, Wearable computing, Embedded computing, Augmented reality, Pervasive computing">
+  <link rel="shortcut icon" href="http://letsmakerobots.com/favicon.ico">
+  </head>
+
+<body id="letsmakerobots.com" class="not-front not-logged-in node-type-robot_tip one-sidebar sidebar-right page-node-40136 section-node">
+  <div id="doc4" class="yui-t4">
+    <div id="hd">
+      
+
+			      <div class="cz-toplink">
+
+
+
+		      <a href="http://letsmakerobots.com/chill" title="Chillout Zone: "><img src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/v3frontchill.png" alt="Chillout Zone"></a>
+			
+
+
+            </div>
+	
+            <div id="site-name">
+         <a href="http://letsmakerobots.com/" title="Let&#39;s Make Robots!" rel="home"><img src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/LMR3FlashLogo.png" width="375" height="59" alt="Let&#39;s Make Robots!" title="Let&#39;s Make Robots!"></a>
+      </div>
+
+      <div id="navbar-top"><ul class="links-menu">
+<li><a href="http://letsmakerobots.com/start" title="Are you new to robot building? This may be a good tutorial for you to get started on your first robot.">Start Here</a></li>
+<li><a href="http://letsmakerobots.com/lmr/rules" title="DOs and DONTs on LetsMakeRobots">Rules</a></li>
+<li><a href="http://letsmakerobots.com/view/tip/list" title="LMR&#39;s Epic Walk Throughs">TopTips</a></li>
+<li><a href="http://letsmakerobots.com/view/node/list/robot" title="List of all robots">Robots</a></li>
+<li><a href="http://letsmakerobots.com/view/node/list/something_else">Something else</a></li>
+<li><a href="http://letsmakerobots.com/blog" title="Users blogs">Blogs</a></li>
+<li><a href="http://letsmakerobots.com/reviews/components" title="Reviews for components, components for reviews!">Reviews</a></li>
+<li><a href="http://letsmakerobots.com/content/join-lmr-3d-print-club" title="Join the LMR 3D Print Club here">3D print club</a></li>
+<li><a href="http://letsmakerobots.com/view/challenges/list">Challenges</a></li>
+<li><a href="http://letsmakerobots.com/forums">Forums</a></li>
+<li><a href="http://letsmakerobots.com/tracker">Recent</a></li>
+<li><a href="http://letsmakerobots.com/content/together-we-push-evolution-0" title="About LetsMakeRobots">About</a></li>
+<li><a href="http://letsmakerobots.com/user" title="Lists of your posts">My Account</a></li>
+<li><a href="http://letsmakerobots.com/my" title="Your stuff sorted by recent activity">My stuff</a></li>
+</ul></div>
+      <div class="breadcrumb"><a href="http://letsmakerobots.com/">Home</a></div>    </div>
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b first" id="main-content">
+                          <div id="content-header">
+			                                    <h1 class="title title-link-options" id="links-40136">Changing PWM frequencies on Arduino controllers</h1>
+            
+                                  </div> <!-- /#content-header -->
+                  <div id="content-area">
+            
+
+      <div class="links hide" id="hide-links-40136">
+      <ul class="links inline"><li class="first comment_forbidden"><span class="comment_forbidden"><a href="http://letsmakerobots.com/user/login?destination=node/40136%2523comment-form">Login</a> or <a href="http://letsmakerobots.com/user/register?destination=node/40136%2523comment-form">register</a> to post comments</span></li>
+<li class="bio"><a href="http://letsmakerobots.com/profile/oddbot" title="View OddBot&#39;s Profile." class="bio">by OddBot</a></li>
+<li class="last collectedby"><a href="http://letsmakerobots.com/node/40136/who" title="Collected by 5 users" class="collectedby">Collected by 5 users</a></li>
+</ul>    </div>
+  <div class="node node-full node-type-robot_tip" id="node-40136"><div class="node-inner">
+
+  <div class="node-full-badge">
+    
+  
+    <div class="lmr-nodetype-badge robot_tip"><a href="http://letsmakerobots.com/view/node/list/robot_tip">Tip/walkthrough</a></div>&nbsp;
+  </div>
+
+  <div id="robot_infosidebar">
+    <div id="robot-submitdata" class="clear-block">
+      <div class="picture"><a href="http://letsmakerobots.com/users/oddbot"><img alt="" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/picture-1533.jpg"></a></div>              <span class="submitted">
+          By <a href="http://letsmakerobots.com/users/oddbot" title="View user profile.">OddBot</a> @ January 29, 2014        </span>
+          </div>
+    <div id="robot_what_does_it_do">Increase torque or reduce noise in DC brushed motors</div><div class="lmrFavs"></div>  </div><!-- /#robot_infosidebar -->
+
+
+
+  
+    <div class="field-primary-image">
+      <a href="http://letsmakerobots.com/files/field_primary_image/great_motor_2.jpg?"><img src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/great_motor_2.jpg" alt="" title="" class="imagecache imagecache-robot_fullpage_header"></a>    </div>
+  
+
+
+  <div class="robot-embedded-videos"></div>
+  
+    
+
+    <br>
+  <div id="tip_body_text">
+    <p style="text-align:justify;">By default, most Arduino pwm outputs are set to about 490Hz or 980Hz. These frequencies work quite well with small dc brushed motors but can cause unwanted noise or reduce motor torque in some cases.</p><p style="text-align:justify;">The frequencies are generated as a result of the clock frequency (this tutorial assumes 16MHz) being divided by a pre-scaler. For 8Mhz clocks, divide the frequency by 2.&nbsp; Before you start changing frequencies there are a few things you must be careful of.</p><ol style="text-align:justify;"><li>Many motor controllers cannot work at high frequencies and can short circuit when you change to high frequencies.</li><li>High frequencies increase inductive reactance of the motor windings. This can increase heat and decrease motor torque.</li><li>Timers may be used by other functions and libraries. Changing PWM frequencies can have unexpected side affects.</li></ol><p style="text-align:justify;">So before you start, check what is the maximum PWM frequency your motor controller can handle, check what timers are currently used (eg. Timer 0 used for Arduino timing functions, Timer 1 or 5 used for servos, Timer 2 used by tone() command.</p><p style="text-align:justify;">Below are 2 list of timer settings. 1 for Arduinos using ATmega 8, 168, 328 and the other for Arduino's using ATmega1280 and ATmega2560 processors. Cut and paste the lines you need directly into your setup() function.</p><p style="text-align:justify;">You should find that lower frequencies provide better torque for most small DC hobby motors. A frequency of 122.55Hz provides good torque without too much noise. A frequency of 30.64Hz give the best torque at low speeds but can cause noticable vibration in your robot.</p><p style="text-align:justify;">Frequencies from 490.2Hz to 7812.5Hz are noisy and cause the motors to loose torque. Frequencies above 20000Hz cannot be heard by most humans although the pets might complain. Unless your motor and motor driver are designed for these frequencies then you risk damaging them. I found that the most small DC motors lost a lot of torque and tended to overheat.</p><p><strong>Note: Divide the PWM frequency by 2 for an 8MHz clock, multiply by 1.25 for a 20MHz clock</strong>.</p><pre><strong>For&nbsp;Arduino&nbsp;Uno,&nbsp;Nano,&nbsp;Micro&nbsp;Magician,&nbsp;Mini&nbsp;Driver,&nbsp;Lilly&nbsp;Pad&nbsp;and&nbsp;any&nbsp;other&nbsp;board&nbsp;using&nbsp;ATmega&nbsp;8,&nbsp;168&nbsp;or&nbsp;328</strong>
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D5&nbsp;&amp;&nbsp;D6&nbsp;-------------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;62500.00&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;7812.50&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 0 divisor to    64 for PWM frequency of   976.56 Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;244.14&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;61.04&nbsp;Hz</span>
+
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D9&nbsp;&amp;&nbsp;D10&nbsp;------------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 1 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D3&nbsp;&amp;&nbsp;D11&nbsp;------------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;32&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;980.39&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 2 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;128&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;245.10&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000110;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000111;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+
+<strong>
+For&nbsp;Arduino&nbsp;Mega1280,&nbsp;Mega2560,&nbsp;MegaADK,&nbsp;Spider&nbsp;or&nbsp;any&nbsp;other&nbsp;board&nbsp;using&nbsp;ATmega1280&nbsp;or&nbsp;ATmega2560</strong>
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D4&nbsp;&amp;&nbsp;D13&nbsp;------------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;62500.00&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;7812.50&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 0 divisor to    64 for PWM frequency of   976.56 Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;244.14&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR0B&nbsp;=&nbsp;TCCR0B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;0&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;61.04&nbsp;Hz</span>
+
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D11&nbsp;&amp;&nbsp;D12&nbsp;-----------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 1 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR1B&nbsp;=&nbsp;TCCR1B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;1&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D9&nbsp;&amp;&nbsp;D10&nbsp;------------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;32&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;980.39&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 2 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;128&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;245.10&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000110;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR2B&nbsp;=&nbsp;TCCR2B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000111;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;2&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D2,&nbsp;D3&nbsp;&amp;&nbsp;D5&nbsp;---------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR3B&nbsp;=&nbsp;TCCR3B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;3&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR3B&nbsp;=&nbsp;TCCR3B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;3&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR3B&nbsp;=&nbsp;TCCR3B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 3 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR3B&nbsp;=&nbsp;TCCR3B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;3&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR3B&nbsp;=&nbsp;TCCR3B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;3&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D6,&nbsp;D7&nbsp;&amp;&nbsp;D8&nbsp;---------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR4B&nbsp;=&nbsp;TCCR4B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;4&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR4B&nbsp;=&nbsp;TCCR4B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;4&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR4B&nbsp;=&nbsp;TCCR4B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 4 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR4B&nbsp;=&nbsp;TCCR4B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;4&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR4B&nbsp;=&nbsp;TCCR4B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;4&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+
+<span style="color:#7e7e7e;">//----------------------------------------------&nbsp;Set&nbsp;PWM&nbsp;frequency&nbsp;for&nbsp;D44,&nbsp;D45&nbsp;&amp;&nbsp;D46&nbsp;------------------------</span>
+&nbsp;&nbsp;
+<span style="color:#7e7e7e;">//TCCR5B&nbsp;=&nbsp;TCCR5B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000001;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;5&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;31372.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR5B&nbsp;=&nbsp;TCCR5B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000010;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;5&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;3921.16&nbsp;Hz</span>
+&nbsp;&nbsp;TCCR5B&nbsp;=&nbsp;TCCR5B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000011;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7e7e7e;">// set timer 5 divisor to    64 for PWM frequency of   490.20 Hz</span>
+<span style="color:#7e7e7e;">//TCCR5B&nbsp;=&nbsp;TCCR5B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000100;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;5&nbsp;divisor&nbsp;to&nbsp;&nbsp;&nbsp;256&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;122.55&nbsp;Hz</span>
+<span style="color:#7e7e7e;">//TCCR5B&nbsp;=&nbsp;TCCR5B&nbsp;&amp;&nbsp;B11111000&nbsp;|&nbsp;B00000101;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;set&nbsp;timer&nbsp;5&nbsp;divisor&nbsp;to&nbsp;&nbsp;1024&nbsp;for&nbsp;PWM&nbsp;frequency&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;30.64&nbsp;Hz</span>
+
+</pre><p style="text-align:justify;"><strong>Differences in timer frequencies:</strong><br>You will see that timer 0 frequencies are double that of the other timers. This is because Timer 0 is used by Arduino for timing functions such as delay(), millis(), micros() and more. To get better accuracy, The Arduino IDE sets Timer 0 to fast PWM mode. It should be noted that for these timing functions,the Arduino software automatically compensates for 8MHz, 16MHz and 20MHz clocks. The default prescaler setting is always 64.</p><p style="text-align:justify;">For all other timers, the Arduino IDE sets the timer mode to phase correct PWM. This causes the counter to count from 0 to 255 and then from 255 back to 0 again. This provides a more symetrical output but at half the frequency. The default timer settings are configured in the <strong>wiring.c</strong> file of your Arduino installation.</p><p style="text-align:justify;">&nbsp;</p><p style="text-align:justify;">If you are looking for a timer library for generating timer interrupts or custom PWM outputs then check out this library: <a href="http://playground.arduino.cc/Code/Timer1">http://playground.arduino.cc/Code/Timer1</a>. There are 2 versions, one for timer 1 and another for timer 3. It should be easy to modify these libraries to work with the other timers if required.</p><p style="text-align:justify;">If you want more information about configuring timers and the different modes then check these tutorials out. <br>Ken Shirriff's secrets of Arduino PWMs: <a href="http://www.righto.com/2009/07/secrets-of-arduino-pwm.html">http://www.righto.com/2009/07/secrets-of-arduino-pwm.html</a><br>RobotFreaks's Arduino 101: Timers and interrupts: <a href="http://letsmakerobots.com/node/28278">http://letsmakerobots.com/node/28278</a></p><p style="text-align:justify;">&nbsp;</p><p style="text-align:justify;">&nbsp;</p><p style="text-align:justify;">&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>  </div>
+  
+
+
+
+
+
+
+
+
+
+
+  
+</div></div> <!-- /node-inner, /node -->
+<div id="comments"><form action="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/Changing PWM frequencies on Arduino controllers   Let's Make Robots!.htm" accept-charset="UTF-8" method="post" id="comment-controls">
+<div><div class="box">
+
+  <h2>Comment viewing options</h2>
+
+  <div class="content"><div class="container-inline"><input type="hidden" name="form_id" id="edit-comment-controls" value="comment_controls">
+<div class="form-item" id="edit-mode-wrapper">
+ <select name="mode" class="form-select" id="edit-mode"><option value="1">Flat list - collapsed</option><option value="2">Flat list - expanded</option><option value="3">Threaded list - collapsed</option><option value="4" selected="selected">Threaded list - expanded</option></select>
+</div>
+<div class="form-item" id="edit-order-wrapper">
+ <select name="order" class="form-select" id="edit-order"><option value="1" selected="selected">Date - newest first</option><option value="2">Date - oldest first</option></select>
+</div>
+<div class="form-item" id="edit-comments-per-page-wrapper">
+ <select name="comments_per_page" class="form-select" id="edit-comments-per-page"><option value="10" selected="selected">10 comments per page</option><option value="30">30 comments per page</option><option value="50">50 comments per page</option><option value="70">70 comments per page</option><option value="90">90 comments per page</option><option value="150">150 comments per page</option><option value="200">200 comments per page</option><option value="250">250 comments per page</option><option value="300">300 comments per page</option></select>
+</div>
+<input type="submit" name="op" id="edit-submit" value="Save settings" class="form-submit">
+</div><div class="description">Select your preferred way to display the comments and click "Save settings" to activate your changes.</div></div>
+</div>
+
+</div></form>
+<a id="comment-113889"></a>
+<div class="comment odd">
+  <div class="comment-inner clear-block">
+    <div class="submitted">
+      By <a href="http://letsmakerobots.com/user/21784" title="View user profile.">42Bots</a> @ Wed, 2014-01-29 17:34    </div>
+    <div class="picture"><a href="http://letsmakerobots.com/user/21784"><img alt="" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/picture-21784.png"></a></div>              <h3 class="title title-link-options" id="links-comment-113889"><a href="http://letsmakerobots.com/node/40136#comment-113889" class="active">delay() and millis()</a></h3>
+    
+          <div class="links hide" id="hide-links-comment-113889">
+      <ul class="links"><li class="first last comment_forbidden"><span class="comment_forbidden"><a href="http://letsmakerobots.com/user/login?destination=node/40136%2523comment-form">Login</a> or <a href="http://letsmakerobots.com/user/register?destination=node/40136%2523comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  
+    <div class="content">
+      <p>I read that changing these settings for timer 0 will affect delay() and millis() functions. Would changing the other timers (1 or 3 for example) have the same effect? Any other potential issues (possibly libraries that depend on those, I assume)? Thanks for the informative post!</p>    </div>
+  </div><!-- /comment-inner -->
+
+</div><!-- /comment -->
+<div class="indented"><a id="comment-113912"></a>
+<div class="comment even comment-by-author">
+  <div class="comment-inner clear-block">
+    <div class="submitted">
+      By <a href="http://letsmakerobots.com/users/oddbot" title="View user profile.">OddBot</a> @ Thu, 2014-01-30 04:53    </div>
+    <div class="picture"><a href="http://letsmakerobots.com/users/oddbot"><img alt="" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/picture-1533.jpg"></a></div>              <h3 class="title title-link-options" id="links-comment-113912"><a href="http://letsmakerobots.com/node/40136#comment-113912" class="active">Yes timer 0 is used for the</a></h3>
+    
+          <div class="links hide" id="hide-links-comment-113912">
+      <ul class="links"><li class="first last comment_forbidden"><span class="comment_forbidden"><a href="http://letsmakerobots.com/user/login?destination=node/40136%2523comment-form">Login</a> or <a href="http://letsmakerobots.com/user/register?destination=node/40136%2523comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  
+    <div class="content">
+      <p>Yes timer 0 is used for the timing functions so yes, adjusting timer 0 will affect those functions. The simplest workaround is to allow for the changes in your code. For example if you set the prescaler so it runs 4x slower then you know that when the Arduino thinks 1mS has passed, in reality 4mS have passed.</p><p>Changing other timers will have no affect on the timing functions but they will affect any libraries that uses those timers.</p>    </div>
+  </div><!-- /comment-inner -->
+
+</div><!-- /comment -->
+</div><a id="comment-113884"></a>
+<div class="comment odd">
+  <div class="comment-inner clear-block">
+    <div class="submitted">
+      By <a href="http://letsmakerobots.com/user/21264" title="View user profile.">unix_guru</a> @ Wed, 2014-01-29 14:52    </div>
+    <div class="picture"><a href="http://letsmakerobots.com/user/21264"><img alt="" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/picture-21264.jpg"></a></div>              <h3 class="title title-link-options" id="links-comment-113884"><a href="http://letsmakerobots.com/node/40136#comment-113884" class="active">Thanks OB1.  Great tutorial.  </a></h3>
+    
+          <div class="links hide" id="hide-links-comment-113884">
+      <ul class="links"><li class="first last comment_forbidden"><span class="comment_forbidden"><a href="http://letsmakerobots.com/user/login?destination=node/40136%2523comment-form">Login</a> or <a href="http://letsmakerobots.com/user/register?destination=node/40136%2523comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  
+    <div class="content">
+      <p>I struggled through all of this a few months ago.&nbsp; This will definitely help newcomers!&nbsp;</p><p>&nbsp;</p><p>Great work as always.</p><p>&nbsp;</p>    </div>
+  </div><!-- /comment-inner -->
+
+</div><!-- /comment -->
+<div class="indented"><a id="comment-113885"></a>
+<div class="comment even comment-by-author">
+  <div class="comment-inner clear-block">
+    <div class="submitted">
+      By <a href="http://letsmakerobots.com/users/oddbot" title="View user profile.">OddBot</a> @ Wed, 2014-01-29 15:19    </div>
+    <div class="picture"><a href="http://letsmakerobots.com/users/oddbot"><img alt="" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/picture-1533.jpg"></a></div>              <h3 class="title title-link-options" id="links-comment-113885"><a href="http://letsmakerobots.com/node/40136#comment-113885" class="active">It's more of a cut an paste</a></h3>
+    
+          <div class="links hide" id="hide-links-comment-113885">
+      <ul class="links"><li class="first last comment_forbidden"><span class="comment_forbidden"><a href="http://letsmakerobots.com/user/login?destination=node/40136%2523comment-form">Login</a> or <a href="http://letsmakerobots.com/user/register?destination=node/40136%2523comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  
+    <div class="content">
+      <p>It's more of a cut an paste solution than a tutorial.</p><p>It is based on this tutorial: <a href="http://playground.arduino.cc/Main/TimerPWMCheatsheet">http://playground.arduino.cc/Main/TimerPWMCheatsheet </a>but I've filled in some blanks for using the ATmega1280 and 2560.</p>    </div>
+  </div><!-- /comment-inner -->
+
+</div><!-- /comment -->
+</div></div>          </div><!-- /#content-area -->
+                  </div><!-- /.yui-b -->
+      </div><!-- /#yui-main -->
+      <div id="sidebar-right" class="yui-b">
+        <div id="block-google_cse-0" class="block block-google_cse">
+
+  <h2>Search</h2>
+
+  <div class="content"><form action="http://letsmakerobots.com/search/google" accept-charset="UTF-8" method="get" id="google-cse-searchbox-form">
+<div><input type="hidden" name="cx" id="edit-cx" value="012709226640790061585:0mee3t_1dna">
+<input type="hidden" name="cof" id="edit-cof" value="FORID:11">
+<div class="form-item" id="edit-query-wrapper">
+ <input type="text" maxlength="128" name="query" id="edit-query" size="15" value="" title="Enter the terms you wish to search for." class="form-text" style="border: 1px solid rgb(126, 157, 185); padding: 2px; background: url(http://www.google.com/coop/intl/en-US/images/google_custom_search_watermark.gif) 0% 50% no-repeat rgb(255, 255, 255);">
+</div>
+<input type="submit" name="op" id="edit-sa" value="Search" class="form-submit">
+<input type="hidden" name="safe" id="edit-safe" value="off">
+<input type="hidden" name="form_id" id="edit-google-cse-searchbox-form" value="google_cse_searchbox_form">
+
+</div></form>
+</div>
+</div>
+<div id="block-block-11" class="block block-block">
+
+
+  <div class="content"><p><a href="http://letsmakerobots.com/content/shout-box" target="_blank">Shout Box Pop Out</a></p>
+</div>
+</div>
+<div id="block-user-0" class="block block-user">
+
+  <h2>User login</h2>
+
+  <div class="content"><form action="http://letsmakerobots.com/node/40136?destination=node%2F40136" accept-charset="UTF-8" method="post" id="user-login-form">
+<div><div class="form-item" id="edit-openid-identifier-wrapper">
+ <label for="edit-openid-identifier">Log in using OpenID: </label>
+ <input type="text" maxlength="255" name="openid_identifier" id="edit-openid-identifier" size="13" value="" class="form-text">
+ <div class="description"><a href="http://openid.net/">What is OpenID?</a></div>
+</div>
+<div id="edit-name-wrapper"><div class="form-item" id="edit-name-wrapper">
+ <label for="edit-name">Username: <span class="form-required" title="This field is required.">*</span></label>
+ <input type="text" maxlength="60" name="name" id="edit-name" size="15" value="" class="form-text required">
+</div>
+</div><div id="edit-pass-wrapper"><div class="form-item" id="edit-pass-wrapper">
+ <label for="edit-pass">Password: <span class="form-required" title="This field is required.">*</span></label>
+ <input type="password" name="pass" id="edit-pass" maxlength="60" size="15" class="form-text required">
+</div>
+</div><input type="submit" name="op" id="edit-submit" value="Log in" class="form-submit">
+<div class="item-list"><ul><li><a href="http://letsmakerobots.com/user/register" title="Create a new user account.">Create new account</a></li><li><a href="http://letsmakerobots.com/user/password" title="Request new password via e-mail.">Request new password</a></li></ul></div><input type="hidden" name="form_id" id="edit-user-login-block" value="user_login_block">
+<a href="http://letsmakerobots.com/%2523" class="openid-link">Log in using OpenID</a><a href="http://letsmakerobots.com/%2523" class="user-link">Cancel OpenID login</a><input type="hidden" name="openid.return_to" id="edit-openid.return-to" value="http://letsmakerobots.com/openid/authenticate?destination=node%2F40136">
+
+</div></form>
+</div>
+</div>
+<div id="block-blog-0" class="block block-blog">
+
+  <h2>Recent blog posts</h2>
+
+  <div class="content"><div class="item-list"><ul><li><a href="http://letsmakerobots.com/blog/roxanna77/miscellaneous-items-updates">Miscellaneous items updates....</a></li><li><a href="http://letsmakerobots.com/blog/vishu2287/aumac-multitask-robot">AuMac, a multitask robot </a></li><li><a href="http://letsmakerobots.com/blog/dangerousthing/good-bye-while">Good bye for a while.</a></li><li><a href="http://letsmakerobots.com/blog/craighissett/wall-e-mkiiproject-2-master-plans">Wall-e MkII/Project 2: The master plans</a></li><li><a href="http://letsmakerobots.com/blog/lumi/toys-kids-disabilities">Toys for kids with disabilities</a></li><li><a href="http://letsmakerobots.com/blog/dangerousthing/batteries-are-coming">The batteries are coming!</a></li><li><a href="http://letsmakerobots.com/blog/fossil1999/rocker-bogies">Rocker-Bogies.</a></li><li><a href="http://letsmakerobots.com/blog/mintvelt/i2c-io-expanderservo-controller-using-picaxe-20x2">I2C IO expander/servo controller using a picaxe 20x2</a></li><li><a href="http://letsmakerobots.com/blog/lordbot/emotions-and-motivations-behaviour-architecture">Emotions and Motivations as behaviour architecture</a></li><li><a href="http://letsmakerobots.com/blog/craighissett/wall-e-mkii-tinkering-begins">Wall-e MkII - the tinkering begins...</a></li></ul></div><div class="more-link"><a href="http://letsmakerobots.com/blog" title="Read the latest blog entries.">more</a></div></div>
+</div>
+<div id="block-links_weblink-1" class="block block-links_weblink">
+
+  <h2>Latest weblinks</h2>
+
+  <div class="content"><div class="item-list"><ul><li><a href="http://letsmakerobots.com/content/socal-makercon-nov-8th-2014">SoCal MakerCon - Nov 8th 2014</a></li><li><a href="http://letsmakerobots.com/content/linear-travel-motor">Linear travel motor</a></li><li><a href="http://letsmakerobots.com/content/oh-dear-jesus-terrifying">Oh dear Jesus this is Terrifying</a></li><li><a href="http://letsmakerobots.com/content/safety">Safety</a></li><li><a href="http://letsmakerobots.com/content/octaworm">Octaworm</a></li><li><a href="http://letsmakerobots.com/content/forth">Forth</a></li><li><a href="http://letsmakerobots.com/content/humanoid-robot-pianist-your-pc"> Humanoid Robot Pianist On Your PC</a></li><li><a href="http://letsmakerobots.com/content/pibot-website">The PiBot Website</a></li><li><a href="http://letsmakerobots.com/content/hackaday-judge-and-embedded-guru-jack-ganssle">Hackaday judge and embedded guru: Jack Ganssle</a></li><li><a href="http://letsmakerobots.com/content/engineering-101-its-all-datasheet">Engineering 101: It's all in the datasheet</a></li></ul></div></div>
+</div>
+<div id="block-user-3" class="block block-user">
+
+  <h2>Who's online</h2>
+
+  <div class="content">There are currently <em>21 users</em> and <em>21 guests</em> online.<div class="item-list"><h3>Online users</h3><ul><li><a href="http://letsmakerobots.com/user/14021" title="View user profile.">birdmun</a></li><li><a href="http://letsmakerobots.com/user/17864" title="View user profile.">Mr.What</a></li><li><a href="http://letsmakerobots.com/users/bdk6" title="View user profile.">bdk6</a></li><li><a href="http://letsmakerobots.com/user/19048" title="View user profile.">Ladvien</a></li><li><a href="http://letsmakerobots.com/user/20896" title="View user profile.">cevinius</a></li><li><a href="http://letsmakerobots.com/user/4873" title="View user profile.">bluesthue</a></li><li><a href="http://letsmakerobots.com/user/15049" title="View user profile.">Dan M</a></li><li><a href="http://letsmakerobots.com/users/mark8suttongmailcom" title="View user profile.">mark8sutton@gma...</a></li><li><a href="http://letsmakerobots.com/user/22059" title="View user profile.">Hackgar</a></li><li><a href="http://letsmakerobots.com/user/3022" title="View user profile.">K120189</a></li><li><a href="http://letsmakerobots.com/user/20389" title="View user profile.">mtriplett</a></li><li><a href="http://letsmakerobots.com/users/ncoonrod14" title="View user profile.">ncoonrod14</a></li><li><a href="http://letsmakerobots.com/users/bdk6" title="View user profile.">bdk6</a></li><li><a href="http://letsmakerobots.com/users/maxhirez" title="View user profile.">Maxhirez</a></li><li><a href="http://letsmakerobots.com/users/dannyjeffrey" title="View user profile.">DannyJeffrey</a></li><li><a href="http://letsmakerobots.com/user/14887" title="View user profile.">Duane Degn</a></li><li><a href="http://letsmakerobots.com/user/5404" title="View user profile.">lukeyes</a></li><li><a href="http://letsmakerobots.com/users/yahmez" title="View user profile.">Yahmez</a></li><li><a href="http://letsmakerobots.com/users/cromz" title="View user profile.">Cromz</a></li><li><a href="http://letsmakerobots.com/users/kallie" title="View user profile.">Kallie</a></li><li><a href="http://letsmakerobots.com/users/drewtoby" title="View user profile.">drewtoby</a></li></ul></div></div>
+</div>
+<div id="block-user-1" class="block block-user">
+
+  <h2>Navigation</h2>
+
+  <div class="content">
+<ul class="menu">
+<li class="leaf"><a href="https://plus.google.com/u/0/112079279304962380860/posts" title="LMR on Google+">LMR on Google+</a></li>
+<li class="leaf"><a href="http://www.facebook.com/group.php?gid=52847854131">LMR on Facebook</a></li>
+<li class="leaf"><a href="http://www.flickr.com/groups/letsmakerobots" title="LMR on Flicker">LMR on Flicker</a></li>
+<li class="leaf"><a href="http://twitter.com/LetsMakeRobots" title="Follow LMR on Twitter">LMR on Twitter</a></li>
+<li class="leaf"><a href="http://letsmakerobots.com/content/lmr-scrapbook">LMR Scrapbook</a></li>
+<li class="leaf"><a href="http://letsmakerobots.com/user_list">User list</a></li>
+<li class="leaf"><a href="http://letsmakerobots.com/tracker_unread/all">Unread posts</a></li>
+<li class="leaf"><a href="http://letsmakerobots.com/rss_feeds">RSS feeds</a></li>
+<li class="leaf"><a href="http://letsmakerobots.com/view/admin/spam">Spam Control</a></li>
+
+</ul>
+</div>
+</div>
+      </div>
+    </div>
+    <div id="ft">
+      <div id="footer-message">
+        <div id="bee3-footer">ALL LMR ARE BELONG TO US!</div>
+        Let's make robots!
+      </div>
+      <div id="region_footer"></div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/googleanalytics.js"></script>
+<script type="text/javascript" src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/google_cse.js"></script>
+<script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script><script src="./Changing PWM frequencies on Arduino controllers   Let's Make Robots!_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">try{var pageTracker = _gat._getTracker("UA-3749072-1");pageTracker._trackPageview();} catch(err) {}</script>
+
+
+</body></html>
