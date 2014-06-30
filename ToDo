@@ -1,8 +1,8 @@
 * Investigar sobre modo API de los XBEE.
+* Adaptar el código del Arduino para ejecución de pruebas con los cuatro ejes y altura, enviando valores nuevos de constantes y comandos de movimiento.
 * Segundo circuito de control de motores.
-* Mejorar el ciclo de ejecución del controlador para que se mantenga leyendo 
-datos mientras se inicie.
+	* Probar la combinación de resistencias para el fototransistor del optocoupler 4N25.
+	* Probar el desempeño del PWM en los puertos del Arduino Nano que estamos utilizando.
 
-* Incluir la lectura y graficación de datos de sensores. (Posiblemente tendría
-que hacerse con hilos).
-* Interfaz en Python.
+* Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con callbacks pueden ser una buena solución).
+* Interfaz en Python (Puede hacerse con PyQT).
