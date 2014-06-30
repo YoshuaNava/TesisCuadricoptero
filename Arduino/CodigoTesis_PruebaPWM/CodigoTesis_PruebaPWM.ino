@@ -156,7 +156,6 @@ void loop() {
   while (i<50)
   {
     FiltroComplementario();
-    Serial.flush();
     i++;
   }
 
@@ -481,8 +480,6 @@ void RecibirComando()
     }
 
   }
-  
-  Serial.flush();
 }
 
 
@@ -695,13 +692,19 @@ void AplicarPWMmotores()
 
 //  if(millis() - tiempoUltimoMuestreo > DT_muestreo)
 //  {
+//    Serial.print('S');
+//    Serial.print(USAltura);
+//    Serial.print(float(anguloYPR[0]));
+//    Serial.print(" ");
+//    Serial.print(float(G_velocidadYPR[0]));
+//    Serial.print(" ");
+//    Serial.print(float(anguloYPR[1]));
+//    Serial.print(" ");
+//    Serial.print(float(G_velocidadYPR[1]));
+//    Serial.print(" ");
 //    Serial.print(float(anguloYPR[2]));
 //    Serial.print(" ");
-//    Serial.print(float(velocidadDeseadaYPR[2]));
-//    Serial.print(" ");
-//    Serial.print(float(anguloDeseadoYPR[2]));
-//    Serial.print(" ");
-//    Serial.print(float(correccionPWM_YPR[2]));
+//    Serial.print(float(G_velocidadYPR[2]));
 //    Serial.print("\n");
 //    tiempoUltimoMuestreo = millis();
 //  }
