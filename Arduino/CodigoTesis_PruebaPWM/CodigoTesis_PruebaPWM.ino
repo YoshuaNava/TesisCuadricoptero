@@ -142,6 +142,12 @@ int correccionAltura = 0;
   pinMode(PUERTOMOTORIZQUIERDO, OUTPUT);
   pinMode(PUERTOMOTORSUPERIOR, OUTPUT);
   pinMode(PUERTOMOTORINFERIOR, OUTPUT);
+
+  // Modo FAST PWM en los pines 9, 10 y 11 //
+  bitSet(TCCR1B, WGM12);
+  bitSet(TCCR2B, WGM12);
+  ///////////////////////////////////////////
+  
   tiempo = micros();
 }
 

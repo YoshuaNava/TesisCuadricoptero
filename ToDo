@@ -3,6 +3,7 @@
 * Segundo circuito de control de motores.
 	* Probar la combinación de resistencias para el fototransistor del optocoupler 4N25.
 	* Probar el desempeño del PWM en los puertos del Arduino Nano que estamos utilizando.
+	* Cambiar la frecuencia de todos los puertos de PWM a 1KHz en modo Fast PWM.
 
 * Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con callbacks pueden ser una buena solución).
 * Interfaz en Python (Puede hacerse con PyQT).
