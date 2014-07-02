@@ -70,4 +70,5 @@ def update():
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
+puerto.flush()
 timer.start(1)
