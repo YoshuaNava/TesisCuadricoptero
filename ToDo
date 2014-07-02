@@ -7,3 +7,5 @@
 
 * Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con callbacks pueden ser una buena solución).
 * Interfaz en Python (Puede hacerse con PyQT).
+* Calibrar sistemas de control.
+* Pruebas de vuelo.
