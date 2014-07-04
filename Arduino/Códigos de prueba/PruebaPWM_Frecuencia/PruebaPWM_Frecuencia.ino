@@ -10,5 +10,10 @@ void setup()
 
 void loop()
 {
-  analogWrite(9, 250);
+  int i;
+  for(i=0; i<255 ;i++)
+  {
+    analogWrite(9, 50);
+    delay(5);
+  }
 }
