@@ -142,9 +142,9 @@ void setup() {
   PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
   PID_altura.SetSampleTime(DT_PID_altura);
 
-  PID_pAngular_Yaw.SetOutputLimits(-90.0, 90.0);
-  PID_pAngular_Pitch.SetOutputLimits(-90.0, 90.0);
-  PID_pAngular_Roll.SetOutputLimits(-90.0, 90.0);
+  PID_pAngular_Yaw.SetOutputLimits(-180.0, 180.0);
+  PID_pAngular_Pitch.SetOutputLimits(-180.0, 180.0);
+  PID_pAngular_Roll.SetOutputLimits(-180.0, 180.0);
   PID_vAngular_Yaw.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
@@ -169,12 +169,16 @@ void setup() {
 void loop()
 {
 
+  anguloDeseadoYPR[1] = 10.0;
+  
+  // Yaw-  P: 1    I:    D:
   PID_pAngular_Yaw.SetTunings(1, 0, 0);
-  PID_pAngular_Pitch.SetTunings(1, 0, 0);
-  PID_pAngular_Roll.SetTunings(1, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0, 0, 0);
+  PID_pAngular_Roll.SetTunings(0, 0, 0);
 
+  // Yaw-  P: 1.3  I:    D:
   PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
   PID_vAngular_Roll.SetTunings(0, 0, 0);
 
   modoEjecucion = '_';
@@ -208,7 +212,7 @@ void SecuenciaDeInicio()
   }
 
 
-  CalcularOffsetYaw();
+//  CalcularOffsetYaw();
   i = 0;
   if(modoEjecucion != '_')
   {
@@ -242,6 +246,46 @@ void SecuenciaDeInicio()
     analogWrite(PUERTOMOTORINFERIOR, 0);
   }
 }
+
+void ImprimirEstado()
+{
+  if (millis() - tiempoUltimoEnvio > DT_envioDatos)
+  {
+    Serial.println(CODIGO_ENVIO_DATOS);
+    Serial.print("Altura: ");
+    Serial.print(USAltura);
+    Serial.println();
+    Serial.print("Yaw: ");
+    Serial.print(float(anguloYPR[0]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(float(anguloYPR[1]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");
+    Serial.print(float(anguloYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[2]));
+    Serial.print("\n");
+
+//    Serial.print("Comandos PWM: ");
+//    Serial.print("Yaw: ");
+//    Serial.print(float(correccionPWM_YPR[0]));
+//    Serial.println();
+//    Serial.print("Pitch: ");
+//    Serial.print(float(correccionPWM_YPR[1]));
+//    Serial.println();
+//    Serial.print("Roll: ");
+//    Serial.print(float(correccionPWM_YPR[2]));
+//    Serial.print("\n");
+//    Serial.print("\n");
+    tiempoUltimoEnvio = millis();
+  }
+}
+
 
 void CalcularOffsetYaw()
 {
@@ -282,6 +326,7 @@ void FiltroComplementario() {
   anguloYPR[0] = (float) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
   
+  
   anguloYPR[1] = (float) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
   anguloYPR[1] = ToRad(anguloYPR[1]);
   anguloYPR[1] = (float) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
@@ -293,6 +338,7 @@ void FiltroComplementario() {
   anguloYPR[2] = ToDeg(anguloYPR[2]);  
 
   tiempoUltimoMuestreo = micros();
+  ImprimirEstado();
 }
 
 
@@ -393,59 +439,11 @@ void AplicarPWMmotores()
     motorIzquierdo = 0;
   }
 
-  //  Serial.println("Angulos, error de angulo, error de velocidad y comando para los motores");
-  //  Serial.println(String((int)(anguloYPR[1]-offsetInicialAngulos[1]))+' '+String((int)(anguloYPR[2]-offsetInicialAngulos[2])));
-  //  Serial.println(String((int)errorPitch)+' '+String((int)errorRoll));
-  //  Serial.println(String((int)errorPitch_velocidad) + ' ' + String((int)errorRoll_velocidad));
-  //  Serial.println(String((int)correccionPWM_YPR[1]) + ' ' + String((int)correccionPWM_YPR[2]));
-  //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
-  //  Serial.println();
-
-  if (millis() - tiempoUltimoEnvio > DT_envioDatos)
-  {
-    Serial.println(CODIGO_ENVIO_DATOS);
-    Serial.print("Altura: ");
-    Serial.print(USAltura);
-    Serial.println();
-    Serial.print("Yaw: ");
-    Serial.print(float(anguloYPR[0]));
-    Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[0]));
-    Serial.println();
-    Serial.print("Pitch: ");
-    Serial.print(float(anguloYPR[1]));
-    Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[1]));
-    Serial.println();
-    Serial.print("Roll: ");
-    Serial.print(float(anguloYPR[2]));
-    Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[2]));
-    Serial.print("\n");
-
-//    Serial.print("Comandos PWM: ");
-//    Serial.print("Yaw: ");
-//    Serial.print(float(correccionPWM_YPR[0]));
-//    Serial.println();
-//    Serial.print("Pitch: ");
-//    Serial.print(float(correccionPWM_YPR[1]));
-//    Serial.println();
-//    Serial.print("Roll: ");
-//    Serial.print(float(correccionPWM_YPR[2]));
-//    Serial.print("\n");
-//    Serial.print("\n");
-    tiempoUltimoEnvio = millis();
-  }
-
 
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);
-
-  //Serial.println(anguloYPR[1]/10);
-  //  analogWrite(PUERTOMOTORSUPERIOR,0);
-  //  analogWrite(PUERTOMOTORINFERIOR,0);
 }
 
 
