@@ -143,8 +143,8 @@ void setup() {
   PID_altura.SetSampleTime(DT_PID_altura);
 
   PID_pAngular_Yaw.SetOutputLimits(-180.0, 180.0);
-  PID_pAngular_Pitch.SetOutputLimits(-180.0, 180.0);
-  PID_pAngular_Roll.SetOutputLimits(-180.0, 180.0);
+  PID_pAngular_Pitch.SetOutputLimits(-1000.0, 1000.0);
+  PID_pAngular_Roll.SetOutputLimits(-1000.0, 1000.0);
   PID_vAngular_Yaw.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
