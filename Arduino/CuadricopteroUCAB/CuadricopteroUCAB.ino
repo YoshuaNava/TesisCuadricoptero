@@ -124,27 +124,42 @@ void setup() {
   //Parametros de los Algoritmos PID
   PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);  
   PID_pAngular_Pitch.SetSampleTime(DT_PID_posicionAngular);
-  PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);
-  
+  PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);  
   PID_vAngular_Yaw.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Pitch.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
-  
   PID_altura.SetSampleTime(DT_PID_altura);
+
+  PID_pAngular_Yaw.SetOutputLimits(-90.0, 90.0);
+  PID_pAngular_Pitch.SetOutputLimits(-90.0, 90.0);
+  PID_pAngular_Roll.SetOutputLimits(-90.0, 90.0);
+  PID_vAngular_Yaw.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
+  PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
+  PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
+  PID_altura.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
+  
+  PID_pAngular_Yaw.SetMode(AUTOMATIC);
+  PID_pAngular_Pitch.SetMode(AUTOMATIC);
+  PID_pAngular_Roll.SetMode(AUTOMATIC);
+  PID_vAngular_Yaw.SetMode(AUTOMATIC);
+  PID_vAngular_Pitch.SetMode(AUTOMATIC);
+  PID_vAngular_Roll.SetMode(AUTOMATIC);
+  PID_altura.SetMode(AUTOMATIC);
 }
 
 void loop() 
 {
   SecuenciaDeInicio();
 
-  PID_pAngular_Yaw.SetTunings(0, 0, 0);  
+  PID_pAngular_Yaw.SetTunings(0, 0, 0);
   PID_pAngular_Pitch.SetTunings(0, 0, 0);
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   PID_vAngular_Yaw.SetTunings(0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
-  PID_vAngular_Roll.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.1, 0, 0);
 
+  velocidadBasePWM = 80;
   modoEjecucion = 'T';
   
   while (modoEjecucion != '_')
