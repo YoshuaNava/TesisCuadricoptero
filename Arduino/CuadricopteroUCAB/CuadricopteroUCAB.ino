@@ -20,6 +20,10 @@
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 190 //maximo PWM que puede enviar el arduino a los motores
+#define CODIGO_APAGADO 'Z'
+#define CODIGO_ENCENDIDO 'T'
+#define CODIGO_CONSTANTES 'K'
+#define CODIGO_ENVIO_DATOS 'S'
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
@@ -90,7 +94,30 @@ PID PID_altura(&USAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
 
 
 void setup() {
-  // put your setup code here, to run once:
+  // Modo FAST PWM en los pines 9, 10 y 11 //
+  TCCR2A = _BV(COM2A1) | _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS22);
+
+  TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM10);
+  TCCR1B = _BV(CS11) | _BV(CS10) | _BV(WGM12);
+  ///////////////////////////////////////////
+
+
+  // Configuracion de los puertos para sensores y motores //
+  pinMode(USTRIGPIN, OUTPUT);
+  pinMode(USECHOPIN, INPUT);
+  pinMode(PUERTOMOTORDERECHO, OUTPUT);
+  pinMode(PUERTOMOTORIZQUIERDO, OUTPUT);
+  pinMode(PUERTOMOTORSUPERIOR, OUTPUT);
+  pinMode(PUERTOMOTORINFERIOR, OUTPUT);
+  analogWrite(PUERTOMOTORDERECHO, 0);
+  analogWrite(PUERTOMOTORIZQUIERDO, 0);
+  analogWrite(PUERTOMOTORSUPERIOR, 0);
+  analogWrite(PUERTOMOTORINFERIOR, 0);
+  //////////////////////////////////////////////////////////
+
+
+  // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
   Serial.begin(115200);
   Wire.begin();
 
@@ -103,26 +130,10 @@ void setup() {
   gyro.enableDefault();
   compass.init();
   compass.enableDefault();
+  /////////////////////////////////////////////////////////////////////////////
 
-  pinMode(USTRIGPIN, OUTPUT);
-  pinMode(USECHOPIN, INPUT);
-  pinMode(PUERTOMOTORDERECHO, OUTPUT);
-  pinMode(PUERTOMOTORIZQUIERDO, OUTPUT);
-  pinMode(PUERTOMOTORSUPERIOR, OUTPUT);
-  pinMode(PUERTOMOTORINFERIOR, OUTPUT);
 
-  // Modo FAST PWM en los pines 9, 10 y 11 //
-  TCCR2A = _BV(COM2A1) | _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
-  TCCR2B = _BV(CS22);
-
-  TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM10);
-  TCCR1B = _BV(CS11) | _BV(CS10) | _BV(WGM12);
-  ///////////////////////////////////////////
-
-  tiempoUltimoMuestreo = micros();
-  tiempoUltimoEnvio = millis();
-
-  //Parametros de los Algoritmos PID
+  // Parametros de los Algoritmos PID //
   PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);
   PID_pAngular_Pitch.SetSampleTime(DT_PID_posicionAngular);
   PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);
@@ -146,22 +157,31 @@ void setup() {
   PID_vAngular_Pitch.SetMode(AUTOMATIC);
   PID_vAngular_Roll.SetMode(AUTOMATIC);
   PID_altura.SetMode(AUTOMATIC);
+  //////////////////////////////////////
+
+  
+  // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
+  tiempoUltimoMuestreo = micros();
+  tiempoUltimoEnvio = millis();
+  ///////////////////////////////////////////////////////////////////////////////////
 }
 
 void loop()
 {
-  SecuenciaDeInicio();
 
-  PID_pAngular_Yaw.SetTunings(2.5, 0, 0);
+  PID_pAngular_Yaw.SetTunings(1.5, 0, 0);
   PID_pAngular_Pitch.SetTunings(0, 0, 0);
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   PID_vAngular_Yaw.SetTunings(0.7, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.3, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.3, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.1, 0, 0);
 
+  modoEjecucion = '_';
   velocidadBasePWM = 120;
-  modoEjecucion = 'T';
+  RecibirComando();
+
+  SecuenciaDeInicio();
 
   while (modoEjecucion != '_')
   {
@@ -187,28 +207,39 @@ void SecuenciaDeInicio()
     i++;
   }
 
+
   CalcularOffsetYaw();
   i = 0;
-  while (i < velocidadBasePWM / 2)
+  if(modoEjecucion != '_')
   {
-    if (modoEjecucion == '_')
+    while (i < velocidadBasePWM / 2)
     {
-      motorDerecho = 0;
-      motorIzquierdo = 0;
-      motorDelantero = 0;
-      motorTrasero = 0;
+      if (modoEjecucion == '_')
+      {
+        motorDerecho = 0;
+        motorIzquierdo = 0;
+        motorDelantero = 0;
+        motorTrasero = 0;
+      }
+      if (modoEjecucion == 'T')
+      {
+        motorDerecho = i;
+        motorIzquierdo = i;
+        motorDelantero = i;
+        motorTrasero = i;
+        AplicarPWMmotores();
+      }
+      FiltroComplementario();
+      i++;
+      delay(20);
     }
-    if (modoEjecucion == 'T')
-    {
-      motorDerecho = i;
-      motorIzquierdo = i;
-      motorDelantero = i;
-      motorTrasero = i;
-    }
-    AplicarPWMmotores();
-    FiltroComplementario();
-    i++;
-    delay(20);
+  }
+  else
+  {
+    analogWrite(PUERTOMOTORDERECHO, 0);
+    analogWrite(PUERTOMOTORIZQUIERDO, 0);
+    analogWrite(PUERTOMOTORSUPERIOR, 0);
+    analogWrite(PUERTOMOTORINFERIOR, 0);
   }
 }
 
@@ -372,7 +403,7 @@ void AplicarPWMmotores()
 
   if (millis() - tiempoUltimoEnvio > DT_envioDatos)
   {
-    Serial.println('S');
+    Serial.println(CODIGO_ENVIO_DATOS);
     Serial.print("Altura: ");
     Serial.print(USAltura);
     Serial.println();
@@ -423,9 +454,16 @@ void RecibirComando()
   if (Serial.available() > 0)
   {
     char comando = Serial.read();
-    if (comando == 'Z')
+    if (comando == CODIGO_ENCENDIDO)
+    {
+      modoEjecucion = 'T';
+        velocidadBasePWM = 120;
+      Serial.println("ENCENDER!");
+    }
+    if (comando == CODIGO_APAGADO)
     {
       modoEjecucion = '_';
+      velocidadBasePWM = 0;      
       Serial.println("APAGAR!");
     }
   }
