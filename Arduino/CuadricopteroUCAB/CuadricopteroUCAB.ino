@@ -33,7 +33,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.9
-#define DT_envioDatos 20
+#define DT_envioDatos 100
 #define DT_PID_altura 0
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 5
@@ -41,6 +41,7 @@ int motorTrasero = 0;
 L3G gyro;
 LSM303 compass;
 char report[80];
+double yaw_offset = 0;
 double anguloDeseadoYPR[3] = {
   0, 0, 0
 };
@@ -122,9 +123,9 @@ void setup() {
   tiempoUltimoEnvio = millis();
 
   //Parametros de los Algoritmos PID
-  PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);  
+  PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);
   PID_pAngular_Pitch.SetSampleTime(DT_PID_posicionAngular);
-  PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);  
+  PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);
   PID_vAngular_Yaw.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Pitch.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
@@ -137,7 +138,7 @@ void setup() {
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_altura.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
-  
+
   PID_pAngular_Yaw.SetMode(AUTOMATIC);
   PID_pAngular_Pitch.SetMode(AUTOMATIC);
   PID_pAngular_Roll.SetMode(AUTOMATIC);
@@ -147,21 +148,21 @@ void setup() {
   PID_altura.SetMode(AUTOMATIC);
 }
 
-void loop() 
+void loop()
 {
   SecuenciaDeInicio();
 
-  PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+  PID_pAngular_Yaw.SetTunings(5, 0, 0);
+  PID_pAngular_Pitch.SetTunings(1, 0, 0);
+  PID_pAngular_Roll.SetTunings(1, 0, 0);
 
-  PID_vAngular_Yaw.SetTunings(0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0, 0, 0);
+  PID_vAngular_Yaw.SetTunings(0.2, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
   PID_vAngular_Roll.SetTunings(0.1, 0, 0);
 
   velocidadBasePWM = 80;
   modoEjecucion = 'T';
-  
+
   while (modoEjecucion != '_')
   {
     //    CalcularAltura();
@@ -186,6 +187,7 @@ void SecuenciaDeInicio()
     i++;
   }
 
+  CalcularOffsetYaw();
   i = 0;
   while (i < velocidadBasePWM / 2)
   {
@@ -210,6 +212,21 @@ void SecuenciaDeInicio()
   }
 }
 
+void CalcularOffsetYaw()
+{
+  int numMuestras = 500;
+  for (int n = 0; n < numMuestras ; n++) {
+    gyro.read();
+    yaw_offset += (int)gyro.g.z*G_GYRO;
+  }
+  yaw_offset = yaw_offset / numMuestras;
+
+  Serial.println();
+  Serial.print("YAW Offset: ");
+  Serial.print(yaw_offset);
+  Serial.println();
+}
+
 
 
 void FiltroComplementario() {
@@ -218,7 +235,7 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreo) / 1000000;
 
-  G_velocidadYPR[0] = (float) gyro.g.z * G_GYRO;
+  G_velocidadYPR[0] = (float) (gyro.g.z * G_GYRO - yaw_offset);
   G_velocidadYPR[1] = (float) gyro.g.y * G_GYRO;
   G_velocidadYPR[2] = (float) gyro.g.x * G_GYRO;
 
@@ -226,6 +243,7 @@ void FiltroComplementario() {
   A_aceleracionYPR[0] = (float) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (float) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (float) compass.a.x * G_ACC;
+
   A_anguloYPR[0] = 0;
   A_anguloYPR[1] = (float) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
   A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
@@ -233,9 +251,20 @@ void FiltroComplementario() {
   A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
 
 
-  anguloYPR[0] = (float) (K_COMP * (anguloYPR[0] + G_velocidadYPR[0] * DT) + (1 - K_COMP) * A_anguloYPR[0]);
+  anguloYPR[0] = (float) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+  anguloYPR[0] = ToRad(anguloYPR[0]);
+  anguloYPR[0] = (float) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
+  anguloYPR[0] = ToDeg(anguloYPR[0]);
+  
   anguloYPR[1] = (float) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
+  anguloYPR[1] = ToRad(anguloYPR[1]);
+  anguloYPR[1] = (float) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
+  anguloYPR[1] = ToDeg(anguloYPR[1]);  
+  
   anguloYPR[2] = (float) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
+  anguloYPR[2] = ToRad(anguloYPR[2]);
+  anguloYPR[2] = (float) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
+  anguloYPR[2] = ToDeg(anguloYPR[2]);  
 
   tiempoUltimoMuestreo = micros();
 }
@@ -280,7 +309,7 @@ void PID_VelocidadAngular()
   PID_vAngular_Roll.Compute();
 }
 
-void PIDAltura() 
+void PIDAltura()
 {
   PID_altura.Compute();
 }
@@ -346,7 +375,7 @@ void AplicarPWMmotores()
   //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
   //  Serial.println();
 
-  if(millis() - tiempoUltimoEnvio > DT_envioDatos)
+  if (millis() - tiempoUltimoEnvio > DT_envioDatos)
   {
     Serial.println('S');
     Serial.print("Altura: ");
@@ -362,12 +391,12 @@ void AplicarPWMmotores()
     Serial.print(" ");
     Serial.print(float(G_velocidadYPR[1]));
     Serial.println();
-    Serial.print("Roll: ");    
+    Serial.print("Roll: ");
     Serial.print(float(anguloYPR[2]));
     Serial.print(" ");
     Serial.print(float(G_velocidadYPR[2]));
     Serial.print("\n");
-    
+
     Serial.print("Comandos PWM: ");
     Serial.print("Yaw: ");
     Serial.print(float(correccionPWM_YPR[0]));
@@ -375,7 +404,7 @@ void AplicarPWMmotores()
     Serial.print("Pitch: ");
     Serial.print(float(correccionPWM_YPR[1]));
     Serial.println();
-    Serial.print("Roll: ");    
+    Serial.print("Roll: ");
     Serial.print(float(correccionPWM_YPR[2]));
     Serial.print("\n");
     Serial.print("\n");
