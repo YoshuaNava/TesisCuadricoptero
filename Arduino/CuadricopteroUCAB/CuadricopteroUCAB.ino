@@ -19,7 +19,7 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 210 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 250 //maximo PWM que puede enviar el arduino a los motores
 #define CODIGO_APAGADO 'Z'
 #define CODIGO_ENCENDIDO 'T'
 #define CODIGO_CONSTANTES 'K'
@@ -36,8 +36,8 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.9
-#define DT_envioDatos 100
+#define K_COMP 0.95
+#define DT_envioDatos 200
 #define DT_PID_altura 0
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 5
@@ -169,17 +169,17 @@ void setup() {
 void loop()
 {
 
-  anguloDeseadoYPR[1] = 10.0;
+  //anguloDeseadoYPR[1] = 20.0;
   
-  // Yaw-  P: 1    I:    D:
+  // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(1, 0, 0);
   PID_pAngular_Pitch.SetTunings(0, 0, 0);
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
-  // Yaw-  P: 1.3  I:    D:
+  // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
-  PID_vAngular_Roll.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.1, 0, 0.05);
+  PID_vAngular_Roll.SetTunings(0.05, 0, 0.03);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -249,7 +249,7 @@ void SecuenciaDeInicio()
 
 void ImprimirEstado()
 {
-  if (millis() - tiempoUltimoEnvio > DT_envioDatos)
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
   {
     Serial.println(CODIGO_ENVIO_DATOS);
     Serial.print("Altura: ");
