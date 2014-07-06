@@ -109,49 +109,6 @@ def Ejecutar(puertoSerial):
                         Serial.EnviarComandoCuadricoptero(puertoSerial, __CODIGO_MOVIMIENTO, comandoPitch, comandoRoll, checksum)
                         
     
-"""                if evento.type == pygame.JOYBUTTONDOWN:
-                    estado_boton_1 = joystick_object.get_button(__BOTON_1)
-                    if(estado_boton_1 == 1):
-                        codigo = 'K'
-                        checksum = incremento_kP_velocidad*__multiplicadorConstantes + ord('+') + ord('P')
-                        puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
-                        puertoSerial.write('+')
-                        puertoSerial.write('P')
-                        Serial.EnviarEnteroSerial(puertoSerial,incremento_kP_velocidad*multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,__multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,checksum)
-                        print("Incrementar proporcional de PItch")
-                    estado_boton_2 = joystick_object.get_button(__BOTON_2)
-                    if(estado_boton_2 == 1):
-                        checksum = incremento_kD_velocidad*multiplicadorConstantes + ord('+') + ord('D')
-                        puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
-                        puertoSerial.write('+')
-                        puertoSerial.write('D')
-                        Serial.EnviarEnteroSerial(puertoSerial,incremento_kD_velocidad*multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,__multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,checksum)
-                        print("Incrementar derivada de Pitch")
-                    estado_boton_3 = joystick_object.get_button(__BOTON_3)
-                    if(estado_boton_3 == 1):
-                        checksum = incremento_kP_velocidad*multiplicadorConstantes + ord('-') + ord('P')
-                        puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
-                        puertoSerial.write('-')
-                        puertoSerial.write('P')
-                        Serial.EnviarEnteroSerial(puertoSerial,incremento_kP_velocidad*multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,__multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,checksum)
-                        print("Decrementar proporcional de Pitch")
-                    estado_boton_4 = joystick_object.get_button(__BOTON_4)
-                    if(estado_boton_4 == 1):
-                        codigo = 'K'
-                        checksum = incremento_kD_velocidad*multiplicadorConstantes + ord('-') + ord('D')
-                        puertoSerial.write(CODIGO_INCREMENTO_CONSTANTES)
-                        puertoSerial.write('-')
-                        puertoSerial.write('D')
-                        Serial.EnviarEnteroSerial(puertoSerial,incremento_kD_velocidad*multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,__multiplicadorConstantes)
-                        Serial.EnviarEnteroSerial(puertoSerial,checksum)
-                        print("Decrementar derivada de Pitch")"""
                         
                         
                     estado_boton_QUIT = joystick_object.get_button(__BOTON_9)

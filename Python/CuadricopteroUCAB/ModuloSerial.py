@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import serial
-import math
 import struct
 
 
@@ -9,16 +8,11 @@ import struct
 def AbrirPuerto(nombrePuerto, tasaBaudios):
     puertoSerial = serial.Serial(nombrePuerto, tasaBaudios)
     return puertoSerial
+
     
 def CerrarPuerto(puertoSerial):
     puertoSerial.close()
 
-
-def NumDigitos(numero):
-    if  numero == 0:
-        return 1
-    else:
-        return int(math.log10(numero))+1
 
 def EnviarCaracter(puerto, caracter):
     puerto.write(caracter)

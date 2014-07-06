@@ -463,7 +463,7 @@ void RecibirComando()
       modoEjecucion = '_';
       Serial.println("APAGAR!");
     }
-    if (comando == 'M')
+    if (comando == CODIGO_MOVIMIENTO)
     {
       int checksumCalculado = 0;
       int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
@@ -493,11 +493,6 @@ void RecibirComando()
       
       if(checksumRecibido == checksumCalculado)
       {
-//        Serial.println("Valores recibidos");
-//        Serial.println(String((int)anguloRecibidoPitch-90) + ' ' + String((int)anguloRecibidoRoll-90) + ' ' + String((char)calibrarYPR_recibido));
-//        Serial.println(checksumCalculado-180);
-//        Serial.println();
-
         anguloDeseadoYPR[0] = 0;
         anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
         anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
