@@ -22,6 +22,7 @@
 #define PWM_MAXIMO 250 //maximo PWM que puede enviar el arduino a los motores
 #define CODIGO_APAGADO 'Z'
 #define CODIGO_ENCENDIDO 'T'
+#define CODIGO_MOVIMIENTO 'M'
 #define CODIGO_CONSTANTES 'K'
 #define CODIGO_ENVIO_DATOS 'S'
 int motorDerecho = 0;
@@ -143,8 +144,8 @@ void setup() {
   PID_altura.SetSampleTime(DT_PID_altura);
 
   PID_pAngular_Yaw.SetOutputLimits(-180.0, 180.0);
-  PID_pAngular_Pitch.SetOutputLimits(-1000.0, 1000.0);
-  PID_pAngular_Roll.SetOutputLimits(-1000.0, 1000.0);
+  PID_pAngular_Pitch.SetOutputLimits(-180.0, 180.0);
+  PID_pAngular_Roll.SetOutputLimits(-180.0, 180.0);
   PID_vAngular_Yaw.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
@@ -169,7 +170,7 @@ void setup() {
 void loop()
 {
 
-  //anguloDeseadoYPR[1] = 20.0;
+    //anguloDeseadoYPR[1] = 20.0;
   
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(1, 0, 0);
@@ -461,6 +462,53 @@ void RecibirComando()
     {
       modoEjecucion = '_';
       Serial.println("APAGAR!");
+    }
+    if (comando == 'M')
+    {
+      int checksumCalculado = 0;
+      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
+      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
+      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
+
+      if(Serial.available() > 0)
+      {
+        anguloRecibidoPitch_low = Serial.read();
+        anguloRecibidoPitch_high = Serial.read();
+        anguloRecibidoPitch = anguloRecibidoPitch_high*256 + anguloRecibidoPitch_low;
+      }
+      if(Serial.available() > 0)
+      {
+        anguloRecibidoRoll_low = Serial.read();
+        anguloRecibidoRoll_high = Serial.read();
+        anguloRecibidoRoll = anguloRecibidoRoll_high*256 + anguloRecibidoRoll_low;
+      }
+      if(Serial.available() > 0)
+      {
+        checksumRecibido_low = Serial.read();
+        checksumRecibido_high = Serial.read();
+        checksumRecibido = checksumRecibido_high*256 + checksumRecibido_low;
+      }
+      
+      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
+      
+      if(checksumRecibido == checksumCalculado)
+      {
+//        Serial.println("Valores recibidos");
+//        Serial.println(String((int)anguloRecibidoPitch-90) + ' ' + String((int)anguloRecibidoRoll-90) + ' ' + String((char)calibrarYPR_recibido));
+//        Serial.println(checksumCalculado-180);
+//        Serial.println();
+
+        anguloDeseadoYPR[0] = 0;
+        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
+        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
+        if(modoEjecucion == '_')
+        {
+          Serial.println("Angulos deseados en Pitch y Roll:");
+          Serial.println(anguloDeseadoYPR[1]);
+          Serial.println(anguloDeseadoYPR[2]);
+          Serial.println();
+        }
+      }
     }
   }
 

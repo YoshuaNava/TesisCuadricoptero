@@ -33,10 +33,9 @@ def EnviarEntero(puerto, numero):
     puerto.write(struct.pack('B',numero_high))
     
 
-def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum):
+def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, checksum):
     EnviarCaracter(puerto, codigo)
     EnviarEntero(puerto,comandoPitch)
     EnviarEntero(puerto,comandoRoll)
-    EnviarCaracter(puerto, calibrarYPR)
     EnviarEntero(puerto,checksum)
     
