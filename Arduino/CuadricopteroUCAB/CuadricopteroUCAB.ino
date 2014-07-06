@@ -74,9 +74,6 @@ float DT = 0;
 //VARIABLES GLOBALES:
 int velocidadBasePWM = 0;
 long tiempoUltimoMuestreo = 0;
-long tiempoUltimoCicloVelocidadAngular = 0;
-long tiempoUltimoCicloPosicionAngular = 0;
-long tiempoUltimoCicloAltura = 0;
 long tiempoUltimoEnvio = 0;
 char modoEjecucion = '_';
 
@@ -122,9 +119,6 @@ void setup() {
   ///////////////////////////////////////////
 
   tiempoUltimoMuestreo = micros();
-  tiempoUltimoCicloVelocidadAngular = millis();
-  tiempoUltimoCicloPosicionAngular = millis();
-  tiempoUltimoCicloAltura = millis();
   tiempoUltimoEnvio = millis();
 
   //Parametros de los Algoritmos PID
@@ -337,24 +331,41 @@ void AplicarPWMmotores()
   //  Serial.println(String(motorIzquierdo)+' '+String(motorDerecho));
   //  Serial.println();
 
-  //  if(millis() - tiempoUltimoEnvio > DT_envioDatos)
-  //  {
-  //    Serial.print('S');
-  //    Serial.print(USAltura);
-  //    Serial.print(float(anguloYPR[0]));
-  //    Serial.print(" ");
-  //    Serial.print(float(G_velocidadYPR[0]));
-  //    Serial.print(" ");
-  //    Serial.print(float(anguloYPR[1]));
-  //    Serial.print(" ");
-  //    Serial.print(float(G_velocidadYPR[1]));
-  //    Serial.print(" ");
-  //    Serial.print(float(anguloYPR[2]));
-  //    Serial.print(" ");
-  //    Serial.print(float(G_velocidadYPR[2]));
-  //    Serial.print("\n");
-  //    tiempoUltimoEnvio = millis();
-  //  }
+  if(millis() - tiempoUltimoEnvio > DT_envioDatos)
+  {
+    Serial.println('S');
+    Serial.print("Altura: ");
+    Serial.print(USAltura);
+    Serial.println();
+    Serial.print("Yaw: ");
+    Serial.print(float(anguloYPR[0]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(float(anguloYPR[1]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");    
+    Serial.print(float(anguloYPR[2]));
+    Serial.print(" ");
+    Serial.print(float(G_velocidadYPR[2]));
+    Serial.print("\n");
+    
+    Serial.print("Comandos PWM: ");
+    Serial.print("Yaw: ");
+    Serial.print(float(correccionPWM_YPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(float(correccionPWM_YPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");    
+    Serial.print(float(correccionPWM_YPR[2]));
+    Serial.print("\n");
+    Serial.print("\n");
+    tiempoUltimoEnvio = millis();
+  }
 
 
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
