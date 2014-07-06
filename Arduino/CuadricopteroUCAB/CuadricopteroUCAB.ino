@@ -19,7 +19,7 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 190 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 210 //maximo PWM que puede enviar el arduino a los motores
 #define CODIGO_APAGADO 'Z'
 #define CODIGO_ENCENDIDO 'T'
 #define CODIGO_CONSTANTES 'K'
@@ -169,13 +169,13 @@ void setup() {
 void loop()
 {
 
-  PID_pAngular_Yaw.SetTunings(1.5, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+  PID_pAngular_Yaw.SetTunings(1, 0, 0);
+  PID_pAngular_Pitch.SetTunings(1, 0, 0);
+  PID_pAngular_Roll.SetTunings(1, 0, 0);
 
-  PID_vAngular_Yaw.SetTunings(0.7, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.1, 0, 0);
+  PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0, 0, 0);
+  PID_vAngular_Roll.SetTunings(0, 0, 0);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -423,17 +423,17 @@ void AplicarPWMmotores()
     Serial.print(float(G_velocidadYPR[2]));
     Serial.print("\n");
 
-    Serial.print("Comandos PWM: ");
-    Serial.print("Yaw: ");
-    Serial.print(float(correccionPWM_YPR[0]));
-    Serial.println();
-    Serial.print("Pitch: ");
-    Serial.print(float(correccionPWM_YPR[1]));
-    Serial.println();
-    Serial.print("Roll: ");
-    Serial.print(float(correccionPWM_YPR[2]));
-    Serial.print("\n");
-    Serial.print("\n");
+//    Serial.print("Comandos PWM: ");
+//    Serial.print("Yaw: ");
+//    Serial.print(float(correccionPWM_YPR[0]));
+//    Serial.println();
+//    Serial.print("Pitch: ");
+//    Serial.print(float(correccionPWM_YPR[1]));
+//    Serial.println();
+//    Serial.print("Roll: ");
+//    Serial.print(float(correccionPWM_YPR[2]));
+//    Serial.print("\n");
+//    Serial.print("\n");
     tiempoUltimoEnvio = millis();
   }
 
@@ -457,13 +457,11 @@ void RecibirComando()
     if (comando == CODIGO_ENCENDIDO)
     {
       modoEjecucion = 'T';
-        velocidadBasePWM = 120;
       Serial.println("ENCENDER!");
     }
     if (comando == CODIGO_APAGADO)
     {
       modoEjecucion = '_';
-      velocidadBasePWM = 0;      
       Serial.println("APAGAR!");
     }
   }
