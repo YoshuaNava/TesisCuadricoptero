@@ -127,11 +127,31 @@ void setup() {
   tiempoUltimoCicloAltura = millis();
   tiempoUltimoEnvio = millis();
 
+  //Parametros de los Algoritmos PID
+  PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);  
+  PID_pAngular_Pitch.SetSampleTime(DT_PID_posicionAngular);
+  PID_pAngular_Roll.SetSampleTime(DT_PID_posicionAngular);
+  
+  PID_vAngular_Yaw.SetSampleTime(DT_PID_velocidadAngular);
+  PID_vAngular_Pitch.SetSampleTime(DT_PID_velocidadAngular);
+  PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
+  
+  PID_altura.SetSampleTime(DT_PID_altura);
 }
 
 void loop() 
 {
   SecuenciaDeInicio();
+
+  PID_pAngular_Yaw.SetTunings(0, 0, 0);  
+  PID_pAngular_Pitch.SetTunings(0, 0, 0);
+  PID_pAngular_Roll.SetTunings(0, 0, 0);
+
+  PID_vAngular_Yaw.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.1, 0, 0);
+  PID_vAngular_Roll.SetTunings(0, 0, 0);
+
+  modoEjecucion = 'T';
   
   while (modoEjecucion != '_')
   {
@@ -140,21 +160,9 @@ void loop()
 
     FiltroComplementario();
     RecibirComando();
-    if (millis() - tiempoUltimoCicloAltura > DT_PID_altura)
-    {
-      PIDAltura();
-      tiempoUltimoCicloAltura = millis();
-    }
-    if (millis() - tiempoUltimoCicloPosicionAngular > DT_PID_posicionAngular)
-    {
-      PID_PosicionAngular();
-      tiempoUltimoCicloPosicionAngular = millis();
-    }
-    if (millis() - tiempoUltimoCicloVelocidadAngular > DT_PID_velocidadAngular)
-    {
-      PID_VelocidadAngular();
-      tiempoUltimoCicloVelocidadAngular = millis();
-    }
+    PIDAltura();
+    PID_PosicionAngular();
+    PID_VelocidadAngular();
     AplicarPWMmotores();
   }
 }
