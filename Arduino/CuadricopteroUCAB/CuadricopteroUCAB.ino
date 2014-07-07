@@ -170,7 +170,7 @@ void setup() {
 void loop()
 {
 
-  //anguloDeseadoYPR[1] = 20.0;
+//  anguloDeseadoYPR[1] = 15.0;
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
