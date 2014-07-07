@@ -3,7 +3,6 @@
 import pyqtgraph as pg
 import numpy as np
 from pyqtgraph.Qt import QtGui, QtCore
-import serial
 import FuncionesComunes as Comun
 
 
@@ -15,29 +14,29 @@ numDatosRecibidos = 0
 x = np.arange(limiteDatos)
 y = np.arange(limiteDatos)*0
 timer = None
+grafica = None
 
 
 def Ejecutar(paramPuertoSerial):
-    global curva, puertoSerial, limiteDatos, x, y, timer
-    puertoSerial = paramPuertoSerial 
+    global puertoSerial, grafica, curva, limiteDatos, x, y, timer
+    puertoSerial = paramPuertoSerial
     app = QtGui.QApplication([])
     win = pg.GraphicsWindow(title="Velocidad angular")
     win.resize(1000,600)
-    win.setWindowTitle('Velocidad angular: vRoll, vPitch y vYaw')
+    win.setWindowTitle('Velocidad angular')
 
     puertoSerial.flushInput()
-
     grafica = win.addPlot(title="Velocidad angular")
     grafica.setYRange(-90,90)
     curva = grafica.plot(x,y)
     timer = QtCore.QTimer()
     timer.timeout.connect(update)
-    timer.start(1)
-
+    timer.start(1)    
 
 
 def update():
-    global curva, x, y, grafica, timer, puertoSerial, numDatosRecibidos, timer
+    print "hola"
+    global curva, x, y, timer, puertoSerial, numDatosRecibidos, limiteDatos
     if (numDatosRecibidos < limiteDatos):
         dato = puertoSerial.readline()
         puertoSerial.flushInput()
@@ -51,4 +50,9 @@ def update():
         print 'hola'
         timer.stop()
         exit()
+    
+
+
+
+
 

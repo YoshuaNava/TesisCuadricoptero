@@ -38,7 +38,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.95
-#define DT_envioDatos 200
+#define DT_envioDatos 50
 #define DT_PID_altura 0
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 5
@@ -178,9 +178,9 @@ void loop()
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.6, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.08, 0, 0.04);
-  PID_vAngular_Roll.SetTunings(0.08, 0, 0.04);
+  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.08, 0, 0);
+  PID_vAngular_Roll.SetTunings(0, 0, 0);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -248,44 +248,6 @@ void SecuenciaDeInicio()
   }
 }
 
-void ImprimirEstado()
-{
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
-  {
-    Serial.println(CODIGO_ENVIO_DATOS);
-    Serial.print("Altura: ");
-    Serial.print(USAltura);
-    Serial.println();
-    Serial.print("Yaw: ");
-    Serial.print(double(anguloYPR[0]));
-    Serial.print(" ");
-    Serial.print(double(G_velocidadYPR[0]));
-    Serial.println();
-    Serial.print("Pitch: ");
-    Serial.print(double(anguloYPR[1]));
-    Serial.print(" ");
-    Serial.print(double(G_velocidadYPR[1]));
-    Serial.println();
-    Serial.print("Roll: ");
-    Serial.print(double(anguloYPR[2]));
-    Serial.print(" ");
-    Serial.print(double(G_velocidadYPR[2]));
-    Serial.print("\n");
-
-    Serial.print("Comandos PWM: ");
-    Serial.print("Yaw: ");
-    Serial.print(double(correccionPWM_YPR[0]));
-    Serial.println();
-    Serial.print("Pitch: ");
-    Serial.print(double(correccionPWM_YPR[1]));
-    Serial.println();
-    Serial.print("Roll: ");
-    Serial.print(double(correccionPWM_YPR[2]));
-    Serial.print("\n");
-    Serial.print("\n");
-    tiempoUltimoEnvio = millis();
-  }
-}
 
 
 void CalcularOffsetYaw()
@@ -507,5 +469,47 @@ void RecibirComando()
     }
   }
 
+}
+
+
+void ImprimirEstado()
+{
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  {
+    Serial.println(CODIGO_ENVIO_DATOS);
+    Serial.print("Altura: ");
+    Serial.print(USAltura);
+    Serial.println();
+    Serial.print("Yaw: ");
+    Serial.print(double(anguloYPR[0]));
+    Serial.print(" ");
+    Serial.print(double(G_velocidadYPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(double(anguloYPR[1]));
+    Serial.print(" ");
+    Serial.print(double(G_velocidadYPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");
+    Serial.print(double(anguloYPR[2]));
+    Serial.print(" ");
+    Serial.print(double(G_velocidadYPR[2]));
+    Serial.print("\n");
+
+    Serial.print("Comandos PWM: ");
+    Serial.print("Yaw: ");
+    Serial.print(double(correccionPWM_YPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(double(correccionPWM_YPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");
+    Serial.print(double(correccionPWM_YPR[2]));
+    Serial.print("\n");
+    Serial.print("\n");
+//    Serial.println(int(G_velocidadYPR[1]));
+//    Serial.println(int(G_velocidadYPR[2]));    
+    tiempoUltimoEnvio = millis();
+  }
 }
 

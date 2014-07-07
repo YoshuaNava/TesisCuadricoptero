@@ -1,4 +1,3 @@
-* Adaptar el código del Arduino para ejecución de pruebas con los cuatro ejes y altura, enviando comandos de movimiento.
 
 * Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con su multiprocesamiento nativo pueden ser una buena solución).
 * Interfaz en Python (Puede hacerse con PyQT).

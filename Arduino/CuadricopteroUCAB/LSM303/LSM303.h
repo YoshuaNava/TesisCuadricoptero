@@ -39,7 +39,7 @@ class LSM303
 
       CTRL0             = 0x1F, // D
       CTRL1             = 0x20, // D
-      CTRL_REG1_A       = 0x30, // DLH, DLM, DLHC
+      CTRL_REG1_A       = 0x20, // DLH, DLM, DLHC
       CTRL2             = 0x21, // D
       CTRL_REG2_A       = 0x21, // DLH, DLM, DLHC
       CTRL3             = 0x22, // D
