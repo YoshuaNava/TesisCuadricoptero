@@ -178,9 +178,9 @@ void loop()
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
-  PID_vAngular_Pitch.SetTunings(1, 0, 0);
-  PID_vAngular_Roll.SetTunings(1, 0, 0);
+  PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
+  PID_vAngular_Pitch.SetTunings(1.7, 0, 0.3);
+  PID_vAngular_Roll.SetTunings(1.7, 0, 0.3);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -362,8 +362,8 @@ void AplicarPWMmotores()
   }
   if (modoEjecucion == 'T')
   {
-    motorDerecho = velocidadBasePWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
-    motorIzquierdo = velocidadBasePWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorDerecho = velocidadBasePWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorIzquierdo = velocidadBasePWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
     motorDelantero = velocidadBasePWM - correccionPWM_YPR[1] - correccionPWM_YPR[0];
     motorTrasero = velocidadBasePWM + correccionPWM_YPR[1] - correccionPWM_YPR[0];
   }
@@ -504,7 +504,7 @@ void ImprimirEstado()
 //    Serial.print(double(correccionPWM_YPR[1]));
 //    Serial.println();
 //    Serial.print("Roll: ");
-//    Serial.print(double(correccionPWM_YPR[2]));
+//    Serial.print(int(correccionPWM_YPR[2]));
 //    Serial.print("\n");
 //    Serial.print("\n");
     Serial.println('Y');
@@ -512,7 +512,7 @@ void ImprimirEstado()
     Serial.println('P');
     Serial.println(int(G_velocidadYPR[1]));
     Serial.println('R');
-    Serial.println(int(G_velocidadYPR[2]));    
+    Serial.println(int(G_velocidadYPR[2]));
     tiempoUltimoEnvio = millis();
   }
 }
