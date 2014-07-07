@@ -14,10 +14,12 @@ win.setWindowTitle('Datos de los sensores')
 puerto=serial.Serial("/dev/ttyUSB0",115200)
 puerto.flushInput()
 
-puerto.write('T')
+#puerto.write('T')
+#puerto.write('T')
+#puerto.write('T')
 
 
-limiteDatos = 300
+limiteDatos = 2500
 x = np.arange(limiteDatos)
 yaw = np.arange(limiteDatos)*0
 pitch = np.arange(limiteDatos)*0

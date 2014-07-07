@@ -1,7 +1,7 @@
-#include <PID_v1.h>
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
+#include <PID_v1.h>
 
 //CONSTANTES:
 //IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
@@ -170,20 +170,21 @@ void setup() {
 void loop()
 {
 
-//  anguloDeseadoYPR[1] = 15.0;
+  anguloDeseadoYPR[1] = -10.0;
+  anguloDeseadoYPR[2] = 20.0;  
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+//  PID_pAngular_Pitch.SetTunings(4.5, 0.01, 0);
+//  PID_pAngular_Roll.SetTunings(4.5, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(1.7, 0, 0.3);
-  PID_vAngular_Roll.SetTunings(1.7, 0, 0.3);
+  PID_vAngular_Yaw.SetTunings(4.0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(5.6, 0, 0.3);
+  PID_vAngular_Roll.SetTunings(5.0, 0, 0.1);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 120;
+  velocidadBasePWM = 200;
   RecibirComando();
 
   SecuenciaDeInicio();
@@ -236,7 +237,7 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       i++;
-      delay(20);
+      delay(10);
     }
   }
   else
