@@ -178,7 +178,7 @@ void loop()
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
+  PID_vAngular_Yaw.SetTunings(0.6, 0, 0);
   PID_vAngular_Pitch.SetTunings(0.08, 0, 0.04);
   PID_vAngular_Roll.SetTunings(0.08, 0, 0.04);
 
