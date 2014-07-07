@@ -7,43 +7,42 @@ import serial
 app = QtGui.QApplication([])
 
 win = pg.GraphicsWindow(title="Datos de los sensores")
-win.resize(1000,600)
+#win.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+win.resize(1300,700)
 win.setWindowTitle('Datos de los sensores')
 
 puerto=serial.Serial("/dev/ttyUSB0",115200)
-puerto.flush()
+puerto.flushInput()
 
-#puerto.write('T')
+puerto.write('T')
 
-grafica1 = win.addPlot(title="Pitch")
-grafica2 = win.addPlot(title="Roll")
-limiteDatos = 250
+
+limiteDatos = 350
 x = np.arange(limiteDatos)
-y = np.arange(limiteDatos)*0
-Z = np.arange(limiteDatos)*0
+yaw = np.arange(limiteDatos)*0
+pitch = np.arange(limiteDatos)*0
+roll = np.arange(limiteDatos)*0
 D = np.arange(limiteDatos)*0
-grafica1.setYRange(-90,90)
-grafica2.setYRange(-90,90)
-curva1 = grafica1.plot(x,y, pen = pg.mkPen('y', width=2))
-curva2 = grafica2.plot(x,Z, pen = pg.mkPen('b', width=2))
-curva3 = grafica1.plot(x,D, pen = pg.mkPen('g', width=3))
-curva4 = grafica2.plot(x,D, pen = pg.mkPen('g', width=3))
+
+graficaYaw = win.addPlot(title="Yaw")
+graficaPitch = win.addPlot(title="Pitch")
+graficaRoll = win.addPlot(title="Roll")
+
+graficaYaw.setYRange(-90,90)
+graficaPitch.setYRange(-90,90)
+graficaRoll.setYRange(-90,90)
+
+curvaYaw = graficaYaw.plot(x,yaw, pen = pg.mkPen('r', width=2))
+curvaPitch = graficaPitch.plot(x,pitch, pen = pg.mkPen('y', width=2))
+curvaRoll = graficaRoll.plot(x,roll, pen = pg.mkPen('b', width=2))
+
+graficaPitch.plot(x,D, pen = pg.mkPen('g', width=3))
+graficaRoll.plot(x,D, pen = pg.mkPen('g', width=3))
+graficaYaw.plot(x,D, pen = pg.mkPen('g', width=3))
+
 i = 0
-
-q = 0.1 #Covarianza del ruido del proceso fisico
-r = 10.0 #Covarianza del ruido del sensor
-z = 0.0 #Prediccion
-p = 3.0 #Covarianza del ruido de la estimacion
-k = 0.0 #Ganancia de Kalman
-
-def FiltroKalman(valor):
-    global q, r, z, p, k
-    p = p + q
-    k = p/(p+r)
-    z = z + k*(valor - z)
-    p = (1-k)*p
-    
-    return z
+j = 0
+k = 0
 
 
 def EsNumero(numero):
@@ -53,33 +52,94 @@ def EsNumero(numero):
     except Exception:
         return False
 
-def update():
-    global curve, i, grafica, timer
-    if (i<limiteDatos):
-        codigo = puerto.readline()
+def updateYaw():
+    global curvaYaw, k, timerYaw, limiteDatos, yaw
+    if (k<limiteDatos):
+        entrada = puerto.readline()
+        entrada = list(entrada)
+        codigo = entrada[0]
         if(EsNumero(codigo)):
-            codigo = puerto.readline()
+            entrada = puerto.readline()
+            entrada = list(entrada)
+            codigo = entrada[0]
             
         dato = puerto.readline()
-        print "Recibido:"        
-        print codigo
-        print dato
+        if(EsNumero(dato)):
+            if (codigo == 'Y'):
+                print "Yaw"
+                yaw[k] = dato
+
+            curvaYaw.setData(yaw)
+            k += 1
+    else:
+        print 'Terminado'
+        puerto.write('Z')
+        timerYaw.stop()
+        exit()
+
+
+def updatePitch():
+    global curvaPitch, i, timerPitch, limiteDatos, pitch
+    if (i<limiteDatos):
+        entrada = puerto.readline()
+        entrada = list(entrada)
+        codigo = entrada[0]
+        if(EsNumero(codigo)):
+            entrada = puerto.readline()
+            entrada = list(entrada)
+            codigo = entrada[0]
+            
+        dato = puerto.readline()
         if(EsNumero(dato)):
             if (codigo == 'P'):
-                y[i] = dato
-            if (codigo == 'R'):
-                Z[i] = dato
+                print "Pitch"
+                pitch[i] = dato
 
-            curva1.setData(y)
-            curva2.setData(Z)
+            curvaPitch.setData(pitch)
             i += 1
     else:
         print 'Terminado'
         puerto.write('Z')
-        timer.stop()
+        timerPitch.stop()
         exit()
 
-timer = QtCore.QTimer()
-timer.timeout.connect(update)
-puerto.flush()
-timer.start(1)
+
+
+def updateRoll():
+    global curvaRoll, j, timerRoll, limiteDatos, roll
+    if (j<limiteDatos):
+        entrada = puerto.readline()
+        entrada = list(entrada)
+        codigo = entrada[0]
+        if(EsNumero(codigo)):
+            entrada = puerto.readline()
+            entrada = list(entrada)
+            codigo = entrada[0]
+            
+        dato = puerto.readline()
+        if(EsNumero(dato)):
+            if (codigo == "R"):
+                print "Roll"
+                roll[j] = dato
+
+            curvaRoll.setData(roll)
+            j += 1
+    else:
+        print 'Terminado'
+        puerto.write('Z')
+        timerRoll.stop()
+        exit()
+
+
+timerYaw = QtCore.QTimer()
+timerYaw.timeout.connect(updateYaw)
+timerYaw.start(1)
+
+timerPitch = QtCore.QTimer()
+timerPitch.timeout.connect(updatePitch)
+timerPitch.start(1)
+
+timerRoll = QtCore.QTimer()
+timerRoll.timeout.connect(updateRoll)
+timerRoll.start(1)
+
