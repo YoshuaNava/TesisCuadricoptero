@@ -179,8 +179,8 @@ void loop()
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.4, 0, 0);
-  PID_vAngular_Roll.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(1, 0, 0);
+  PID_vAngular_Roll.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -269,13 +269,13 @@ void FiltroComplementario() {
   DT = (double)(micros() - tiempoUltimoMuestreo) / 1000000;
 
   G_velocidadYPR[0] = (double) (gyro.g.z * G_GYRO - yaw_offset);
-  G_velocidadYPR[1] = (double) gyro.g.y * G_GYRO;
-  G_velocidadYPR[2] = (double) gyro.g.x * G_GYRO;
+  G_velocidadYPR[1] = (double) gyro.g.x * G_GYRO;
+  G_velocidadYPR[2] = (double) gyro.g.y * G_GYRO;
 
 
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
-  A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
-  A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
+  A_aceleracionYPR[1] = (double) compass.a.x * G_ACC;
+  A_aceleracionYPR[2] = (double) compass.a.y * G_ACC;
 
   A_anguloYPR[0] = 0;
   A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));

@@ -17,7 +17,7 @@ puerto.flushInput()
 puerto.write('T')
 
 
-limiteDatos = 350
+limiteDatos = 300
 x = np.arange(limiteDatos)
 yaw = np.arange(limiteDatos)*0
 pitch = np.arange(limiteDatos)*0
@@ -43,6 +43,7 @@ graficaYaw.plot(x,D, pen = pg.mkPen('g', width=3))
 i = 0
 j = 0
 k = 0
+
 
 
 def EsNumero(numero):
@@ -75,7 +76,7 @@ def updateYaw():
         print 'Terminado'
         puerto.write('Z')
         timerYaw.stop()
-        exit()
+        #exit()
 
 
 def updatePitch():
@@ -101,7 +102,7 @@ def updatePitch():
         print 'Terminado'
         puerto.write('Z')
         timerPitch.stop()
-        exit()
+        #exit()
 
 
 
@@ -128,7 +129,7 @@ def updateRoll():
         print 'Terminado'
         puerto.write('Z')
         timerRoll.stop()
-        exit()
+        #exit()
 
 
 timerYaw = QtCore.QTimer()
