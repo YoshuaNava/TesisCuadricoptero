@@ -1,5 +1,13 @@
 
-* Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con su multiprocesamiento nativo pueden ser una buena solución).
-* Interfaz en Python (Puede hacerse con PyQT).
+* Marco referencial.
+* Pruebas con el Parallax Ping.
 * Calibrar sistemas de control.
+	* Posición angular.
+	* Altura.
+* Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con su multiprocesamiento nativo pueden ser una buena solución).
 * Pruebas de vuelo.
+* Interfaz en Python (Puede hacerse con PyQT).
+* Documento.
+	* Desarrollo.
+	* Resultados.
+	* Conclusiones.
