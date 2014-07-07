@@ -74,7 +74,7 @@ double correccionPWM_YPR[3] = {
 double alturaDeseada = 0;
 double USAltura = 0; // Distancia medida por el sensor de ultrasonido
 double correccionAltura = 0;
-float DT = 0;
+double DT = 0;
 //FIN IMU
 
 //VARIABLES GLOBALES:
@@ -160,7 +160,7 @@ void setup() {
   PID_altura.SetMode(AUTOMATIC);
   //////////////////////////////////////
 
-  
+
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
   tiempoUltimoMuestreo = micros();
   tiempoUltimoEnvio = millis();
@@ -170,17 +170,17 @@ void setup() {
 void loop()
 {
 
-    //anguloDeseadoYPR[1] = 20.0;
-  
+  //anguloDeseadoYPR[1] = 20.0;
+
   // Yaw-  P: 1    I: 0   D: 0
-  PID_pAngular_Yaw.SetTunings(1, 0, 0);
+  PID_pAngular_Yaw.SetTunings(0, 0, 0);
   PID_pAngular_Pitch.SetTunings(0, 0, 0);
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(1.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.1, 0, 0.05);
-  PID_vAngular_Roll.SetTunings(0.05, 0, 0.03);
+  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.08, 0, 0.04);
+  PID_vAngular_Roll.SetTunings(0.08, 0, 0.04);
 
   modoEjecucion = '_';
   velocidadBasePWM = 120;
@@ -213,9 +213,9 @@ void SecuenciaDeInicio()
   }
 
 
-//  CalcularOffsetYaw();
+  //  CalcularOffsetYaw();
   i = 0;
-  if(modoEjecucion != '_')
+  if (modoEjecucion != '_')
   {
     while (i < velocidadBasePWM / 2)
     {
@@ -257,32 +257,32 @@ void ImprimirEstado()
     Serial.print(USAltura);
     Serial.println();
     Serial.print("Yaw: ");
-    Serial.print(float(anguloYPR[0]));
+    Serial.print(double(anguloYPR[0]));
     Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[0]));
+    Serial.print(double(G_velocidadYPR[0]));
     Serial.println();
     Serial.print("Pitch: ");
-    Serial.print(float(anguloYPR[1]));
+    Serial.print(double(anguloYPR[1]));
     Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[1]));
+    Serial.print(double(G_velocidadYPR[1]));
     Serial.println();
     Serial.print("Roll: ");
-    Serial.print(float(anguloYPR[2]));
+    Serial.print(double(anguloYPR[2]));
     Serial.print(" ");
-    Serial.print(float(G_velocidadYPR[2]));
+    Serial.print(double(G_velocidadYPR[2]));
     Serial.print("\n");
 
-//    Serial.print("Comandos PWM: ");
-//    Serial.print("Yaw: ");
-//    Serial.print(float(correccionPWM_YPR[0]));
-//    Serial.println();
-//    Serial.print("Pitch: ");
-//    Serial.print(float(correccionPWM_YPR[1]));
-//    Serial.println();
-//    Serial.print("Roll: ");
-//    Serial.print(float(correccionPWM_YPR[2]));
-//    Serial.print("\n");
-//    Serial.print("\n");
+    Serial.print("Comandos PWM: ");
+    Serial.print("Yaw: ");
+    Serial.print(double(correccionPWM_YPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(double(correccionPWM_YPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");
+    Serial.print(double(correccionPWM_YPR[2]));
+    Serial.print("\n");
+    Serial.print("\n");
     tiempoUltimoEnvio = millis();
   }
 }
@@ -293,7 +293,7 @@ void CalcularOffsetYaw()
   int numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
     gyro.read();
-    yaw_offset += (int)gyro.g.z*G_GYRO;
+    yaw_offset += (int)gyro.g.z * G_GYRO;
   }
   yaw_offset = yaw_offset / numMuestras;
 }
@@ -306,37 +306,37 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreo) / 1000000;
 
-  G_velocidadYPR[0] = (float) (gyro.g.z * G_GYRO - yaw_offset);
-  G_velocidadYPR[1] = (float) gyro.g.y * G_GYRO;
-  G_velocidadYPR[2] = (float) gyro.g.x * G_GYRO;
+  G_velocidadYPR[0] = (double) (gyro.g.z * G_GYRO - yaw_offset);
+  G_velocidadYPR[1] = (double) gyro.g.y * G_GYRO;
+  G_velocidadYPR[2] = (double) gyro.g.x * G_GYRO;
 
 
-  A_aceleracionYPR[0] = (float) compass.a.z * G_ACC;
-  A_aceleracionYPR[1] = (float) compass.a.y * G_ACC;
-  A_aceleracionYPR[2] = (float) compass.a.x * G_ACC;
+  A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
+  A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
+  A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
 
   A_anguloYPR[0] = 0;
-  A_anguloYPR[1] = (float) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
+  A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
   A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-  A_anguloYPR[2] = (float) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
+  A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
   A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
 
 
-  anguloYPR[0] = (float) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+  anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
   anguloYPR[0] = ToRad(anguloYPR[0]);
-  anguloYPR[0] = (float) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
+  anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
-  
-  
-  anguloYPR[1] = (float) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
+
+
+  anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
   anguloYPR[1] = ToRad(anguloYPR[1]);
-  anguloYPR[1] = (float) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
-  anguloYPR[1] = ToDeg(anguloYPR[1]);  
-  
-  anguloYPR[2] = (float) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
+  anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
+  anguloYPR[1] = ToDeg(anguloYPR[1]);
+
+  anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
   anguloYPR[2] = ToRad(anguloYPR[2]);
-  anguloYPR[2] = (float) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
-  anguloYPR[2] = ToDeg(anguloYPR[2]);  
+  anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
+  anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   tiempoUltimoMuestreo = micros();
   ImprimirEstado();
@@ -346,7 +346,7 @@ void FiltroComplementario() {
 void CalcularAltura()
 {
   long duracion = 0;
-  float distancia = 0;
+  double distancia = 0;
   digitalWrite(USTRIGPIN, LOW);
   delayMicroseconds(2);
   digitalWrite(USTRIGPIN, HIGH);
@@ -470,33 +470,33 @@ void RecibirComando()
       int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
       int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
 
-      if(Serial.available() > 0)
+      if (Serial.available() > 0)
       {
         anguloRecibidoPitch_low = Serial.read();
         anguloRecibidoPitch_high = Serial.read();
-        anguloRecibidoPitch = anguloRecibidoPitch_high*256 + anguloRecibidoPitch_low;
+        anguloRecibidoPitch = anguloRecibidoPitch_high * 256 + anguloRecibidoPitch_low;
       }
-      if(Serial.available() > 0)
+      if (Serial.available() > 0)
       {
         anguloRecibidoRoll_low = Serial.read();
         anguloRecibidoRoll_high = Serial.read();
-        anguloRecibidoRoll = anguloRecibidoRoll_high*256 + anguloRecibidoRoll_low;
+        anguloRecibidoRoll = anguloRecibidoRoll_high * 256 + anguloRecibidoRoll_low;
       }
-      if(Serial.available() > 0)
+      if (Serial.available() > 0)
       {
         checksumRecibido_low = Serial.read();
         checksumRecibido_high = Serial.read();
-        checksumRecibido = checksumRecibido_high*256 + checksumRecibido_low;
+        checksumRecibido = checksumRecibido_high * 256 + checksumRecibido_low;
       }
-      
+
       checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
-      
-      if(checksumRecibido == checksumCalculado)
+
+      if (checksumRecibido == checksumCalculado)
       {
         anguloDeseadoYPR[0] = 0;
         anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
         anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
-        if(modoEjecucion == '_')
+        if (modoEjecucion == '_')
         {
           Serial.println("Angulos deseados en Pitch y Roll:");
           Serial.println(anguloDeseadoYPR[1]);
