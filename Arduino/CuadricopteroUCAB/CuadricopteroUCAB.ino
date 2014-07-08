@@ -170,18 +170,18 @@ void setup() {
 void loop()
 {
 
-  anguloDeseadoYPR[1] = 0.0;
+  anguloDeseadoYPR[1] = -10.0;
   anguloDeseadoYPR[2] = 0.0;  
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(2.5, 0.01, 0);
-  PID_pAngular_Roll.SetTunings(2.5, 0, 0);
+//ZPID_pAngular_Pitch.SetTunings(1, 0.01, 0);
+//  PID_pAngular_Roll.SetTunings(1, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(4.0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(6.3, 0, 0.2);
-  PID_vAngular_Roll.SetTunings(6.3, 0, 0.1);
+  PID_vAngular_Yaw.SetTunings(2.0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(2.8, 0, 0.2);
+  PID_vAngular_Roll.SetTunings(2.8, 0, 0.1);
 
   modoEjecucion = '_';
   velocidadBasePWM = 250;

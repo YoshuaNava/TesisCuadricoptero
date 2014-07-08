@@ -14,9 +14,7 @@ win.setWindowTitle('Datos de los sensores')
 puerto=serial.Serial("/dev/ttyUSB1",115200)
 puerto.flushInput()
 
-puerto.write('T')
-puerto.write('T')
-puerto.write('T')
+#puerto.write('T')
 
 
 limiteDatos = 500
