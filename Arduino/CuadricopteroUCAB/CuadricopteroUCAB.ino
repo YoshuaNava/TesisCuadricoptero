@@ -170,21 +170,21 @@ void setup() {
 void loop()
 {
 
-  anguloDeseadoYPR[1] = -10.0;
-  anguloDeseadoYPR[2] = 20.0;  
+  anguloDeseadoYPR[1] = 0.0;
+  anguloDeseadoYPR[2] = 0.0;  
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-//  PID_pAngular_Pitch.SetTunings(4.5, 0.01, 0);
-//  PID_pAngular_Roll.SetTunings(4.5, 0, 0);
+  PID_pAngular_Pitch.SetTunings(2.5, 0.01, 0);
+  PID_pAngular_Roll.SetTunings(2.5, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(4.0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(5.6, 0, 0.3);
-  PID_vAngular_Roll.SetTunings(5.0, 0, 0.1);
+  PID_vAngular_Pitch.SetTunings(6.3, 0, 0.2);
+  PID_vAngular_Roll.SetTunings(6.3, 0, 0.1);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 200;
+  velocidadBasePWM = 250;
   RecibirComando();
 
   SecuenciaDeInicio();
@@ -199,7 +199,7 @@ void loop()
     PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
-    AplicarPWMmotores();
+    AplicarPWMmotores(velocidadBasePWM);
   }
 }
 
@@ -233,11 +233,13 @@ void SecuenciaDeInicio()
         motorIzquierdo = i;
         motorDelantero = i;
         motorTrasero = i;
-        AplicarPWMmotores();
+        PID_PosicionAngular();
+        PID_VelocidadAngular();
+        AplicarPWMmotores(i);
       }
       FiltroComplementario();
       i++;
-      delay(10);
+      delay(5);
     }
   }
   else
@@ -352,7 +354,7 @@ void PIDAltura()
 
 
 
-void AplicarPWMmotores()
+void AplicarPWMmotores(int velocidadMotoresPWM)
 {
   if (modoEjecucion == '_')
   {
@@ -363,10 +365,10 @@ void AplicarPWMmotores()
   }
   if (modoEjecucion == 'T')
   {
-    motorDerecho = velocidadBasePWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
-    motorIzquierdo = velocidadBasePWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
-    motorDelantero = velocidadBasePWM - correccionPWM_YPR[1] - correccionPWM_YPR[0];
-    motorTrasero = velocidadBasePWM + correccionPWM_YPR[1] - correccionPWM_YPR[0];
+    motorDerecho = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorIzquierdo = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
+    motorDelantero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0];
+    motorTrasero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0];
   }
 
 

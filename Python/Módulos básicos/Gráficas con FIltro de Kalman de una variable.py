@@ -22,7 +22,7 @@ puerto.flush()
 puerto.write('T')
 
 grafica = win.addPlot(title="Velocidad")
-limiteDatos = 250
+limiteDatos = 1000
 x = np.arange(limiteDatos)
 y = np.arange(limiteDatos)*0
 Z = np.arange(limiteDatos)*0
@@ -36,7 +36,7 @@ i = 0
 q = 0.1 #Covarianza del ruido del proceso fisico
 r = 10.0 #Covarianza del ruido del sensor
 z = 0.0 #Prediccion
-p = 3.0 #Covarianza del ruido de la estimacion
+p = 0.01 #Covarianza del ruido de la estimacion
 k = 0.0 #Ganancia de Kalman
 
 def FiltroKalman(valor):
@@ -60,19 +60,19 @@ def update():
     global curve, i, grafica, timer
     if (i<limiteDatos):
         dato = puerto.readline()
-        #puerto.flush()
+        puerto.flushInput()
         if(EsNumero(dato)):
             y[i] = dato
-            Z[i] = FiltroKalman(float(dato)*0)
+            Z[i] = FiltroKalman(float(dato))
             curva1.setData(y)
             curva2.setData(Z)
+            i += 1
 
-        i += 1
     else:
         print 'Terminado'
         puerto.write('Z')
         timer.stop()
-        exit()
+        #exit()
 
 timer = QtCore.QTimer()
 timer.timeout.connect(update)

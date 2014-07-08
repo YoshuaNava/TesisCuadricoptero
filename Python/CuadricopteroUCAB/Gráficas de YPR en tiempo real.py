@@ -11,17 +11,17 @@ win = pg.GraphicsWindow(title="Datos de los sensores")
 win.resize(1300,700)
 win.setWindowTitle('Datos de los sensores')
 
-puerto=serial.Serial("/dev/ttyUSB0",115200)
+puerto=serial.Serial("/dev/ttyUSB1",115200)
 puerto.flushInput()
 
-#puerto.write('T')
-#puerto.write('T')
-#puerto.write('T')
+puerto.write('T')
+puerto.write('T')
+puerto.write('T')
 
 
-limiteDatos = 2500
+limiteDatos = 500
 x = np.arange(limiteDatos)
-yaw = np.arange(limiteDatos)*0
+yaw = np.arange(limiteDatos)*0  
 pitch = np.arange(limiteDatos)*0
 roll = np.arange(limiteDatos)*0
 D = np.arange(limiteDatos)*0
