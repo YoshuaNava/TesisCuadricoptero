@@ -56,7 +56,7 @@ curvaRoll = graficaRoll.plot(x,roll, pen = pg.mkPen('b', width=2))
 curvaVYaw = graficaVYaw.plot(x,Vyaw, pen = pg.mkPen('r', width=2))
 curvaVPitch = graficaVPitch.plot(x,Vpitch, pen = pg.mkPen('y', width=2))
 curvaVRoll = graficaVRoll.plot(x,Vroll, pen = pg.mkPen('b', width=2))
-curvaAltura = graficaAltura.plot(x,Altura, pen = pg.mkPen('b', width=2))
+curvaAltura = graficaAltura.plot(x,Altura, pen = pg.mkPen('w', width=2))
 
 
 graficaVPitch.plot(x,D, pen = pg.mkPen('g', width=3))
