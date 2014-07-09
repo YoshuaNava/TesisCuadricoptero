@@ -7,9 +7,8 @@
 //IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
 
 //ULTRASONIDO:
-#define USPIN 15 //puerto de datos del ultradonido.
+#define USPIN 14 //puerto de datos del ultradonido.
 #define USRANGOMAXIMO 200 // rango maximo de ultrasonido
-#define USRANGOMINIMO 0 // rango minimo de ultrasonido
 #define ALTURA_MAXIMA 150
 //FIN ULTRASONIDO
 
@@ -38,9 +37,9 @@ int motorTrasero = 0;
 #define G_ACC 0.0573
 #define K_COMP 0.95
 #define DT_envioDatos 20
-#define DT_PID_altura 0
+#define DT_PID_altura 50
 #define DT_PID_posicionAngular 50
-#define DT_PID_velocidadAngular 5
+#define DT_PID_velocidadAngular 10
 
 L3G gyro;
 LSM303 compass;
@@ -167,7 +166,7 @@ void setup() {
 void loop()
 {
 
-  anguloDeseadoYPR[1] = -10.0;
+  anguloDeseadoYPR[1] = 0.0;
   anguloDeseadoYPR[2] = 0.0;  
 
   // Yaw-  P: 1    I: 0   D: 0
@@ -176,9 +175,12 @@ void loop()
 //  PID_pAngular_Roll.SetTunings(1, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(2.0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(2.8, 0, 0.2);
-  PID_vAngular_Roll.SetTunings(2.8, 0, 0.1);
+//  PID_vAngular_Yaw.SetTunings(2.0, 0, 0);
+//  PID_vAngular_Pitch.SetTunings(2.8, 0, 0.2);
+//  PID_vAngular_Roll.SetTunings(2.8, 0, 0.1);
+
+  alturaDeseada = 30;
+//  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
   velocidadBasePWM = 250;
@@ -188,11 +190,10 @@ void loop()
 
   while (modoEjecucion != '_')
   {
-       CalcularAltura();
-    //    USAltura = 0;
-
-    FiltroComplementario();
     RecibirComando();
+    FiltroComplementario();
+    CalcularAltura();    
+//    ImprimirEstado();
     PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
@@ -208,11 +209,11 @@ void SecuenciaDeInicio()
   {
     FiltroComplementario();
     CalcularAltura();
+    ImprimirEstado();
     i++;
   }
 
 
-  //  CalcularOffsetYaw();
   i = 0;
   if (modoEjecucion != '_')
   {
@@ -231,11 +232,13 @@ void SecuenciaDeInicio()
         motorIzquierdo = i;
         motorDelantero = i;
         motorTrasero = i;
-        PID_PosicionAngular();
+        PIDAltura();
         PID_VelocidadAngular();
         AplicarPWMmotores(i);
       }
       FiltroComplementario();
+      CalcularAltura();
+      ImprimirEstado();
       i++;
       delay(5);
     }
@@ -256,6 +259,7 @@ void CalcularOffsetYaw()
   int numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
     gyro.read();
+
     yaw_offset += (int)gyro.g.z * G_GYRO;
   }
   yaw_offset = yaw_offset / numMuestras;
@@ -302,7 +306,6 @@ void FiltroComplementario() {
   anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   tiempoUltimoMuestreo = micros();
-  ImprimirEstado();
 }
 
 
@@ -321,8 +324,10 @@ void CalcularAltura()
   distancia = (duracion/2)/58.2;
   delay(10);
 
+
   if (distancia < ALTURA_MAXIMA)
   {
+    Serial.println("Hola! " + String(int(distancia)));
     USAltura = distancia;
     //    Serial.print(USAltura);
     //    Serial.println("cm");
@@ -332,6 +337,7 @@ void CalcularAltura()
     USAltura = 0;
   }
 }
+
 
 void PID_PosicionAngular()
 {
@@ -365,10 +371,10 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
   if (modoEjecucion == 'T')
   {
-    motorDerecho = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0];
-    motorIzquierdo = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0];
-    motorDelantero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0];
-    motorTrasero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0];
+    motorDerecho = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorIzquierdo = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorDelantero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
+    motorTrasero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
   }
 
 
@@ -510,20 +516,21 @@ void ImprimirEstado()
 //    Serial.print(int(correccionPWM_YPR[2]));
 //    Serial.print("\n");
 //    Serial.print("\n");
-    Serial.println('Y');
-    Serial.println(int(anguloYPR[0]));
-    Serial.println('P');
-    Serial.println(int(anguloYPR[1]));
-    Serial.println('R');
-    Serial.println(int(anguloYPR[2]));
-    Serial.println('y');
-    Serial.println(int(G_velocidadYPR[0]));
-    Serial.println('p');
-    Serial.println(int(G_velocidadYPR[1]));
-    Serial.println('r');
-    Serial.println(int(G_velocidadYPR[2]));
-    Serial.println('A');
-    Serial.println(int(USAltura));
+//    Serial.println('Y');
+//    Serial.println(int(anguloYPR[0]));
+//    Serial.println('P');
+//    Serial.println(int(anguloYPR[1]));
+//    Serial.println('R');
+//    Serial.println(int(anguloYPR[2]));
+//    Serial.println('y');
+//    Serial.println(int(G_velocidadYPR[0]));
+//    Serial.println('p');
+//    Serial.println(int(G_velocidadYPR[1]));
+//    Serial.println('r');
+//    Serial.println(int(G_velocidadYPR[2]));
+//    Serial.println('A');
+//    Serial.println(int(USAltura));
+//    Serial.println(correccionAltura);
     tiempoUltimoEnvio = millis();
   }
 }
