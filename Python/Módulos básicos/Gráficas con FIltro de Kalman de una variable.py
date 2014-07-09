@@ -16,7 +16,7 @@ win = pg.GraphicsWindow(title="Datos de los sensores")
 win.resize(1000,600)
 win.setWindowTitle('Datos de los sensores')
 
-puerto=serial.Serial("/dev/ttyUSB0",115200)
+puerto=serial.Serial("/dev/ttyUSB1",115200)
 puerto.flush()
 
 puerto.write('T')
@@ -27,10 +27,10 @@ x = np.arange(limiteDatos)
 y = np.arange(limiteDatos)*0
 Z = np.arange(limiteDatos)*0
 D = np.arange(limiteDatos)*0
-grafica.setYRange(-90,90)
+grafica.setYRange(0,90)
 curva1 = grafica.plot(x,y, pen = pg.mkPen('y', width=2))
 curva2 = grafica.plot(x,Z, pen = pg.mkPen('b', width=2))
-curva3 = grafica.plot(x,D, pen = pg.mkPen('g', width=3))
+#curva3 = grafica.plot(x,D, pen = pg.mkPen('g', width=3))
 i = 0
 
 q = 0.1 #Covarianza del ruido del proceso fisico

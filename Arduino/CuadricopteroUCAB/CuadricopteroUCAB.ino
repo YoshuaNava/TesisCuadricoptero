@@ -7,8 +7,7 @@
 //IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
 
 //ULTRASONIDO:
-#define USTRIGPIN 14 //puerto de trigger del ultrasonido.
-#define USECHOPIN 15 //puerto de echo del ultradonido.
+#define USPIN 15 //puerto de datos del ultradonido.
 #define USRANGOMAXIMO 200 // rango maximo de ultrasonido
 #define USRANGOMINIMO 0 // rango minimo de ultrasonido
 #define ALTURA_MAXIMA 150
@@ -38,7 +37,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.95
-#define DT_envioDatos 50
+#define DT_envioDatos 20
 #define DT_PID_altura 0
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 5
@@ -105,8 +104,6 @@ void setup() {
 
 
   // Configuracion de los puertos para sensores y motores //
-  pinMode(USTRIGPIN, OUTPUT);
-  pinMode(USECHOPIN, INPUT);
   pinMode(PUERTOMOTORDERECHO, OUTPUT);
   pinMode(PUERTOMOTORIZQUIERDO, OUTPUT);
   pinMode(PUERTOMOTORSUPERIOR, OUTPUT);
@@ -191,7 +188,7 @@ void loop()
 
   while (modoEjecucion != '_')
   {
-    //    CalcularAltura();
+       CalcularAltura();
     //    USAltura = 0;
 
     FiltroComplementario();
@@ -210,6 +207,7 @@ void SecuenciaDeInicio()
   while (i < 50)
   {
     FiltroComplementario();
+    CalcularAltura();
     i++;
   }
 
@@ -312,13 +310,15 @@ void CalcularAltura()
 {
   long duracion = 0;
   double distancia = 0;
-  digitalWrite(USTRIGPIN, LOW);
+  pinMode(USPIN, OUTPUT);
+  digitalWrite(USPIN, LOW);
   delayMicroseconds(2);
-  digitalWrite(USTRIGPIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(USTRIGPIN, LOW);
-  duracion = pulseIn(USECHOPIN, HIGH);
-  distancia = (duracion / 2) / 58.2;
+  digitalWrite(USPIN, HIGH);
+  delayMicroseconds(10);  
+  digitalWrite(USPIN, LOW);
+  pinMode(USPIN, INPUT);  
+  duracion = pulseIn(USPIN, HIGH, 10000);
+  distancia = (duracion/2)/58.2;
   delay(10);
 
   if (distancia < ALTURA_MAXIMA)
@@ -511,11 +511,19 @@ void ImprimirEstado()
 //    Serial.print("\n");
 //    Serial.print("\n");
     Serial.println('Y');
-    Serial.println(int(G_velocidadYPR[0]));
+    Serial.println(int(anguloYPR[0]));
     Serial.println('P');
-    Serial.println(int(G_velocidadYPR[1]));
+    Serial.println(int(anguloYPR[1]));
     Serial.println('R');
+    Serial.println(int(anguloYPR[2]));
+    Serial.println('y');
+    Serial.println(int(G_velocidadYPR[0]));
+    Serial.println('p');
+    Serial.println(int(G_velocidadYPR[1]));
+    Serial.println('r');
     Serial.println(int(G_velocidadYPR[2]));
+    Serial.println('A');
+    Serial.println(int(USAltura));
     tiempoUltimoEnvio = millis();
   }
 }

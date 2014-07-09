@@ -1,4 +1,5 @@
 
+
 #define DT_muestreo 0
 #define ALTURA_MAXIMA 150
 #define USPIN 15 //puerto de trigger del ultrasonido.
@@ -15,7 +16,7 @@ void setup()
 
 void loop()
 {
-      CalcularAltura();
+      //CalcularAltura();
     if(tiempoUltimoMuestreo - millis() >= DT_muestreo)
     {
       Serial.println((int)USAltura);
@@ -36,7 +37,6 @@ void CalcularAltura()
   pinMode(USPIN, INPUT);  
   duracion = pulseIn(USPIN, HIGH,10000);
   distancia = (duracion/2)/58.2;
-  delay(10);
 
   if(distancia < ALTURA_MAXIMA)
   {
