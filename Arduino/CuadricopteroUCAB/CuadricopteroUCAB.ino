@@ -35,11 +35,11 @@ int motorTrasero = 0;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.95
+#define K_COMP 0.99
 #define DT_envioDatos 50
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 50
-#define DT_PID_velocidadAngular 10
+#define DT_PID_posicionAngular 20
+#define DT_PID_velocidadAngular 5
 
 L3G gyro;
 LSM303 compass;
@@ -170,20 +170,20 @@ void loop()
   anguloDeseadoYPR[2] = 0.0;  
 
   // Yaw-  P: 1    I: 0   D: 0
-  PID_pAngular_Yaw.SetTunings(0, 0, 0);
-//  PID_pAngular_Pitch.SetTunings(0.7, 0, 0);
-//  PID_pAngular_Roll.SetTunings(0.7, 0, 0);
+  PID_pAngular_Yaw.SetTunings(0.7, 0, 0);
+  PID_pAngular_Pitch.SetTunings(1.35, 0.05, 0);
+  PID_pAngular_Roll.SetTunings(1.35, 0.05, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.75, 0, 0.005);
-  PID_vAngular_Roll.SetTunings(0.75, 0, 0.005);
+  PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.01);
+  PID_vAngular_Roll.SetTunings(0.95, 0.01, 0.01);
 
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 200;
+  velocidadBasePWM = 250;
   RecibirComando();
   SecuenciaDeInicio();
 
@@ -515,6 +515,14 @@ void ImprimirEstado()
     Serial.print(int(correccionPWM_YPR[2]));
     Serial.print("\n");
     Serial.print("\n");
+*/
+/*
+    Serial.println("Motores:");
+    Serial.println(motorDerecho);
+    Serial.println(motorIzquierdo);
+    Serial.println(motorTrasero);
+    Serial.println(motorDelantero);
+    Serial.println();
 */
     
     Serial.println('Y');
