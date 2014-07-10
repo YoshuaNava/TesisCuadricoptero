@@ -36,7 +36,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.95
-#define DT_envioDatos 20
+#define DT_envioDatos 50
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 50
 #define DT_PID_velocidadAngular 10
@@ -171,19 +171,19 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  //ZPID_pAngular_Pitch.SetTunings(1, 0.01, 0);
-  //  PID_pAngular_Roll.SetTunings(1, 0, 0);
+//  PID_pAngular_Pitch.SetTunings(10, 0, 0);
+//  PID_pAngular_Roll.SetTunings(10, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  //  PID_vAngular_Yaw.SetTunings(2.0, 0, 0);
-  //  PID_vAngular_Pitch.SetTunings(2.8, 0, 0.2);
-  //  PID_vAngular_Roll.SetTunings(2.8, 0, 0.1);
+  PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.6, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.6, 0, 0);
 
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 250;
+  velocidadBasePWM = 150;
   RecibirComando();
   SecuenciaDeInicio();
 
@@ -278,8 +278,8 @@ void FiltroComplementario() {
 
 
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
-  A_aceleracionYPR[1] = (double) compass.a.x * G_ACC;
-  A_aceleracionYPR[2] = (double) compass.a.y * G_ACC;
+  A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
+  A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
 
   A_anguloYPR[0] = 0;
   A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
@@ -504,17 +504,18 @@ void ImprimirEstado()
     //    Serial.print(double(G_velocidadYPR[2]));
     //    Serial.print("\n");
     //
-    //    Serial.print("Comandos PWM: ");
-    //    Serial.print("Yaw: ");
-    //    Serial.print(double(correccionPWM_YPR[0]));
-    //    Serial.println();
-    //    Serial.print("Pitch: ");
-    //    Serial.print(double(correccionPWM_YPR[1]));
-    //    Serial.println();
-    //    Serial.print("Roll: ");
-    //    Serial.print(int(correccionPWM_YPR[2]));
-    //    Serial.print("\n");
-    //    Serial.print("\n");
+/*    Serial.print("Comandos PWM: ");
+    Serial.print("Yaw: ");
+    Serial.print(double(correccionPWM_YPR[0]));
+    Serial.println();
+    Serial.print("Pitch: ");
+    Serial.print(double(correccionPWM_YPR[1]));
+    Serial.println();
+    Serial.print("Roll: ");
+    Serial.print(int(correccionPWM_YPR[2]));
+    Serial.print("\n");
+    Serial.print("\n");
+*/
     
     Serial.println('Y');
     Serial.println(int(anguloYPR[0]));
@@ -530,7 +531,7 @@ void ImprimirEstado()
     Serial.println(int(G_velocidadYPR[2]));
     Serial.println('A');
     Serial.println(int(USAltura));
-    Serial.println(correccionAltura);
+//    Serial.println(correccionAltura);
     tiempoUltimoEnvio = millis();
   }
 }
