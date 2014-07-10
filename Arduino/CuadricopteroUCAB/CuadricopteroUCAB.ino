@@ -176,14 +176,14 @@ void loop()
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.6, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.6, 0, 0);
+  PID_vAngular_Pitch.SetTunings(2.0, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.3, 0, 0);
 
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 150;
+  velocidadBasePWM = 220;
   RecibirComando();
   SecuenciaDeInicio();
 

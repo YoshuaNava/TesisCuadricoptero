@@ -17,12 +17,12 @@ puerto.flushInput()
 #ToDo: Deberiamos atrapar SerialException
 
 
-"""puerto.write('T')
 puerto.write('T')
 puerto.write('T')
 puerto.write('T')
 puerto.write('T')
-"""
+puerto.write('T')
+
 
 limiteDatos = 250
 x = np.arange(limiteDatos)
@@ -53,7 +53,7 @@ curvaRoll = graficaRoll.plot(x,roll, pen = pg.mkPen('b', width=2))
 j = 0
 
 
-"""
+
 Vyaw = np.arange(limiteDatos)*0  
 graficaVYaw = win.addPlot(title="vYaw")
 graficaVYaw.setYRange(-90,90)
@@ -86,7 +86,6 @@ graficaAltura = win.addPlot(title="Altura")
 graficaAltura.setYRange(0,150)
 curvaAltura = graficaAltura.plot(x,Altura, pen = pg.mkPen('w', width=2))
 o = 0
-"""
 
 
 def EsNumero(numero):
@@ -95,6 +94,7 @@ def EsNumero(numero):
         return True
     except Exception:
         return False
+
 
 def updateYaw():
     global curvaYaw, timerYaw, limiteDatos, yaw, k
@@ -172,7 +172,7 @@ def updateRoll():
         #exit()
 
 
-"""
+
 def updateVYaw():
     global curvaVYaw, timerVYaw, limiteDatos, Vyaw, l
     if (l<limiteDatos):
@@ -200,7 +200,7 @@ def updateVYaw():
 
 def updateVPitch():
     global curvaVPitch, timerVPitch, limiteDatos, Vpitch, m
-    if (i<limiteDatos):
+    if (m<limiteDatos):
         entrada = puerto.readline()
         entrada = list(entrada)
         codigo = entrada[0]
@@ -226,7 +226,7 @@ def updateVPitch():
 
 def updateVRoll():
     global curvaVRoll, timerVRoll, limiteDatos, Vroll, n
-    if (j<limiteDatos):
+    if (n<limiteDatos):
         entrada = puerto.readline()
         entrada = list(entrada)
         codigo = entrada[0]
@@ -271,7 +271,7 @@ def updateAltura():
         puerto.write('Z')
         timerAltura.stop()
         #exit()
-"""
+
 
 timerYaw = QtCore.QTimer()
 timerYaw.timeout.connect(updateYaw)
@@ -284,14 +284,14 @@ timerPitch.start(1)
 timerRoll = QtCore.QTimer()
 timerRoll.timeout.connect(updateRoll)
 timerRoll.start(1)
-"""
+
 timerVYaw = QtCore.QTimer()
 timerVYaw.timeout.connect(updateVYaw)
 timerVYaw.start(1)
 
 timerVPitch = QtCore.QTimer()
 timerVPitch.timeout.connect(updateVPitch)
-imerVPitch.start(1)
+timerVPitch.start(1)
 
 timerVRoll = QtCore.QTimer()
 timerVRoll.timeout.connect(updateVRoll)
@@ -300,4 +300,3 @@ timerVRoll.start(1)
 timerAltura = QtCore.QTimer()
 timerAltura.timeout.connect(updateAltura)
 timerAltura.start(1)
-"""
