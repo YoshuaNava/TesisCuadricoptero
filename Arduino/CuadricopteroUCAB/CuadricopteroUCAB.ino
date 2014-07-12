@@ -17,7 +17,7 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 250 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
 #define CODIGO_APAGADO 'Z'
 #define CODIGO_ENCENDIDO 'T'
 #define CODIGO_MOVIMIENTO 'M'
@@ -171,19 +171,19 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0.7, 0, 0);
-  PID_pAngular_Pitch.SetTunings(1.35, 0.05, 0);
-  PID_pAngular_Roll.SetTunings(1.35, 0.05, 0);
+  PID_pAngular_Pitch.SetTunings(3.5, 0.05, 0);
+  PID_pAngular_Roll.SetTunings(3.5, 0.05, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.01);
-  PID_vAngular_Roll.SetTunings(0.95, 0.01, 0.01);
+  PID_vAngular_Yaw.SetTunings(0.7, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.8, 0, 0.01);
+  PID_vAngular_Roll.SetTunings(0.9, 0, 0.01);
 
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 250;
+  velocidadBasePWM = 255;
   RecibirComando();
   SecuenciaDeInicio();
 
@@ -318,8 +318,10 @@ void CalcularAltura()
   digitalWrite(USPIN, HIGH);
   delayMicroseconds(10);  
   digitalWrite(USPIN, LOW);
-  pinMode(USPIN, INPUT);  
+  pinMode(USPIN, INPUT);
   duracion = pulseIn(USPIN, HIGH, 10000);
+  pinMode(USPIN, OUTPUT);
+  digitalWrite(USPIN, HIGH);
   distancia = (duracion/2)/58.2;
   delay(10);
 
