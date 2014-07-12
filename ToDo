@@ -1,13 +1,17 @@
+* Adaptar el protocolo MAVLINK a XBEE y Python. 38400 baudios por segundo.
 
-* Marco referencial.
-* Pruebas con el Parallax Ping.
-* Calibrar sistemas de control.
-	* Posición angular.
-	* Altura.
 * Incluir la lectura y graficación de datos de sensores mientras se escuchan comandos. (PyQT con su multiprocesamiento nativo pueden ser una buena solución).
-* Pruebas de vuelo.
+
 * Interfaz en Python (Puede hacerse con PyQT).
+
+* Pruebas de vuelo sin el sistema de control de altura.
+
+* Sistema de control de altura
+	- Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 son necesarios para utilizar el sensor ultrasónico)
+	- Calibrar sistemas de control.
+
 * Documento.
-	* Desarrollo.
-	* Resultados.
-	* Conclusiones.
+	- Marco referencial.
+	- Desarrollo.
+	- Resultados.
+	- Conclusiones.
