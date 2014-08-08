@@ -149,6 +149,19 @@
      <property name="title">
       <string>Configuración</string>
      </property>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>201</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Lorem ipsum dolor sit amet, consectetur&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;adipiscing elit. Proin id adipiscing leo, in &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;vestibulum nulla. Donec consequat &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;tempus dui congue mattis. Donec &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;blandit orci metus, et interdum sapien &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;porttitor in. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
     </widget>
     <widget class="Line" name="line">
      <property name="geometry">
