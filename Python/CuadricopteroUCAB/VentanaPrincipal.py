@@ -43,6 +43,13 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_velRoll.setYRange(-90,90)
         self.plot_velYaw.setYRange(-90,90)
         self.plot_altura.setYRange(0,150)
+        self.plot_posPitch.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_posRoll.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_posYaw.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_velPitch.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_velRoll.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_velYaw.showGrid(x=True, y=True, alpha=1.0)
+        self.plot_altura.showGrid(x=True, y=True, alpha=1.0)
         self.plot_posPitch.setTitle("Pitch (Grados)")
         self.plot_posRoll.setTitle("Roll (Grados)")
         self.plot_posYaw.setTitle("Yaw (Grados)")
@@ -90,11 +97,11 @@ class VentanaPrincipal(ClaseBasePlantilla):
         
     def chBoxGraficarStateChanged(self):
         self.graficarDatos = not(self.graficarDatos)
-        print self.graficarDatos
+        #print self.graficarDatos
         
     def chBoxEnviarComandosStateChanged(self):
         self.enviarComandos = not(self.enviarComandos)
-        print self.enviarComandos
+        #print self.enviarComandos
 
 
     def setDataArrays(self):
@@ -151,7 +158,6 @@ class VentanaPrincipal(ClaseBasePlantilla):
             
         
     def updatePlots(self):
-        print 'hola'
         if(self.graficarDatos == True):
             self.plot_posPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
             self.plot_posRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
