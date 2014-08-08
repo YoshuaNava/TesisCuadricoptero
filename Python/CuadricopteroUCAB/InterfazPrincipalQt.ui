@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage_posicionAngular" native="true">
      <attribute name="title">
@@ -72,7 +72,7 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="PlotWidget" name="velocidadYawPlot"/>
+       <widget class="PlotWidget" name="velocidadRollPlot"/>
       </item>
       <item row="0" column="3">
        <widget class="Line" name="separadorPlot_PitchRoll_3">
@@ -82,7 +82,7 @@
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="PlotWidget" name="velocidadRollPlot"/>
+       <widget class="PlotWidget" name="velocidadYawPlot"/>
       </item>
      </layout>
     </widget>

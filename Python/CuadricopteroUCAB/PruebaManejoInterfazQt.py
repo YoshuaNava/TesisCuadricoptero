@@ -34,7 +34,15 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_velYaw = self.ui.velocidadYawPlot.getPlotItem()
         self.plot_altura = self.ui.alturaPlot.getPlotItem()
         
-
+        
+        #Configuracion de las propiedades de las graficas.
+        self.plot_posPitch.setYRange(-90,90)
+        self.plot_posRoll.setYRange(-90,90)
+        self.plot_posYaw.setYRange(-90,90)
+        self.plot_velPitch.setYRange(-90,90)
+        self.plot_velRoll.setYRange(-90,90)
+        self.plot_velYaw.setYRange(-90,90)
+        self.plot_altura.setYRange(0,150)
         
         #Objetos para gestionar las acciones del usuario sobre los botones de la interfaz.
         self.botonIniciarCom = self.ui.pB_iniciarComunicacion
@@ -72,32 +80,70 @@ class VentanaPrincipal(ClaseBasePlantilla):
         print self.graficarDatos
         #self.chBoxGraficar.toggle()
 
+
     def setDataArrays(self):
         datosPosPitch = 0
         datosPosRoll = 0
         datosPosYaw = 0
+
         
     def iniciarComunicacion(self):
-        if(comunicacionIniciada == False):
+        if(self.comunicacionIniciada == False):
             print "Iniciar comunicacion"
-            self.estadoCom.setText("Comunicacion activa")
+            self.label_estadoCom.setText("Comunicacion activa")
             self.botonIniciarCom.setStyleSheet('background-color:#cdc9c9;')
             self.botonDetenerCom.setStyleSheet('background-color: rgb(255,0,0);')
             self.tiempoInicioEjecucion = time.localtime(time.time())
             self.comunicacionIniciada = True
+            
+            self.timerTiempoEjecucion = QtCore.QTimer()
+            self.timerTiempoEjecucion.timeout.connect(self.updateTimerLabel)
+            self.timerTiempoEjecucion.start(1000)
+        
         
     def detenerComunicacion(self):
-        if(comunicacionIniciada == True):
+        if(self.comunicacionIniciada == True):
             print "Detener comunicacion"
-            self.estadoCom.setText("Comunicacion inactiva")
+            self.label_estadoCom.setText("Comunicacion inactiva")
             self.botonDetenerCom.setStyleSheet('background-color:#cdc9c9;')
             self.botonIniciarCom.setStyleSheet('background-color: rgb(0,230,0);')
+            self.tiempoEjecucionMinutos = 0
+            self.tiempoEjecucionSegundos = 0            
             self.comunicacionIniciada = False
+            self.timerTiempoEjecucion.stop()
+            self.label_timerSesion.setText("00:00")
+            
+
+    def updateTimerLabel(self):
+        if(self.tiempoEjecucionSegundos < 60):
+            self.tiempoEjecucionSegundos += 1
+        else:
+            self.tiempoEjecucionSegundos = 0
+            self.tiempoEjecucionMinutos += 1
+            
+        if(self.tiempoEjecucionMinutos < 10):
+            textoTimer = "0" + str(self.tiempoEjecucionMinutos) + ":"
+        else:
+            textoTimer = str(self.tiempoEjecucionMinutos) + ":"
+
+        if(self.tiempoEjecucionSegundos < 10):
+            textoTimer += "0" + str(self.tiempoEjecucionSegundos)
+        else:
+            textoTimer += str(self.tiempoEjecucionSegundos)
+            
+        self.label_timerSesion.setText(textoTimer)
+        self.updatePlots()
+            
         
     def updatePlots(self):
         print 'hola'
         if(self.graficarDatos == True):
-            self.plot_posPitch.plot(np.random.normal(size=100), clear=True)
-        
+            self.plot_posPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
+            self.plot_posRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
+            self.plot_posYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
+            self.plot_velPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
+            self.plot_velRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
+            self.plot_velYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
+            self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))
 
 ventana = VentanaPrincipal()
