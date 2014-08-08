@@ -32,7 +32,7 @@
      </attribute>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="PlotWidget" name="graphicsView_pitchPlot"/>
+       <widget class="PlotWidget" name="posicionPitchPlot"/>
       </item>
       <item row="0" column="3">
        <widget class="Line" name="separadorPlot_RollYaw">
@@ -49,10 +49,10 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="PlotWidget" name="graphicsView_rollPlot"/>
+       <widget class="PlotWidget" name="posicionRollPlot"/>
       </item>
       <item row="0" column="4">
-       <widget class="PlotWidget" name="graphicsView_yawPlot"/>
+       <widget class="PlotWidget" name="posicionYawPlot"/>
       </item>
      </layout>
     </widget>
@@ -62,7 +62,7 @@
      </attribute>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <widget class="PlotWidget" name="graphicsView_velocidadPitchPlot"/>
+       <widget class="PlotWidget" name="velocidadPitchPlot"/>
       </item>
       <item row="0" column="1">
        <widget class="Line" name="separadorPlot_PitchRoll_2">
@@ -72,7 +72,7 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="PlotWidget" name="graphicsView_velocidadRollPlot"/>
+       <widget class="PlotWidget" name="velocidadYawPlot"/>
       </item>
       <item row="0" column="3">
        <widget class="Line" name="separadorPlot_PitchRoll_3">
@@ -82,7 +82,7 @@
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="PlotWidget" name="graphicsView_velocidadpitchPlot_4"/>
+       <widget class="PlotWidget" name="velocidadRollPlot"/>
       </item>
      </layout>
     </widget>
@@ -92,7 +92,7 @@
      </attribute>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <widget class="PlotWidget" name="graphicsView_altura"/>
+       <widget class="PlotWidget" name="alturaPlot"/>
       </item>
      </layout>
     </widget>
@@ -199,7 +199,7 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>30</y>
+        <y>120</y>
         <width>201</width>
         <height>31</height>
        </rect>
@@ -217,16 +217,16 @@
      <widget class="QLineEdit" name="tiempoEJecucion">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>70</y>
-        <width>251</width>
-        <height>111</height>
+        <x>60</x>
+        <y>150</y>
+        <width>161</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Droid Sans [unknown]</family>
-        <pointsize>70</pointsize>
+        <pointsize>40</pointsize>
        </font>
       </property>
       <property name="text">
@@ -240,6 +240,75 @@
       </property>
       <property name="readOnly">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pB_iniciarComunicacion">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>101</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(0,230,0);
+}</string>
+      </property>
+      <property name="text">
+       <string>Iniciar</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pB_detenerComunicacion">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>50</y>
+        <width>101</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(255,0,0);
+}</string>
+      </property>
+      <property name="text">
+       <string>Detener</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="titulo_tiempoEjecucion_2">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>20</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Comunicación inalámbrica</string>
       </property>
      </widget>
     </widget>
