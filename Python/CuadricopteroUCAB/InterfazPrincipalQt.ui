@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage_posicionAngular" native="true">
      <attribute name="title">
@@ -153,13 +153,26 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
+        <y>60</y>
         <width>201</width>
-        <height>181</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Lorem ipsum dolor sit amet, consectetur&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;adipiscing elit. Proin id adipiscing leo, in &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;vestibulum nulla. Donec consequat &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;tempus dui congue mattis. Donec &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;blandit orci metus, et interdum sapien &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;porttitor in. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="chBox_graficarDatosSensores">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>191</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Graficar datos de sensores</string>
       </property>
      </widget>
     </widget>
@@ -214,7 +227,7 @@
        <string>Tiempo de ejecución (min:seg)</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="tiempoEJecucion">
+     <widget class="QLineEdit" name="tiempoEjecucion">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -259,9 +272,8 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton {
-    background-color: rgb(0,230,0);
-}</string>
+       <string notr="true">background-color: rgb(0,230,0);
+</string>
       </property>
       <property name="text">
        <string>Iniciar</string>
@@ -284,20 +296,19 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton {
-    background-color: rgb(255,0,0);
-}</string>
+       <string notr="true">background-color: rgb(255,0,0);
+</string>
       </property>
       <property name="text">
        <string>Detener</string>
       </property>
      </widget>
-     <widget class="QLabel" name="titulo_tiempoEjecucion_2">
+     <widget class="QLabel" name="titulo_estadoComunicacion">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>70</x>
         <y>20</y>
-        <width>181</width>
+        <width>151</width>
         <height>31</height>
        </rect>
       </property>
@@ -308,7 +319,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Comunicación inalámbrica</string>
+       <string>Comunicación inactiva</string>
       </property>
      </widget>
     </widget>
