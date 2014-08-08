@@ -126,6 +126,11 @@
       <height>241</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <underline>false</underline>
+     </font>
+    </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
@@ -135,9 +140,9 @@
     <widget class="QGroupBox" name="configuracionSesionVuelo">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>10</y>
-       <width>211</width>
+       <width>201</width>
        <height>221</height>
       </rect>
      </property>
@@ -161,11 +166,18 @@
     <widget class="QGroupBox" name="controlesEJecucion">
      <property name="geometry">
       <rect>
-       <x>700</x>
+       <x>710</x>
        <y>10</y>
-       <width>301</width>
+       <width>291</width>
        <height>231</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Droid Sans [unknown]</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="title">
       <string>Control de ejecución</string>
@@ -173,9 +185,9 @@
      <widget class="QLabel" name="titulo_tiempoEjecucion">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>40</x>
         <y>30</y>
-        <width>141</width>
+        <width>201</width>
         <height>31</height>
        </rect>
       </property>
@@ -186,17 +198,32 @@
        </font>
       </property>
       <property name="text">
-       <string>Tiempo de ejecución</string>
+       <string>Tiempo de ejecución (min:seg)</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="tiempoEJecucion">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>60</y>
+        <x>20</x>
+        <y>70</y>
         <width>251</width>
-        <height>131</height>
+        <height>111</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Droid Sans [unknown]</family>
+        <pointsize>70</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>00:00</string>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Normal</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -238,7 +265,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Paddle derecho:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Adelante -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;+&lt;/span&gt; Pitch&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Atrás -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;-&lt;/span&gt; Pitch&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Derecha -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;+&lt;/span&gt; Roll&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Izquierda -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;-&lt;/span&gt; Roll&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Máximo +-20° por eje.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Paddle derecho:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Adelante -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;+&lt;/span&gt; Pitch&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Atrás -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;-&lt;/span&gt; Pitch&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Derecha -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;+&lt;/span&gt; Roll&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*&lt;/span&gt; Izquierda -&amp;gt; &lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;-&lt;/span&gt; Roll&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Máximo +-20° por eje.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -254,7 +281,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Botones:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 10/START -&amp;gt; Iniciar ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 9/SELECT -&amp;gt; Detener ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Trackpad:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Arriba -&amp;gt; Aumentar altura en 5cm&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Abajo -&amp;gt; Disminuir altura en 5cm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Botones:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 10/START -&amp;gt; Iniciar ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 9/SELECT -&amp;gt; Detener ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Trackpad:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Arriba -&amp;gt; Aumentar altura en 5cm&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Abajo -&amp;gt; Disminuir altura en 5cm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>
