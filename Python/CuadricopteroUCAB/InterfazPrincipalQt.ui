@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabWidgetPage_posicionAngular" native="true">
      <attribute name="title">
@@ -149,30 +149,30 @@
      <property name="title">
       <string>Configuración</string>
      </property>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>60</y>
-        <width>201</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Lorem ipsum dolor sit amet, consectetur&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;adipiscing elit. Proin id adipiscing leo, in &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;vestibulum nulla. Donec consequat &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;tempus dui congue mattis. Donec &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;blandit orci metus, et interdum sapien &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;porttitor in. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="chBox_graficarDatosSensores">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
+        <y>50</y>
         <width>191</width>
         <height>22</height>
        </rect>
       </property>
       <property name="text">
        <string>Graficar datos de sensores</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="chBox_enviarComandosJoystick">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>90</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Enviar comandos del Joystick</string>
       </property>
      </widget>
     </widget>
@@ -374,7 +374,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Botones:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 10/START -&amp;gt; Iniciar ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 9/SELECT -&amp;gt; Detener ejecución&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Trackpad:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Arriba -&amp;gt; Aumentar altura en 5cm&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Abajo -&amp;gt; Disminuir altura en 5cm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Botones:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 10/START -&amp;gt; Iniciar motores&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Botón 9/SELECT -&amp;gt; Detener motores&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Trackpad:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Arriba -&amp;gt; Aumentar altura en 5cm&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;* &lt;/span&gt;Abajo -&amp;gt; Disminuir altura en 5cm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>

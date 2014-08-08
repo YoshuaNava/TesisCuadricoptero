@@ -43,20 +43,32 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_velRoll.setYRange(-90,90)
         self.plot_velYaw.setYRange(-90,90)
         self.plot_altura.setYRange(0,150)
+        self.plot_posPitch.setTitle("Pitch (Grados)")
+        self.plot_posRoll.setTitle("Roll (Grados)")
+        self.plot_posYaw.setTitle("Yaw (Grados)")
+        self.plot_velPitch.setTitle("Pitch (Grados/Segundo)")
+        self.plot_velRoll.setTitle("Roll (Grados/Segundo)")
+        self.plot_velYaw.setTitle("Yaw (Grados/Segundo)")
+        self.plot_altura.setTitle("Altura (Centimetros)")
         
         #Objetos para gestionar las acciones del usuario sobre los botones de la interfaz.
         self.botonIniciarCom = self.ui.pB_iniciarComunicacion
         self.botonDetenerCom = self.ui.pB_detenerComunicacion
-        self.chBoxGraficar = self.ui.chBox_graficarDatosSensores
+        self.chBoxGraficarDatos = self.ui.chBox_graficarDatosSensores
+        self.chBoxEnviarComandos = self.ui.chBox_enviarComandosJoystick
         
         #Por defecto se grafican los datos de los sensores.
         self.graficarDatos = True
-        self.chBoxGraficar.toggle()
+        self.chBoxGraficarDatos.toggle()
+        
+        #Por defecto no se envian comandos desde el Joystick, para evitar accidentes al presionarlo inadvertidamente.
+        self.enviarComandos = False
         
         #Manejadores de eventos para los botones.
         self.botonIniciarCom.clicked.connect(self.iniciarComunicacion)
         self.botonDetenerCom.clicked.connect(self.detenerComunicacion)
-        self.chBoxGraficar.stateChanged.connect(self.chBoxGraficarStateChanged)
+        self.chBoxGraficarDatos.stateChanged.connect(self.chBoxGraficarStateChanged)
+        self.chBoxEnviarComandos.stateChanged.connect(self.chBoxEnviarComandosStateChanged)
 
         #Objetos para gestionar los labels de la interfaz.
         self.label_estadoCom = self.ui.titulo_estadoComunicacion 
@@ -67,6 +79,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         #Al empezar la ejecucion del programa el boton de detener comunicacion debe aparecer desactivado.        
         self.botonDetenerCom.setStyleSheet('background-color:#cdc9c9;')                
         
+        #Variables para manejar la comunicacion y el tiempo de ejecucion.
         self.comunicacionIniciada = False
         self.tiempoEjecucionMinutos = 0
         self.tiempoEjecucionSegundos = 0
@@ -78,7 +91,10 @@ class VentanaPrincipal(ClaseBasePlantilla):
     def chBoxGraficarStateChanged(self):
         self.graficarDatos = not(self.graficarDatos)
         print self.graficarDatos
-        #self.chBoxGraficar.toggle()
+        
+    def chBoxEnviarComandosStateChanged(self):
+        self.enviarComandos = not(self.enviarComandos)
+        print self.enviarComandos
 
 
     def setDataArrays(self):
@@ -95,7 +111,6 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.botonDetenerCom.setStyleSheet('background-color: rgb(255,0,0);')
             self.tiempoInicioEjecucion = time.localtime(time.time())
             self.comunicacionIniciada = True
-            
             self.timerTiempoEjecucion = QtCore.QTimer()
             self.timerTiempoEjecucion.timeout.connect(self.updateTimerLabel)
             self.timerTiempoEjecucion.start(1000)
@@ -147,3 +162,18 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))
 
 ventana = VentanaPrincipal()
+""" TODO:
+    1) Aqui se podria llamar a un hilo que maneje el puerto serial y reciba la instanciacion de la ventana,
+    de modo que pueda llamar al metodo updatePlots de la ventana (que hay que mejorarlo, ahorita solo es 
+    un stub para pruebas) conforme le lleguen datos. De esa manera, las graficas se actualizarian conforme
+    lleguen los datos, y no se quedaria pegada la interfaz.El hilo, ademas, tendria metodos para enviar 
+    comandos del Joystick de forma inmediata al cuadricoptero.
+    Si se aprieta el boton Iniciar en la interfaz, el hilo inicia su ejecucion (Start). Si se aprieta el boton
+    Detener en la interfaz, el hilo se detiene. Si se vuelve a presionar el boton Iniciar, el hilo deberia 
+    empezar a pasar datos de nuevo a la interfaz (El hilo deberia hacer flush cuando se llama a sus metodos
+    Start y Resume)
+
+    2) Al levantarse la ventana principal deberia levantarse tambien un hilo que maneje los eventos del Joystick
+    y guarde     el estado del mismo en variables de la Ventana (Se debe pasar la ventana como parametro al hilo
+    del Joystick)
+"""
