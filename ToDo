@@ -6,9 +6,12 @@
 
 * Pruebas de vuelo sin el sistema de control de altura.
 
-* Sistema de control de altura
-	- Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 son necesarios para utilizar el sensor ultrasónico)
-	- Calibrar sistemas de control.
+* Nuevo circuito de control de motores con diodos en lugar de optocouplers, IRFZ44, diodos de rodada libre de mayor capacidad, y mayores condensadores para 
+filtrar la entrada y salida del regulador.
+
+* Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 son necesarios para utilizar el sensor ultrasónico)
+
+* Calibrar nuevamente los sistemas de control de velocidad angular, posición angular y altura.
 
 * Documento.
 	- Marco referencial.
