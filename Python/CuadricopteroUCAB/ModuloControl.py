@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Mon Aug 11 08:10:57 2014
+
+@author: alfredoso
+"""
+
+# -*- coding: utf-8 -*-
 
 import pygame
 import pygame.display
 import pygame.joystick
 import time
-import ModuloSerial as Serial
+#import ModuloSerial as Serial
 
 __BOTON_1 = 0
 __BOTON_2 = 1
@@ -18,11 +25,10 @@ __BOTON_9 = 8
 __BOTON_10 = 9
 __BOTON_11 = 10
 __BOTON_10 = 11
-__TRACKPAD_x = 0
-__TRACKPAD_y = 1
 __RUEDA_DERECHA_x = 2
 __RUEDA_DERECHA_y = 3
-__RUEDA_IZQUIERDA = 4
+__RUEDA_IZQUIERDA_x = 0
+__RUEDA_IZQUIERDA_y = 1
 
 __CODIGO_MOVIMIENTO = 'M'
 __CODIGO_CONSTANTES = 'K'
@@ -30,8 +36,8 @@ __CODIGO_APAGAR = 'Z'
 
 __multiplicadorConstantes = 1000
 
-calibrarYPR = 'R'
-MAXIMO_ANGULO = 90
+#calibrarYPR = 'R'
+MAXIMO_ANGULO = 20
 
 
 
@@ -72,7 +78,8 @@ def DetectarJoystick():
 
 
 
-def Ejecutar(puertoSerial):
+
+def Ejecutar():
     
     pygame.display.init()
     
@@ -80,70 +87,51 @@ def Ejecutar(puertoSerial):
     joystick_object = DetectarJoystick()
     
     if (joystick_object != None):
-        estado_boton_QUIT = joystick_object.get_button(__BOTON_9)    
+        estado_boton_DELTA = joystick_object.get_button(__BOTON_4)
         
-        while (estado_boton_QUIT == 0):
+        while (estado_boton_DELTA == 0):
             eventos = pygame.event.get()
-            for evento in eventos:
-                if evento.type == pygame.JOYAXISMOTION:                
-                    movimientoX_trackpad = joystick_object.get_axis(__TRACKPAD_x)
-                    movimientoY_trackpad = -joystick_object.get_axis(__TRACKPAD_y)
-                    if (movimientoX_trackpad != 0):
-                        print 'Trackpad, Posicion en x= %f' %round(movimientoX_trackpad)
-                    if (movimientoY_trackpad != 0):
-                        print 'Trackpad, Posicion en y= %f' %movimientoY_trackpad
-    
+            for evento in eventos:                
+                if evento.type == pygame.JOYAXISMOTION:
                     movimientoX_ruedaDerecha = joystick_object.get_axis(__RUEDA_DERECHA_x)
                     movimientoY_ruedaDerecha = -joystick_object.get_axis(__RUEDA_DERECHA_y)
                     if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                         print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                         print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
-                        comandoPitch = int(movimientoY_ruedaDerecha*MAXIMO_ANGULO) + 90
-                        comandoRoll = int(movimientoX_ruedaDerecha*MAXIMO_ANGULO) + 90
-                        checksum = comandoPitch + comandoRoll
-                        print 'Comando de pitch= %d' %(comandoPitch-90)
-                        print 'Comando de roll= %d' %(comandoRoll-90)
-                        #print 'Modo de ejecucion= %c' %ord(calibrarYPR)
-                        print 'Checksum= %d' %checksum
-                        
-                        Serial.EnviarComandoCuadricoptero(puertoSerial, __CODIGO_MOVIMIENTO, comandoPitch, comandoRoll, checksum)
+                        comandoPitch = int(movimientoY_ruedaDerecha*MAXIMO_ANGULO)
+                        comandoRoll = int(movimientoX_ruedaDerecha*MAXIMO_ANGULO)
+                        print 'Comando de pitch= %d' %(comandoPitch)
+                        print 'Comando de roll= %d' %(comandoRoll)
                         
     
-                        
-                        
-                    estado_boton_QUIT = joystick_object.get_button(__BOTON_9)
-                    estado_boton_R1 = joystick_object.get_button(__BOTON_6)
-                    
-                    print 'Boton R1, Valor %d' %(estado_boton_R1)
+                if evento.type == pygame.JOYBUTTONDOWN:
+                    estado_boton_X = joystick_object.get_button(__BOTON_2)
+                    estado_boton_DELTA = joystick_object.get_button(__BOTON_4)
+                    estado_boton_L1 = joystick_object.get_button(__BOTON_5)
+                    estado_boton_L2 = joystick_object.get_button(__BOTON_7)
+
+                    print 'Boton X: ' + str(estado_boton_X)
+                    print 'Boton DELTA: ' + str(estado_boton_DELTA)
+                    print 'Boton L1: ' + str(estado_boton_L1)
+                    print 'Boton L2: ' + str(estado_boton_L2)                    
+ #                   print 'Boton R1, Valor %d' %(estado_boton_R1)
     
     
     codigo = '~'
-    calibrarYPR = '_'
-    comandoPitch = 90
-    comandoRoll = 90
-    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
+    comandoPitch = 0
+    comandoRoll = 0
     print 'Comando de pitch= %d' %comandoPitch
     print 'Comando de roll= %d' %comandoRoll
-    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
-    print 'Checksum= %d' %checksum
-    
-    Serial.EnviarComandoCuadricoptero(puertoSerial, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum)
+    print 'DETENER MOTORES'    
+    #Serial.EnviarComandoCuadricoptero(puertoSerial, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum)
     time.sleep(0.01)
     
-    codigo = '~'
-    calibrarYPR = '_'
-    comandoPitch = 90
-    comandoRoll = 90
-    checksum = comandoPitch + comandoRoll + ord(calibrarYPR)
-    print 'Comando de pitch= %d' %comandoPitch
-    print 'Comando de roll= %d' %comandoRoll
-    print 'Modo de ejecucion= %c' %ord(calibrarYPR)
-    print 'Checksum= %d' %checksum
-    
-    Serial.EnviarComandoCuadricoptero(puertoSerial, codigo, comandoPitch, comandoRoll, calibrarYPR, checksum)
-    time.sleep(0.01)
         
     
     joystick_object.quit()
     #destroy objects and clean up
     pygame.joystick.quit()
+    
+
+
+Ejecutar()
