@@ -10,6 +10,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 import os
 import time
+from ModuloComandos import HiloJoystick
 
 pg.mkQApp()
 
@@ -91,8 +92,16 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.tiempoEjecucionMinutos = 0
         self.tiempoEjecucionSegundos = 0
         
-        self.show()
+        #Variables para manejar el hilo del Joystick, y los comandos que este emita.
+        self.motoresEncendidos = 0
+        self.comandoPitch = 0.0
+        self.comandoRoll = 0.0
+        self.comandoAltura = '='
+        self.hiloJoystick = HiloJoystick(ventana = self)
+        self.hiloJoystick.Start()
+        #self.hiloJoystick.SetVentana(self)
         
+        self.show()
         
         
     def chBoxGraficarStateChanged(self):
@@ -109,6 +118,17 @@ class VentanaPrincipal(ClaseBasePlantilla):
         datosPosRoll = 0
         datosPosYaw = 0
 
+
+    def setComandos(self, comandoPitch, comandoRoll, comandoAltura, motoresEncendidos):
+        print comandoPitch
+        print comandoRoll
+        print comandoAltura
+        print motoresEncendidos
+        self.comandoPitch = comandoPitch
+        self.comandoRoll = comandoRoll
+        self.comandoAltura = comandoAltura
+        self.motoresEncendidos = motoresEncendidos
+        
         
     def iniciarComunicacion(self):
         if(self.comunicacionIniciada == False):
