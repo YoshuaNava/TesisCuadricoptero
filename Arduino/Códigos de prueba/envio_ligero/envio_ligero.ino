@@ -2,10 +2,8 @@
 unsigned char mensajeEstado[10];
 unsigned char ack[4];
 //Comandos recibidos para movimiento
-unsigned char comandoDerecha;
-unsigned char comandoIzquierda;
-unsigned char comandoAdelante;
-unsigned char comandoAtras;
+unsigned char comandoRoll;
+unsigned char comandoPitch;
 unsigned char comandoAltura;
 //Comandos recibidos para apagado o encendido de motores
 unsigned char comandoMotores; 
@@ -18,7 +16,7 @@ void setup()
 
 void loop()
 { 
-  recibir_comando();
+  enviar_ack(1);
 }
 
 /*Procedimiento para enviar el estado del cuadricoptero
@@ -45,31 +43,37 @@ void enviar_mensajeEstado()
 void enviar_ack(unsigned char codigoMensaje)
 {
   ack[0]=255;
-  mensajeEstado[1]=6;
-  mensajeEstado[2]=codigoMensaje;
-  mensajeEstado[3]=(mensajeEstado[0] ^ mensajeEstado[1] ^ mensajeEstado[2] );
-  Serial.write(mensajeEstado, 4);
+  ack[1]=6;
+  ack[2]=codigoMensaje;
+  unsigned char asd=(ack[0] ^ ack[1] ^ ack[2] );
+  Serial.write(255);
+  Serial.write(6);
+  Serial.write(codigoMensaje);
+  Serial.write(asd);
 }
 
 boolean recibir_comando()
 {
   int buffer = Serial.available();
-  int posicionBuffer = 0;
   if (buffer>0)
   {
     unsigned char headerMensaje =Serial.read();
-    while (headerMensaje != 255 && posicionBuffer < buffer)
+   delay(1);
+   // Serial.println (headerMensaje);
+    while (headerMensaje != 255)
     {
       headerMensaje=Serial.read();
     }
     if (headerMensaje == 255)
     {
       unsigned char codigoMensaje = Serial.read();
-
+      delay(1);
+     // Serial.println(codigoMensaje);
+      return (comprobar_guardar_mensaje(codigoMensaje));
 
     }
   }
-  return true;
+  return false;
 }
 
 boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
@@ -77,14 +81,23 @@ boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
   unsigned char checksum;
   if (codigoMensaje == 1)
   {
-    comandoDerecha = Serial.read();
-    comandoIzquierda=Serial.read();
-    comandoAdelante=Serial.read();
-    comandoAtras=Serial.read();
+    comandoRoll = Serial.read();
+   delay(1);
+    comandoPitch=Serial.read();
+   delay(1);
     comandoAltura=Serial.read();
-     checksum = (255 ^ 1 ^ comandoDerecha ^ comandoIzquierda ^ comandoAdelante ^ comandoAtras ^ comandoAltura); 
-    if (checksum=Serial.read())
+   delay(1);
+    unsigned char asd = Serial.read();
+   delay(1);
+   Serial.println("-----------------------------------------");
+   Serial.println(comandoRoll);
+   Serial.println(comandoPitch);
+   Serial.println(comandoAltura);
+   Serial.println("-----------------------------------------");
+    checksum = (255 ^ 1 ^ comandoRoll ^ comandoPitch ^ comandoAltura); 
+    if (checksum==asd)
     {
+      enviar_ack(codigoMensaje);
       return true;
     }
   }

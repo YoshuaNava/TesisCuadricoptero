@@ -3,12 +3,12 @@
 import serial
 import struct
                                                         
-serialport = serial.Serial("COM3", 38400)
+#serialport = serial.Serial("COM3", 38400)
          
 def recibirComandos () : 
-    global serialport
+    #global serialport
     header = "";
-    #serialport = AbrirPuerto()                                                            
+    serialport = AbrirPuerto()                                                            
     header = serialport.read()
     print(len(header))
     while (len(header)>0):
@@ -33,13 +33,14 @@ def recibirComandos () :
             if (ord(comando)==6):
                 comandoACK = ord(serialport.read())
                 checksum = ord(serialport.read())
-                if ((header ^ comando ^ comandoACK) == checksum):
-                    print ("LLEGO!")                    
-                    return True
-                else:
-                    print("MALO!")
-                    return False
+#                if (bin((ord(header)) ^ bin(comando) ^ bin(comandoACK)) == checksum):
+#                    print ("LLEGO!")                    
+#                    return True
+#                else:
+#                    print("MALO!")
+#                    return False
     print("ERROR")
+    serialport.close();
     return False
             
            
@@ -51,17 +52,16 @@ def controlMotores(intValor):
     CerrarPuerto(puerto)
 
 def controlMovimiento(listaMovimientos):
-    global serialport
-    #puerto = AbrirPuerto()
+    #global serialport
+    puerto = AbrirPuerto()
     checksum = (255 ^ 1 ^ listaMovimientos[0] ^ listaMovimientos[1] ^ listaMovimientos[2] ^ listaMovimientos[3] ^ listaMovimientos[4])
     paquete = (chr(255)+chr(1)+chr(listaMovimientos[0])+chr(listaMovimientos[1])+chr(listaMovimientos[2])+chr(checksum))
-    serialport.write(paquete)
-    #CerrarPuerto(puerto)
+    puerto.write(paquete)
+    CerrarPuerto(puerto)
     
     
     
 def AbrirPuerto():
-    global puertoSerial
     puertoSerial = serial.Serial("COM3", 38400)
     return puertoSerial
 
@@ -90,11 +90,11 @@ def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, checks
     EnviarEntero(puerto,checksum)
     
 while (True):
-    listamovimientos = []
-    for i in range(5):
-       listamovimientos.append(0)
-    listamovimientos[0]=1
-    listamovimientos[1]=2
-    listamovimientos[2]=3
-    controlMovimiento(listamovimientos)
+#    listamovimientos = []
+#    for i in range(5):
+#       listamovimientos.append(0)
+#    listamovimientos[0]=1
+#    listamovimientos[1]=2
+#    listamovimientos[2]=3
+#    controlMovimiento(listamovimientos)
     recibirComandos()
