@@ -521,86 +521,6 @@
 </deviceset>
 </devicesets>
 </library>
-<library name="v-reg">
-<description>&lt;b&gt;Voltage Regulators&lt;/b&gt;&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="78XXL">
-<description>&lt;b&gt;VOLTAGE REGULATOR&lt;/b&gt;</description>
-<wire x1="-5.207" y1="-1.27" x2="5.207" y2="-1.27" width="0.1524" layer="21"/>
-<wire x1="5.207" y1="14.605" x2="-5.207" y2="14.605" width="0.1524" layer="21"/>
-<wire x1="5.207" y1="-1.27" x2="5.207" y2="11.176" width="0.1524" layer="21"/>
-<wire x1="5.207" y1="11.176" x2="4.318" y2="11.176" width="0.1524" layer="21"/>
-<wire x1="4.318" y1="11.176" x2="4.318" y2="12.7" width="0.1524" layer="21"/>
-<wire x1="4.318" y1="12.7" x2="5.207" y2="12.7" width="0.1524" layer="21"/>
-<wire x1="5.207" y1="12.7" x2="5.207" y2="14.605" width="0.1524" layer="21"/>
-<wire x1="-5.207" y1="-1.27" x2="-5.207" y2="11.176" width="0.1524" layer="21"/>
-<wire x1="-5.207" y1="11.176" x2="-4.318" y2="11.176" width="0.1524" layer="21"/>
-<wire x1="-4.318" y1="11.176" x2="-4.318" y2="12.7" width="0.1524" layer="21"/>
-<wire x1="-4.318" y1="12.7" x2="-5.207" y2="12.7" width="0.1524" layer="21"/>
-<wire x1="-5.207" y1="12.7" x2="-5.207" y2="14.605" width="0.1524" layer="21"/>
-<wire x1="-4.572" y1="-0.635" x2="4.572" y2="-0.635" width="0.0508" layer="21"/>
-<wire x1="4.572" y1="7.62" x2="4.572" y2="-0.635" width="0.0508" layer="21"/>
-<wire x1="4.572" y1="7.62" x2="-4.572" y2="7.62" width="0.0508" layer="21"/>
-<wire x1="-4.572" y1="-0.635" x2="-4.572" y2="7.62" width="0.0508" layer="21"/>
-<circle x="0" y="11.176" radius="1.8034" width="0.1524" layer="21"/>
-<circle x="0" y="11.176" radius="4.191" width="0" layer="42"/>
-<circle x="0" y="11.176" radius="4.191" width="0" layer="43"/>
-<pad name="IN" x="-2.54" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="GND" x="0" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="OUT" x="2.54" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<text x="-3.81" y="5.08" size="1.778" layer="25" ratio="10">&gt;NAME</text>
-<text x="-3.937" y="2.54" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-4.445" y="7.874" size="0.9906" layer="21" ratio="10">A15,2mm</text>
-<text x="-0.508" y="0" size="1.27" layer="51" ratio="10">-</text>
-<text x="-3.048" y="0" size="1.27" layer="51" ratio="10">I</text>
-<text x="2.032" y="0" size="1.27" layer="51" ratio="10">O</text>
-<rectangle x1="1.905" y1="-2.159" x2="3.175" y2="-1.27" layer="21"/>
-<rectangle x1="1.905" y1="-3.81" x2="3.175" y2="-2.159" layer="51"/>
-<rectangle x1="-0.635" y1="-2.159" x2="0.635" y2="-1.27" layer="21"/>
-<rectangle x1="-3.175" y1="-2.159" x2="-1.905" y2="-1.27" layer="21"/>
-<rectangle x1="-0.635" y1="-3.81" x2="0.635" y2="-2.159" layer="51"/>
-<rectangle x1="-3.175" y1="-3.81" x2="-1.905" y2="-2.159" layer="51"/>
-<hole x="0" y="11.176" drill="3.302"/>
-</package>
-</packages>
-<symbols>
-<symbol name="78XX">
-<wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.4064" layer="94"/>
-<wire x1="5.08" y1="-5.08" x2="5.08" y2="2.54" width="0.4064" layer="94"/>
-<wire x1="5.08" y1="2.54" x2="-5.08" y2="2.54" width="0.4064" layer="94"/>
-<wire x1="-5.08" y1="2.54" x2="-5.08" y2="-5.08" width="0.4064" layer="94"/>
-<text x="2.54" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
-<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-2.032" y="-4.318" size="1.524" layer="95">GND</text>
-<text x="-4.445" y="-0.635" size="1.524" layer="95">IN</text>
-<text x="0.635" y="-0.635" size="1.524" layer="95">OUT</text>
-<pin name="IN" x="-7.62" y="0" visible="off" length="short" direction="in"/>
-<pin name="GND" x="0" y="-7.62" visible="off" length="short" direction="in" rot="R90"/>
-<pin name="OUT" x="7.62" y="0" visible="off" length="short" direction="pas" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="78XXL" prefix="IC" uservalue="yes">
-<description>&lt;b&gt;VOLTAGE REGULATOR&lt;/b&gt;</description>
-<gates>
-<gate name="A" symbol="78XX" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="78XXL">
-<connects>
-<connect gate="A" pin="GND" pad="GND"/>
-<connect gate="A" pin="IN" pad="IN"/>
-<connect gate="A" pin="OUT" pad="OUT"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="transistor-power">
 <description>&lt;b&gt;Power Transistors&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
@@ -1017,87 +937,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </connects>
 <technologies>
 <technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
-<library name="SparkFun-Capacitors">
-<description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
-In this library you'll find resistors, capacitors, inductors, test points, jumper pads, etc.&lt;br&gt;&lt;br&gt;
-We've spent an enormous amount of time creating and checking these footprints and parts, but it is the end user's responsibility to ensure correctness and suitablity for a given componet or application. If you enjoy using this library, please buy one of our products at www.sparkfun.com.
-&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
-&lt;br&gt;&lt;br&gt;
-You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
-<packages>
-<package name="CAP-PTH-SMALL-KIT">
-<description>&lt;h3&gt;CAP-PTH-SMALL-KIT&lt;/h3&gt;
-Commonly used for small ceramic capacitors. Like our 0.1uF (http://www.sparkfun.com/products/8375) or 22pF caps (http://www.sparkfun.com/products/8571).&lt;br&gt;
-&lt;br&gt;
-&lt;b&gt;Warning:&lt;/b&gt; This is the KIT version of this package. This package has a smaller diameter top stop mask, which doesn't cover the diameter of the pad. This means only the bottom side of the pads' copper will be exposed. You'll only be able to solder to the bottom side.</description>
-<wire x1="0" y1="0.635" x2="0" y2="-0.635" width="0.254" layer="21"/>
-<wire x1="-2.667" y1="1.27" x2="2.667" y2="1.27" width="0.254" layer="21"/>
-<wire x1="2.667" y1="1.27" x2="2.667" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="2.667" y1="-1.27" x2="-2.667" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="-2.667" y1="-1.27" x2="-2.667" y2="1.27" width="0.254" layer="21"/>
-<pad name="1" x="-1.397" y="0" drill="1.016" diameter="2.032" stop="no"/>
-<pad name="2" x="1.397" y="0" drill="1.016" diameter="2.032" stop="no"/>
-<polygon width="0.127" layer="30">
-<vertex x="-1.4021" y="-0.9475" curve="-90"/>
-<vertex x="-2.357" y="-0.0178" curve="-90.011749"/>
-<vertex x="-1.4046" y="0.9576" curve="-90"/>
-<vertex x="-0.4546" y="-0.0204" curve="-90.024193"/>
-</polygon>
-<polygon width="0.127" layer="29">
-<vertex x="-1.4046" y="-0.4395" curve="-90.012891"/>
-<vertex x="-1.8491" y="-0.0153" curve="-90"/>
-<vertex x="-1.4046" y="0.452" curve="-90"/>
-<vertex x="-0.9627" y="-0.0051" curve="-90.012967"/>
-</polygon>
-<polygon width="0.127" layer="30">
-<vertex x="1.397" y="-0.9475" curve="-90"/>
-<vertex x="0.4421" y="-0.0178" curve="-90.011749"/>
-<vertex x="1.3945" y="0.9576" curve="-90"/>
-<vertex x="2.3445" y="-0.0204" curve="-90.024193"/>
-</polygon>
-<polygon width="0.127" layer="29">
-<vertex x="1.3945" y="-0.4395" curve="-90.012891"/>
-<vertex x="0.95" y="-0.0153" curve="-90"/>
-<vertex x="1.3945" y="0.452" curve="-90"/>
-<vertex x="1.8364" y="-0.0051" curve="-90.012967"/>
-</polygon>
-</package>
-</packages>
-<symbols>
-<symbol name="CAP">
-<wire x1="0" y1="2.54" x2="0" y2="2.032" width="0.1524" layer="94"/>
-<wire x1="0" y1="0" x2="0" y2="0.508" width="0.1524" layer="94"/>
-<text x="1.524" y="2.921" size="1.778" layer="95">&gt;NAME</text>
-<text x="1.524" y="-2.159" size="1.778" layer="96">&gt;VALUE</text>
-<rectangle x1="-2.032" y1="0.508" x2="2.032" y2="1.016" layer="94"/>
-<rectangle x1="-2.032" y1="1.524" x2="2.032" y2="2.032" layer="94"/>
-<pin name="1" x="0" y="5.08" visible="off" length="short" direction="pas" swaplevel="1" rot="R270"/>
-<pin name="2" x="0" y="-2.54" visible="off" length="short" direction="pas" swaplevel="1" rot="R90"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="0.1UF-50V-20%(PTH)" prefix="C" uservalue="yes">
-<description>CAP-08370</description>
-<gates>
-<gate name="G$1" symbol="CAP" x="0" y="-2.54"/>
-</gates>
-<devices>
-<device name="KIT-EZ" package="CAP-PTH-SMALL-KIT">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="CAP-08370" constant="no"/>
-</technology>
 </technologies>
 </device>
 </devices>
@@ -1583,12 +1422,10 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <parts>
 <part name="MOTORES" library="pinhead" deviceset="PINHD-1X8" device="/90"/>
 <part name="XBEE" library="pinhead" deviceset="PINHD-1X4" device=""/>
-<part name="LM7809" library="v-reg" deviceset="78XXL" device=""/>
 <part name="Q1" library="transistor-power" deviceset="IRLZ44Z" device=""/>
 <part name="Q2" library="transistor-power" deviceset="IRLZ44Z" device=""/>
 <part name="Q3" library="transistor-power" deviceset="IRLZ44Z" device=""/>
 <part name="Q4" library="transistor-power" deviceset="IRLZ44Z" device=""/>
-<part name="SUPPLY1" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY2" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY4" library="supply2" deviceset="GND" device=""/>
@@ -1598,23 +1435,11 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <part name="+11,1V__BATERIA" library="SparkFun-Connectors" deviceset="M01" device="-SMTSO-256-ET"/>
 <part name="GND__BATERIA" library="SparkFun-Connectors" deviceset="M01" device="-SMTSO-256-ET"/>
 <part name="SUPPLY12" library="supply2" deviceset="GND" device=""/>
-<part name="SUPPLY13" library="supply2" deviceset="GND" device=""/>
 <part name="ARDUINO" library="pinhead" deviceset="PINHD-1X8" device="/90"/>
-<part name="C3" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF"/>
-<part name="C1" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF">
-<attribute name="PROD_ID" value="CAP-08370"/>
-</part>
-<part name="C2" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ" value="0.1uF">
-<attribute name="PROD_ID" value="CAP-08370"/>
-</part>
-<part name="C4" library="SparkFun-Capacitors" deviceset="0.1UF-50V-20%(PTH)" device="KIT-EZ">
-<attribute name="PROD_ID" value="CAP-08370"/>
-</part>
 <part name="H1" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H2" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H3" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
 <part name="H4" library="holes" deviceset="MOUNT-HOLE" device="3.2"/>
-<part name="JP2" library="pinhead" deviceset="PINHD-1X2" device="/90"/>
 <part name="JP1" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="D5" library="gm-diodes" deviceset="1N5817" device=""/>
 <part name="D6" library="gm-diodes" deviceset="1N5817" device=""/>
@@ -1630,12 +1455,10 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <instances>
 <instance part="MOTORES" gate="A" x="167.64" y="33.02"/>
 <instance part="XBEE" gate="A" x="-55.88" y="15.24" rot="R180"/>
-<instance part="LM7809" gate="A" x="195.58" y="15.24"/>
 <instance part="Q1" gate="G$1" x="76.2" y="81.28"/>
 <instance part="Q2" gate="G$1" x="76.2" y="53.34"/>
 <instance part="Q3" gate="G$1" x="76.2" y="25.4"/>
 <instance part="Q4" gate="G$1" x="76.2" y="-2.54"/>
-<instance part="SUPPLY1" gate="GND" x="195.58" y="-12.7"/>
 <instance part="SUPPLY2" gate="GND" x="78.74" y="71.12"/>
 <instance part="SUPPLY3" gate="GND" x="78.74" y="43.18"/>
 <instance part="SUPPLY4" gate="GND" x="78.74" y="15.24"/>
@@ -1645,17 +1468,11 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <instance part="+11,1V__BATERIA" gate="G$1" x="208.28" y="58.42" rot="R180"/>
 <instance part="GND__BATERIA" gate="G$1" x="208.28" y="35.56" rot="R180"/>
 <instance part="SUPPLY12" gate="GND" x="185.42" y="30.48"/>
-<instance part="SUPPLY13" gate="GND" x="96.52" y="-58.42"/>
 <instance part="ARDUINO" gate="A" x="-55.88" y="40.64" rot="R180"/>
-<instance part="C3" gate="G$1" x="182.88" y="0"/>
-<instance part="C1" gate="G$1" x="167.64" y="0"/>
-<instance part="C2" gate="G$1" x="175.26" y="0"/>
-<instance part="C4" gate="G$1" x="205.74" y="0"/>
 <instance part="H1" gate="G$1" x="2.54" y="-45.72"/>
 <instance part="H2" gate="G$1" x="30.48" y="-45.72"/>
 <instance part="H3" gate="G$1" x="2.54" y="-63.5"/>
 <instance part="H4" gate="G$1" x="30.48" y="-63.5"/>
-<instance part="JP2" gate="G$1" x="71.12" y="-60.96" rot="R270"/>
 <instance part="JP1" gate="G$1" x="-33.02" y="2.54" rot="R270"/>
 <instance part="D5" gate="G$1" x="25.4" y="78.74"/>
 <instance part="D6" gate="G$1" x="25.4" y="50.8"/>
@@ -1705,34 +1522,10 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 </net>
 <net name="GND" class="1">
 <segment>
-<pinref part="LM7809" gate="A" pin="GND"/>
-<wire x1="195.58" y1="7.62" x2="195.58" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="-10.16" x2="182.88" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="182.88" y1="-10.16" x2="182.88" y2="-2.54" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="-10.16" x2="205.74" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="-10.16" x2="205.74" y2="-2.54" width="0.1524" layer="91"/>
-<pinref part="SUPPLY1" gate="GND" pin="GND"/>
-<pinref part="C4" gate="G$1" pin="2"/>
-<pinref part="C3" gate="G$1" pin="2"/>
-<pinref part="C2" gate="G$1" pin="2"/>
-<wire x1="175.26" y1="-2.54" x2="175.26" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="-10.16" x2="182.88" y2="-10.16" width="0.1524" layer="91"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="167.64" y1="-2.54" x2="167.64" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="-10.16" x2="175.26" y2="-10.16" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="SUPPLY12" gate="GND" pin="GND"/>
 <wire x1="185.42" y1="33.02" x2="185.42" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="GND__BATERIA" gate="G$1" pin="1"/>
 <wire x1="185.42" y1="35.56" x2="200.66" y2="35.56" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<wire x1="73.66" y1="-53.34" x2="96.52" y2="-53.34" width="0.1524" layer="91"/>
-<pinref part="SUPPLY13" gate="GND" pin="GND"/>
-<wire x1="96.52" y1="-53.34" x2="96.52" y2="-55.88" width="0.1524" layer="91"/>
-<pinref part="JP2" gate="G$1" pin="1"/>
-<wire x1="73.66" y1="-53.34" x2="73.66" y2="-58.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="SUPPLY6" gate="GND" pin="GND"/>
@@ -1769,8 +1562,7 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <net name="N$12" class="0">
 <segment>
 <pinref part="+11,1V__BATERIA" gate="G$1" pin="1"/>
-<wire x1="200.66" y1="58.42" x2="175.26" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="58.42" x2="154.94" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="58.42" x2="154.94" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="154.94" y1="58.42" x2="154.94" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="MOTORES" gate="A" pin="1"/>
 <wire x1="165.1" y1="43.18" x2="154.94" y2="43.18" width="0.1524" layer="91"/>
@@ -1786,17 +1578,6 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <wire x1="154.94" y1="43.18" x2="147.32" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="147.32" y1="43.18" x2="147.32" y2="86.36" width="0.1524" layer="91"/>
 <wire x1="147.32" y1="86.36" x2="121.92" y2="86.36" width="0.1524" layer="91"/>
-<pinref part="C2" gate="G$1" pin="1"/>
-<wire x1="175.26" y1="58.42" x2="175.26" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="175.26" y1="15.24" x2="175.26" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="5.08" x2="167.64" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="15.24" x2="175.26" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="LM7809" gate="A" pin="IN"/>
-<wire x1="175.26" y1="15.24" x2="182.88" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="C3" gate="G$1" pin="1"/>
-<wire x1="182.88" y1="15.24" x2="187.96" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="182.88" y1="5.08" x2="182.88" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="86.36" x2="121.92" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="D3" gate="1" pin="C"/>
 <wire x1="116.84" y1="50.8" x2="121.92" y2="50.8" width="0.1524" layer="91"/>
@@ -1807,9 +1588,9 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 </net>
 <net name="N$14" class="0">
 <segment>
-<wire x1="78.74" y1="63.5" x2="104.14" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="63.5" x2="104.14" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="40.64" x2="114.3" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="63.5" x2="106.68" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="63.5" x2="106.68" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="40.64" x2="114.3" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="114.3" y1="40.64" x2="132.08" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="40.64" x2="132.08" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="MOTORES" gate="A" pin="4"/>
@@ -1868,19 +1649,6 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <wire x1="-30.48" y1="33.02" x2="-53.34" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$18" class="0">
-<segment>
-<pinref part="LM7809" gate="A" pin="OUT"/>
-<wire x1="203.2" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="15.24" x2="205.74" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="-33.02" x2="218.44" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="-33.02" x2="218.44" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="15.24" x2="205.74" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="C4" gate="G$1" pin="1"/>
-<pinref part="JP2" gate="G$1" pin="2"/>
-<wire x1="71.12" y1="-33.02" x2="71.12" y2="-58.42" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$20" class="0">
 <segment>
 <wire x1="-25.4" y1="12.7" x2="-25.4" y2="35.56" width="0.1524" layer="91"/>
@@ -1933,9 +1701,9 @@ dual rectifier, 6 A, 200 V, common cathode</description>
 <wire x1="114.3" y1="55.88" x2="114.3" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="Q1" gate="G$1" pin="D"/>
 <wire x1="78.74" y1="86.36" x2="78.74" y2="91.44" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="91.44" x2="104.14" y2="91.44" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="91.44" x2="104.14" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="68.58" x2="114.3" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="91.44" x2="106.68" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="91.44" x2="106.68" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="68.58" x2="114.3" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="114.3" y1="68.58" x2="142.24" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="68.58" x2="142.24" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="MOTORES" gate="A" pin="2"/>
