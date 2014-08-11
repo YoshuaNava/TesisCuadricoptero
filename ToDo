@@ -5,7 +5,6 @@ Comunicación serial/XBEE
 
 
 Estación de control (Hasta el 13 de agosto)
-	* Lectura del Joystick.
 	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
 
 
