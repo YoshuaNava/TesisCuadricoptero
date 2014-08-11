@@ -11,7 +11,7 @@ Estación de control (Hasta el 13 de agosto)
 
 Circuitos (Hasta el 29 de agosto)
 	* Nuevo circuito de control de motores con diodos schottsky en lugar de optocouplers, IRFZ44 y diodos de rodada libre de mayor 
-	capacidad. (Hasta el 17 de agosto)
+	capacidad. (Hasta el 22 de agosto)
 	* Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 utilizan el timer1, el cual 
 	necesita el sensor ultrasónico). (Hasta el 29 de agosto)
 
