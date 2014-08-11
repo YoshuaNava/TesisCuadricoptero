@@ -4,14 +4,14 @@ Comunicación serial/XBEE
 	* Rehacer la comunicación con paquetes y checksum. (Hasta el 10 de agosto)
 
 
-Estación de control (Hasta el 11 de agosto)
+Estación de control (Hasta el 13 de agosto)
 	* Lectura del Joystick.
 	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
 
 
 Circuitos (Hasta el 29 de agosto)
-	* Nuevo circuito de control de motores con diodos schottsky en lugar de optocouplers, IRFZ44, diodos de rodada libre de mayor capacidad, 
-	y mayores condensadores para filtrar la entrada y salida del regulador. (Hasta el 17 de agosto)
+	* Nuevo circuito de control de motores con diodos schottsky en lugar de optocouplers, IRFZ44 y diodos de rodada libre de mayor 
+	capacidad. (Hasta el 17 de agosto)
 	* Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 utilizan el timer1, el cual 
 	necesita el sensor ultrasónico). (Hasta el 29 de agosto)
 
