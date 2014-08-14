@@ -2,67 +2,66 @@
 
 import serial
 import struct
-                                                        
-#serialport = serial.Serial("COM3", 38400)
-         
-def recibirComandos () : 
-    #global serialport
-    header = "";
-    serialport = AbrirPuerto()                                                            
+        
+
+def recibirComandos (serialport) :  
+#    serialport = AbrirPuerto()                                                            
     header = serialport.read()
-    print(len(header))
     while (len(header)>0):
-        print(ord(header))
-        header = serialport.read()
         if (ord(header)==255):
             comando = serialport.read()
-            if (ord(comando)==7):
+            if (ord(comando)==5):
                 posicionYaw = ord(serialport.read())
                 posicionPitch = ord(serialport.read())
                 posicionRoll = ord(serialport.read())
                 velocidadYaw = ord(serialport.read())
                 velocidadPitch = ord(serialport.read())
                 velocidadRoll = ord(serialport.read())
+                altura = ord(serialport.read())
                 checksum = ord(serialport.read())
-                if ((header ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
-                    print ("LLEGO!")                    
+                print(posicionYaw)
+                print(posicionPitch)
+                print(posicionRoll)
+                print(velocidadYaw)
+                print(velocidadPitch)
+                print(velocidadRoll)
+                print (altura)
+                print(checksum)
+                if ((ord(header) ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
                     return True
                 else:
-                    print("MALO!")
                     return False
-            if (ord(comando)==6):
-                comandoACK = ord(serialport.read())
-                checksum = ord(serialport.read())
-#                if (bin((ord(header)) ^ bin(comando) ^ bin(comandoACK)) == checksum):
-#                    print ("LLEGO!")                    
-#                    return True
-#                else:
-#                    print("MALO!")
-#                    return False
-    print("ERROR")
-    serialport.close();
+           # if (ord(comando)==6):
+            comandoACK = ord(serialport.read())
+            checksum = ord(serialport.read())
+            print(ord(header))
+            print(ord(comando))     
+            print(comandoACK)   
+            print(checksum)
+            
+            if ((ord(header) ^ ord(comando) ^ comandoACK) == checksum):
+                return True
+            else:
+                return False
     return False
             
            
                
-def controlMotores(intValor):
-    puerto = AbrirPuerto()
-    paquete = (chr(255)+chr(1)+chr(intValor))
+def controlMotores(intValor,puerto):
+#    puerto = AbrirPuerto()
+    paquete = (chr(255)+chr(1)+chr(intValor)+chr(255 ^ 1 ^ intValor))
     puerto.write(paquete)
-    CerrarPuerto(puerto)
 
-def controlMovimiento(listaMovimientos):
-    #global serialport
-    puerto = AbrirPuerto()
+def controlMovimiento(listaMovimientos,puerto):
+#   puerto = AbrirPuerto()
     checksum = (255 ^ 1 ^ listaMovimientos[0] ^ listaMovimientos[1] ^ listaMovimientos[2] ^ listaMovimientos[3] ^ listaMovimientos[4])
-    paquete = (chr(255)+chr(1)+chr(listaMovimientos[0])+chr(listaMovimientos[1])+chr(listaMovimientos[2])+chr(checksum))
+    paquete = (chr(255)+chr(1)+chr(listaMovimientos[0])+chr(listaMovimientos[1])+chr(listaMovimientos[2])+chr(listaMovimientos[3])+chr(listaMovimientos[4])+chr(checksum))
     puerto.write(paquete)
-    CerrarPuerto(puerto)
     
     
     
 def AbrirPuerto():
-    puertoSerial = serial.Serial("COM3", 38400)
+    puertoSerial = serial.Serial("COM3", 38400, timeout=0.5)
     return puertoSerial
 
     
@@ -88,13 +87,14 @@ def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, checks
     EnviarEntero(puerto,comandoPitch)
     EnviarEntero(puerto,comandoRoll)
     EnviarEntero(puerto,checksum)
-    
+
+def Enviar():
+    controlMotores(1,puertoSerial)
+
+puertoSerial = serial.Serial("COM3", 38400)
 while (True):
-#    listamovimientos = []
-#    for i in range(5):
-#       listamovimientos.append(0)
-#    listamovimientos[0]=1
-#    listamovimientos[1]=2
-#    listamovimientos[2]=3
-#    controlMovimiento(listamovimientos)
-    recibirComandos()
+    controlMotores(1,puertoSerial)
+    recibirComandos (puertoSerial)
+#    header = puertoSerial.read(1)
+#    if (len(header)>0):
+#        print(ord(header))

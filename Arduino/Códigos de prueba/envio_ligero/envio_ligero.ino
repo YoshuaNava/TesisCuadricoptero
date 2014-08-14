@@ -16,7 +16,7 @@ void setup()
 
 void loop()
 { 
-  enviar_ack(1);
+  recibir_comando();
 }
 
 /*Procedimiento para enviar el estado del cuadricoptero
@@ -32,6 +32,8 @@ void loop()
  posicion 8 = ALTURA
  posicion 9 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
  */
+ 
+ 
 void enviar_mensajeEstado()
 {
   mensajeEstado[0]=255;//HEADER
@@ -59,7 +61,6 @@ boolean recibir_comando()
   {
     unsigned char headerMensaje =Serial.read();
    delay(1);
-   // Serial.println (headerMensaje);
     while (headerMensaje != 255)
     {
       headerMensaje=Serial.read();
@@ -68,8 +69,7 @@ boolean recibir_comando()
     {
       unsigned char codigoMensaje = Serial.read();
       delay(1);
-     // Serial.println(codigoMensaje);
-      return (comprobar_guardar_mensaje(codigoMensaje));
+     comprobar_guardar_mensaje(codigoMensaje);
 
     }
   }
@@ -89,11 +89,6 @@ boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
    delay(1);
     unsigned char asd = Serial.read();
    delay(1);
-   Serial.println("-----------------------------------------");
-   Serial.println(comandoRoll);
-   Serial.println(comandoPitch);
-   Serial.println(comandoAltura);
-   Serial.println("-----------------------------------------");
     checksum = (255 ^ 1 ^ comandoRoll ^ comandoPitch ^ comandoAltura); 
     if (checksum==asd)
     {
@@ -105,10 +100,11 @@ boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
   {
     comandoMotores = Serial.read();
     checksum = (255 ^ 2 ^ comandoMotores); 
-    if (checksum=Serial.read())
+    if (checksum==Serial.read())
     {
       enviar_ack(codigoMensaje);
-      return true;
+      
+      return true;   
     }  
   }
   return false;
