@@ -113,10 +113,14 @@ class VentanaPrincipal(ClaseBasePlantilla):
         #print self.enviarComandos
 
 
-    def setDataArrays(self):
-        datosPosPitch = 0
-        datosPosRoll = 0
-        datosPosYaw = 0
+    def setDataArrays(self, datosPosPitch, datosPosRoll, datosPosYaw, datosVelPitch, datosVelRoll, datosVelYaw, datosAltura):
+        self.datosPosPitch = datosPosPitch
+        self.datosPosRoll = datosPosRoll
+        self.datosPosYaw = datosPosYaw
+        self.datosVelPitch = datosVelPitch
+        self.datosVelRoll = datosVelRoll
+        self.datosVelYaw = datosVelYaw
+        self.datosAltura = datosAltura
 
 
     def setComandos(self, comandoPitch, comandoRoll, comandoAltura, motoresEncendidos):
@@ -128,7 +132,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoRoll = comandoRoll
         self.comandoAltura = comandoAltura
         self.motoresEncendidos = motoresEncendidos
-        
+            
         
     def iniciarComunicacion(self):
         if(self.comunicacionIniciada == False):
@@ -188,6 +192,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))
 
 ventana = VentanaPrincipal()
+
 """ TODO:
     1) Aqui se podria llamar a un hilo que maneje el puerto serial y reciba la instanciacion de la ventana,
     de modo que pueda llamar al metodo updatePlots de la ventana (que hay que mejorarlo, ahorita solo es 
@@ -199,7 +204,4 @@ ventana = VentanaPrincipal()
     empezar a pasar datos de nuevo a la interfaz (El hilo deberia hacer flush cuando se llama a sus metodos
     Start y Resume)
 
-    2) Al levantarse la ventana principal deberia levantarse tambien un hilo que maneje los eventos del Joystick
-    y guarde     el estado del mismo en variables de la Ventana (Se debe pasar la ventana como parametro al hilo
-    del Joystick)
 """

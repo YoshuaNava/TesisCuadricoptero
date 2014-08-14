@@ -4,46 +4,57 @@ import serial
 import struct
         
 
+
+def cardinalCaracterValidado(caracter):
+    if(len(caracter) > 0):
+        if((ord(caracter) > 0) and (ord(caracter) <= 255)):
+            return ord(caracter)
+    else:
+        return 1000
+        
+
 def recibirComandos (serialport) :  
-#    serialport = AbrirPuerto()                                                            
+#    serialport = AbrirPuerto()
+#    if (serialport.inWaiting() > 0)
     header = serialport.read()
-    while (len(header)>0):
-        if (ord(header)==255):
-            comando = serialport.read()
-            if (ord(comando)==5):
-                posicionYaw = ord(serialport.read())
-                posicionPitch = ord(serialport.read())
-                posicionRoll = ord(serialport.read())
-                velocidadYaw = ord(serialport.read())
-                velocidadPitch = ord(serialport.read())
-                velocidadRoll = ord(serialport.read())
-                altura = ord(serialport.read())
-                checksum = ord(serialport.read())
-                print(posicionYaw)
-                print(posicionPitch)
-                print(posicionRoll)
-                print(velocidadYaw)
-                print(velocidadPitch)
-                print(velocidadRoll)
-                print (altura)
-                print(checksum)
-                if ((ord(header) ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
-                    return True
-                else:
-                    return False
-           # if (ord(comando)==6):
-            comandoACK = ord(serialport.read())
-            checksum = ord(serialport.read())
-            print(ord(header))
-            print(ord(comando))     
+    print "header = " + str(cardinalCaracterValidado(header))
+
+    if (cardinalCaracterValidado(header)==255):
+        comando = serialport.read()
+        if (cardinalCaracterValidado(comando)==5):
+            posicionYaw = cardinalCaracterValidado(serialport.read())
+            posicionPitch = cardinalCaracterValidado(serialport.read())
+            posicionRoll = cardinalCaracterValidado(serialport.read())
+            velocidadYaw = cardinalCaracterValidado(serialport.read())
+            velocidadPitch = cardinalCaracterValidado(serialport.read())
+            velocidadRoll = cardinalCaracterValidado(serialport.read())
+            altura = cardinalCaracterValidado(serialport.read())
+            checksum = cardinalCaracterValidado(serialport.read())
+            print(posicionYaw)
+            print(posicionPitch)
+            print(posicionRoll)
+            print(velocidadYaw)
+            print(velocidadPitch)
+            print(velocidadRoll)
+            print (altura)
+            print(checksum)
+            if ((cardinalCaracterValidado(header) ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
+                return True
+            else:
+                return False
+        
+        if (cardinalCaracterValidado(comando)==6):
+            comandoACK = cardinalCaracterValidado(serialport.read())
+            checksum = cardinalCaracterValidado(serialport.read())
+            print(cardinalCaracterValidado(header))
+            print(cardinalCaracterValidado(comando))     
             print(comandoACK)   
             print(checksum)
-            
+        
             if ((ord(header) ^ ord(comando) ^ comandoACK) == checksum):
                 return True
             else:
                 return False
-    return False
             
            
                
@@ -91,10 +102,14 @@ def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, checks
 def Enviar():
     controlMotores(1,puertoSerial)
 
-puertoSerial = serial.Serial("COM3", 38400)
+puertoSerial = serial.Serial(port="/dev/ttyUSB0", baudrate=38400, timeout=0.05)
+contador = 0
 while (True):
-    controlMotores(1,puertoSerial)
+    #controlMotores(1,puertoSerial)
     recibirComandos (puertoSerial)
+    contador = contador + 1
+    print "Paquetes recibidos = " + str(contador)
+    #puertoSerial.flushInput()    
 #    header = puertoSerial.read(1)
 #    if (len(header)>0):
 #        print(ord(header))

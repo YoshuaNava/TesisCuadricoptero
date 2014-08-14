@@ -16,7 +16,9 @@ void setup()
 
 void loop()
 { 
-  recibir_comando();
+//  recibir_comando();
+  enviar_ack(6);
+  delay(50);
 }
 
 /*Procedimiento para enviar el estado del cuadricoptero
