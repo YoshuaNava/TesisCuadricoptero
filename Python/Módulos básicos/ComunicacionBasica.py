@@ -30,15 +30,15 @@ def recibirComandos (serialport) :
             velocidadRoll = cardinalCaracterValidado(serialport.read())
             altura = cardinalCaracterValidado(serialport.read())
             checksum = cardinalCaracterValidado(serialport.read())
-            print(posicionYaw)
-            print(posicionPitch)
-            print(posicionRoll)
-            print(velocidadYaw)
-            print(velocidadPitch)
-            print(velocidadRoll)
-            print (altura)
-            print(checksum)
             if ((cardinalCaracterValidado(header) ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
+                print(posicionYaw)
+                print(posicionPitch)
+                print(posicionRoll)
+                print(velocidadYaw)
+                print(velocidadPitch)
+                print(velocidadRoll)
+                print (altura)
+                print(checksum)
                 return True
             else:
                 return False
@@ -46,12 +46,13 @@ def recibirComandos (serialport) :
         if (cardinalCaracterValidado(comando)==6):
             comandoACK = cardinalCaracterValidado(serialport.read())
             checksum = cardinalCaracterValidado(serialport.read())
-            print(cardinalCaracterValidado(header))
-            print(cardinalCaracterValidado(comando))     
-            print(comandoACK)   
-            print(checksum)
         
             if ((ord(header) ^ ord(comando) ^ comandoACK) == checksum):
+                print(cardinalCaracterValidado(header))
+                print(cardinalCaracterValidado(comando))     
+                print(comandoACK)   
+                print(checksum)
+
                 return True
             else:
                 return False
