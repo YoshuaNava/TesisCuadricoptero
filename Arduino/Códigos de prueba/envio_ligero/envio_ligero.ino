@@ -16,9 +16,8 @@ void setup()
 
 void loop()
 { 
-//  recibir_comando();
-  enviar_ack(6);
-  delay(50);
+  recibir_comando();
+
 }
 
 /*Procedimiento para enviar el estado del cuadricoptero
@@ -66,6 +65,7 @@ boolean recibir_comando()
     while (headerMensaje != 255)
     {
       headerMensaje=Serial.read();
+      delay(1);
     }
     if (headerMensaje == 255)
     {
@@ -96,7 +96,7 @@ boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
     {
       enviar_ack(codigoMensaje);
       return true;
-    }
+    } 
   }
   if (codigoMensaje == 2)
   {

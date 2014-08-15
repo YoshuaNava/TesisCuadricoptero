@@ -17,11 +17,10 @@ def recibirComandos (serialport) :
 #    serialport = AbrirPuerto()
 #    if (serialport.inWaiting() > 0)
     header = serialport.read()
-    print "header = " + str(cardinalCaracterValidado(header))
 
     if (cardinalCaracterValidado(header)==255):
         comando = serialport.read()
-        if (cardinalCaracterValidado(comando)==5):
+        if (cardinalCaracterValidado(comando)==7):
             posicionYaw = cardinalCaracterValidado(serialport.read())
             posicionPitch = cardinalCaracterValidado(serialport.read())
             posicionRoll = cardinalCaracterValidado(serialport.read())
@@ -30,7 +29,7 @@ def recibirComandos (serialport) :
             velocidadRoll = cardinalCaracterValidado(serialport.read())
             altura = cardinalCaracterValidado(serialport.read())
             checksum = cardinalCaracterValidado(serialport.read())
-            if ((cardinalCaracterValidado(header) ^ comando ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll) == checksum):
+            if ((cardinalCaracterValidado(header) ^ ord(comando) ^ posicionYaw ^ posicionPitch ^ posicionRoll ^ velocidadYaw ^ velocidadPitch ^ velocidadRoll ^ altura) == checksum):
                 print(posicionYaw)
                 print(posicionPitch)
                 print(posicionRoll)
@@ -66,8 +65,10 @@ def controlMotores(intValor,puerto):
 
 def controlMovimiento(listaMovimientos,puerto):
 #   puerto = AbrirPuerto()
-    checksum = (255 ^ 1 ^ listaMovimientos[0] ^ listaMovimientos[1] ^ listaMovimientos[2] ^ listaMovimientos[3] ^ listaMovimientos[4])
-    paquete = (chr(255)+chr(1)+chr(listaMovimientos[0])+chr(listaMovimientos[1])+chr(listaMovimientos[2])+chr(listaMovimientos[3])+chr(listaMovimientos[4])+chr(checksum))
+    checksum = (255 ^ 1 ^ listaMovimientos[0] ^ listaMovimientos[1] ^ listaMovimientos[2])
+    paquete = (chr(255)+chr(1)+chr(listaMovimientos[0])+chr(listaMovimientos[1])+chr(listaMovimientos[2])+chr(checksum))
+    for i in range(6):  
+        print (ord(paquete[i]))
     puerto.write(paquete)
     
     
@@ -103,13 +104,9 @@ def EnviarComandoCuadricoptero(puerto, codigo, comandoPitch, comandoRoll, checks
 def Enviar():
     controlMotores(1,puertoSerial)
 
-puertoSerial = serial.Serial(port="/dev/ttyUSB0", baudrate=38400, timeout=0.05)
-contador = 0
+puertoSerial = serial.Serial(port="COM3", baudrate=38400, timeout=0.05)
 while (True):
-    #controlMotores(1,puertoSerial)
     recibirComandos (puertoSerial)
-    contador = contador + 1
-    print "Paquetes recibidos = " + str(contador)
     #puertoSerial.flushInput()    
 #    header = puertoSerial.read(1)
 #    if (len(header)>0):
