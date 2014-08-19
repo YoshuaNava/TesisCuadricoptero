@@ -20,7 +20,7 @@
 
 #define L3G_WHO_AM_I      0x0F
 
-#define L3G_CTRL_REG1     0x80
+#define L3G_CTRL_REG1     0x20
 #define L3G_CTRL_REG2     0x21
 #define L3G_CTRL_REG3     0x22
 #define L3G_CTRL_REG4     0x23

@@ -1,21 +1,18 @@
 #######################################################		¿Qué falta por hacer?		#######################################################
 
-Comunicación serial/XBEE
-	* Rehacer la comunicación con paquetes y checksum. (Hasta el 14 de agosto)
 
-
-Estación de control (Hasta el 14 de agosto)
+Estación de control (Hasta el 19 de agosto)
 	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
 
 
 Circuitos (Hasta el 29 de agosto)
 	* Nuevo circuito de control de motores con diodos schottsky en lugar de optocouplers, IRFZ44 y diodos de rodada libre de mayor 
-	capacidad. (Hasta el 24 de agosto)
+	capacidad.
 	* Nuevo circuito de lógica y comunicación que utilice los pines 3, 5, 6 y 11 para PWM. (Los pines 9 y 10 utilizan el timer1, el cual 
-	necesita el sensor ultrasónico). (Hasta el 29 de agosto)
+	necesita el sensor ultrasónico).
 
 
-Chasis (Hasta el 29 de agosto)
+Chasis (Hasta el 7 de septiembre)
 	* Diseñar y construir la base definitiva que llevará el cuadricóptero. Sin ella no se pueden realizar pruebas con el cuadricóptero libre.
 
 

@@ -11,6 +11,7 @@ import numpy as np
 import os
 import time
 from ModuloComandos import HiloJoystick
+from ModuloSerial import HiloSerial
 
 pg.mkQApp()
 
@@ -35,7 +36,6 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_velYaw = self.ui.velocidadYawPlot.getPlotItem()
         self.plot_altura = self.ui.alturaPlot.getPlotItem()
         
-        
         #Configuracion de las propiedades de las graficas.
         self.plot_posPitch.setYRange(-90,90)
         self.plot_posRoll.setYRange(-90,90)
@@ -58,12 +58,26 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_velRoll.setTitle("Roll (Grados/Segundo)")
         self.plot_velYaw.setTitle("Yaw (Grados/Segundo)")
         self.plot_altura.setTitle("Altura (Centimetros)")
+
+        #Variables para almacenar los valores que se graficaran
+        self.mensajesEstadoRecibidos = 0
+        self.limiteDatosGraficas = 300
+        self.datosPosPitch = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosPosRoll = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosPosYaw = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosVelPitch = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosVelRoll = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosVelYaw = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosAltura = np.arange(self.limiteDatosGraficas)*0.0
+        self.datosTiempoRecepcion = np.arange(self.limiteDatosGraficas)*0.0
+        
         
         #Objetos para gestionar las acciones del usuario sobre los botones de la interfaz.
         self.botonIniciarCom = self.ui.pB_iniciarComunicacion
         self.botonDetenerCom = self.ui.pB_detenerComunicacion
         self.chBoxGraficarDatos = self.ui.chBox_graficarDatosSensores
         self.chBoxEnviarComandos = self.ui.chBox_enviarComandosJoystick
+        
         
         #Por defecto se grafican los datos de los sensores.
         self.graficarDatos = True
@@ -98,8 +112,12 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoRoll = 0.0
         self.comandoAltura = '='
         self.hiloJoystick = HiloJoystick(ventana = self)
-        self.hiloJoystick.Start()
+        self.hiloJoystick.start()
         #self.hiloJoystick.SetVentana(self)
+        
+        self.tasaBaudios = 38400
+        self.nombrePuertoSerial = "/dev/ttyUSB0"
+        self.hiloComunicacion = HiloSerial(ventana = self, limiteDatos = self.limiteDatosGraficas, nombrePuerto = self.nombrePuertoSerial, tasaBaudios = self.tasaBaudios)
         
         self.show()
         
@@ -113,7 +131,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         #print self.enviarComandos
 
 
-    def setDataArrays(self, datosPosPitch, datosPosRoll, datosPosYaw, datosVelPitch, datosVelRoll, datosVelYaw, datosAltura):
+    def setDatos(self, datosPosYaw, datosPosPitch, datosPosRoll, datosVelYaw, datosVelPitch, datosVelRoll, datosAltura, mensajesRecibidos):
         self.datosPosPitch = datosPosPitch
         self.datosPosRoll = datosPosRoll
         self.datosPosYaw = datosPosYaw
@@ -121,6 +139,11 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosVelRoll = datosVelRoll
         self.datosVelYaw = datosVelYaw
         self.datosAltura = datosAltura
+        self.mensajesEstadoRecibidos = mensajesRecibidos
+        self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock()
+        print "\nDatos de tiempo = "
+        print "tiempo= " + str(self.datosTiempoRecepcion[self.mensajesEstadoRecibidos])
+        print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])
 
 
     def setComandos(self, comandoPitch, comandoRoll, comandoAltura, motoresEncendidos):
@@ -145,6 +168,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.timerTiempoEjecucion = QtCore.QTimer()
             self.timerTiempoEjecucion.timeout.connect(self.updateTimerLabel)
             self.timerTiempoEjecucion.start(1000)
+            self.hiloComunicacion.start()
         
         
     def detenerComunicacion(self):
@@ -158,6 +182,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.comunicacionIniciada = False
             self.timerTiempoEjecucion.stop()
             self.label_timerSesion.setText("00:00")
+            self.hiloComunicacion.stop()
             
 
     def updateTimerLabel(self):
@@ -183,25 +208,26 @@ class VentanaPrincipal(ClaseBasePlantilla):
         
     def updatePlots(self):
         if(self.graficarDatos == True):
-            self.plot_posPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
+            """self.plot_posPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
             self.plot_posRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
             self.plot_posYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
             self.plot_velPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
             self.plot_velRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
             self.plot_velYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
-            self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))
+            self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))"""
+            self.plot_posPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
+            self.plot_posRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
+            self.plot_posYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
+            self.plot_velPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
+            self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
+            self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
+            self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('g', width=2))
 
 ventana = VentanaPrincipal()
 
 """ TODO:
-    1) Aqui se podria llamar a un hilo que maneje el puerto serial y reciba la instanciacion de la ventana,
-    de modo que pueda llamar al metodo updatePlots de la ventana (que hay que mejorarlo, ahorita solo es 
-    un stub para pruebas) conforme le lleguen datos. De esa manera, las graficas se actualizarian conforme
-    lleguen los datos, y no se quedaria pegada la interfaz.El hilo, ademas, tendria metodos para enviar 
-    comandos del Joystick de forma inmediata al cuadricoptero.
-    Si se aprieta el boton Iniciar en la interfaz, el hilo inicia su ejecucion (Start). Si se aprieta el boton
-    Detener en la interfaz, el hilo se detiene. Si se vuelve a presionar el boton Iniciar, el hilo deberia 
-    empezar a pasar datos de nuevo a la interfaz (El hilo deberia hacer flush cuando se llama a sus metodos
+    1) El hilo de comunicacion debe tener metodos para enviar comandos del Joystick de forma inmediata al cuadricoptero.
+    2) Si se vuelve a presionar el boton Iniciar, el hilo deberia empezar a pasar datos de nuevo a la interfaz (El hilo deberia hacer flush cuando se llama a sus metodos
     Start y Resume)
 
 """

@@ -38,7 +38,7 @@ int motorTrasero = 0;
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
 #define K_COMP 0.99
-#define DT_envioDatos 50
+#define DT_envioDatos 100
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 20
@@ -88,6 +88,11 @@ long tiempoUltimoEnvio = 0;
 char modoEjecucion = '_';
 
 
+//VARIABLES PARA LA COMUNICACION
+unsigned char mensajeEstado[16];
+unsigned char ack[4];
+
+
 
 PID PID_vAngular_Yaw(&G_velocidadYPR[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
 PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
@@ -121,7 +126,7 @@ void setup() {
 
 
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
-  Serial.begin(115200);
+  Serial.begin(38400);
   Wire.begin();
 
   if (!gyro.init())
@@ -197,22 +202,6 @@ void loop()
 }
 
 
-void SecuenciaDeVuelo()
-{
-  while (modoEjecucion != '_')
-  {
-    RecibirComando();
-    FiltroComplementario();
-    CalcularAltura();
-    ImprimirEstado();
-    PIDAltura();
-    PID_PosicionAngular();
-    PID_VelocidadAngular();
-    AplicarPWMmotores(velocidadBasePWM);
-  }
-}
-
-
 void SecuenciaDeInicio()
 {
   int i = 0;
@@ -220,7 +209,10 @@ void SecuenciaDeInicio()
   {
     FiltroComplementario();
     CalcularAltura();
-    ImprimirEstado();
+    USAltura = 0;
+    mensajeEstado[8] = 0;
+    //    ImprimirEstado();
+    EnviarMensajeEstado();
     i++;
   }
 
@@ -264,6 +256,25 @@ void SecuenciaDeInicio()
 }
 
 
+void SecuenciaDeVuelo()
+{
+  while (modoEjecucion != '_')
+  {
+    RecibirComando();
+    FiltroComplementario();
+    CalcularAltura();
+    ImprimirEstado();
+    PIDAltura();
+    PID_PosicionAngular();
+    PID_VelocidadAngular();
+    AplicarPWMmotores(velocidadBasePWM);
+  }
+}
+
+
+
+
+
 
 void CalcularOffsetYaw()
 {
@@ -305,7 +316,6 @@ void FiltroComplementario() {
   anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
 
-
   anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
   anguloYPR[1] = ToRad(anguloYPR[1]);
   anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
@@ -317,6 +327,7 @@ void FiltroComplementario() {
   anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   tiempoUltimoMuestreoAngulos = micros();
+
 }
 
 
@@ -329,7 +340,6 @@ void CalcularAltura()
 
     if ((distancia > 0) && (distancia < ALTURA_MAXIMA))
     {
-      //    Serial.println("Hola! " + String(int(distancia)));
       USAltura = distancia;
       //    Serial.print(USAltura);
       //    Serial.println("cm");
@@ -485,47 +495,6 @@ void ImprimirEstado()
 {
   if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
   {
-    //    Serial.println(CODIGO_ENVIO_DATOS);
-    //    Serial.print("Altura: ");
-    //    Serial.print(USAltura);
-    //    Serial.println();
-    //    Serial.print("Yaw: ");
-    //    Serial.print(double(anguloYPR[0]));
-    //    Serial.print(" ");
-    //    Serial.print(double(G_velocidadYPR[0]));
-    //    Serial.println();
-    //    Serial.print("Pitch: ");
-    //    Serial.print(double(anguloYPR[1]));
-    //    Serial.print(" ");
-    //    Serial.print(double(G_velocidadYPR[1]));
-    //    Serial.println();
-    //    Serial.print("Roll: ");
-    //    Serial.print(double(anguloYPR[2]));
-    //    Serial.print(" ");
-    //    Serial.print(double(G_velocidadYPR[2]));
-    //    Serial.print("\n");
-    //
-    /*    Serial.print("Comandos PWM: ");
-        Serial.print("Yaw: ");
-        Serial.print(double(correccionPWM_YPR[0]));
-        Serial.println();
-        Serial.print("Pitch: ");
-        Serial.print(double(correccionPWM_YPR[1]));
-        Serial.println();
-        Serial.print("Roll: ");
-        Serial.print(int(correccionPWM_YPR[2]));
-        Serial.print("\n");
-        Serial.print("\n");
-    */
-    /*
-        Serial.println("Motores:");
-        Serial.println(motorDerecho);
-        Serial.println(motorIzquierdo);
-        Serial.println(motorTrasero);
-        Serial.println(motorDelantero);
-        Serial.println();
-    */
-
     Serial.println('Y');
     Serial.println(int(anguloYPR[0]));
     Serial.println('P');
@@ -547,30 +516,6 @@ void ImprimirEstado()
 
 ///////////////////COMUNICACION/////////////////////////////////////////
 
-/*Procedimiento para enviar el estado del cuadricoptero
- Envia un paquete de 10 bytes
- posicion 0 = HEADER            (255)
- posicion 1 = CODIGO DE MENSAJE (7)
- posicion 2 = POSICION ANGULAR YAW
- posicion 3 = POSICION ANGULAR PITCH
- posicion 4 = POSICION ANGULAR ROLL
- posicion 5 = VELOCIDAD ANGULAR YAW
- posicion 6 = VELOCIDAD ANGULAR PITCH
- posicion 7 = VELOCIDAD ANGULAR ROLL
- posicion 8 = ALTURA
- posicion 9 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
- */
- 
-/* mensajes de envio*/
-/*
-void enviar_mensajeEstado()
-{
-  mensajeEstado[0]=255;//HEADER
-  mensajeEstado[1] = 7;//CODIGO MENSAJE
-  mensajeEstado[8]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[9] ^ mensajeEstado[7] );//CHECKSUM 
-  Serial.write(mensajeEstado,10);//ENVIAR EL PAQUETE DE 10 BYTES
-}
-
 void enviar_ack(unsigned char codigoMensaje)
 {
   ack[0]=255;
@@ -582,66 +527,171 @@ void enviar_ack(unsigned char codigoMensaje)
   Serial.write(codigoMensaje);
   Serial.write(asd);
 }
-*/
+
 /*recepcion de mensajes*/
 /*
 boolean recibir_comando()
-{
-  int buffer = Serial.available();
-  if (buffer>0)
-  {
-    unsigned char headerMensaje =Serial.read();
-   delay(1);
-    while (headerMensaje != 255)
-    {
-      headerMensaje=Serial.read();
-      delay(1);
-    }
-    if (headerMensaje == 255)
-    {
-      unsigned char codigoMensaje = Serial.read();
-      delay(1);
-     comprobar_guardar_mensaje(codigoMensaje);
-
-    }
-  }
-  return false;
-}
-*/
+ {
+ int buffer = Serial.available();
+ if (buffer>0)
+ {
+ unsigned char headerMensaje =Serial.read();
+ delay(1);
+ while (headerMensaje != 255)
+ {
+ headerMensaje=Serial.read();
+ delay(1);
+ }
+ if (headerMensaje == 255)
+ {
+ unsigned char codigoMensaje = Serial.read();
+ delay(1);
+ comprobar_guardar_mensaje(codigoMensaje);
+ 
+ }
+ }
+ return false;
+ }
+ */
 /*chequeo y aplicacion de mensajes*/
 /*
 
-boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
+ boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
+ {
+ unsigned char checksum;
+ if (codigoMensaje == 1)
+ {
+ comandoRoll = Serial.read();
+ delay(1);
+ comandoPitch=Serial.read();
+ delay(1);
+ comandoAltura=Serial.read();
+ delay(1);
+ unsigned char asd = Serial.read();
+ delay(1);
+ checksum = (255 ^ 1 ^ comandoRoll ^ comandoPitch ^ comandoAltura); 
+ if (checksum==asd)
+ {
+ enviar_ack(codigoMensaje);
+ return true;
+ } 
+ }
+ if (codigoMensaje == 2)
+ {
+ comandoMotores = Serial.read();
+ checksum = (255 ^ 2 ^ comandoMotores); 
+ if (checksum==Serial.read())
+ {
+ enviar_ack(codigoMensaje);
+ 
+ return true;   
+ }  
+ }
+ return false;
+ }
+ */
+
+
+/*Procedimiento para enviar el estado del cuadricoptero
+ Envia un paquete de 16 bytes
+ posicion 0 = HEADER            (255)
+ posicion 1 = CODIGO DE MENSAJE (7)
+ posicion 2 = POSICION ANGULAR YAW (Valor positivo o == 0)
+ posicion 3 = POSICION ANGULAR YAW (Valor negativo)
+ posicion 4 = POSICION ANGULAR PITCH (Valor positivo o == 0)
+ posicion 5 = POSICION ANGULAR PITCH (Valor negativo)
+ posicion 6 = POSICION ANGULAR ROLL (Valor positivo o == 0)
+ posicion 7 = POSICION ANGULAR ROLL (Valor negativo)
+ posicion 8 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
+ posicion 9 = VELOCIDAD ANGULAR YAW (Valor negativo)
+ posicion 10 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
+ posicion 11 = VELOCIDAD ANGULAR PITCH (Valor negativo)
+ posicion 12 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
+ posicion 13 = VELOCIDAD ANGULAR ROLL (Valor negativo)
+ posicion 14 = ALTURA
+ posicion 15 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
+ */
+void PrepararPaqueteMensajeEstado()
 {
-  unsigned char checksum;
-  if (codigoMensaje == 1)
+  if(anguloYPR[0] >= 0)
   {
-    comandoRoll = Serial.read();
-   delay(1);
-    comandoPitch=Serial.read();
-   delay(1);
-    comandoAltura=Serial.read();
-   delay(1);
-    unsigned char asd = Serial.read();
-   delay(1);
-    checksum = (255 ^ 1 ^ comandoRoll ^ comandoPitch ^ comandoAltura); 
-    if (checksum==asd)
-    {
-      enviar_ack(codigoMensaje);
-      return true;
-    } 
+    mensajeEstado[2] = anguloYPR[0];
+    mensajeEstado[3] = 0;
   }
-  if (codigoMensaje == 2)
+  else
   {
-    comandoMotores = Serial.read();
-    checksum = (255 ^ 2 ^ comandoMotores); 
-    if (checksum==Serial.read())
-    {
-      enviar_ack(codigoMensaje);
-      
-      return true;   
-    }  
+    mensajeEstado[3] = abs(anguloYPR[0]);
+    mensajeEstado[2] = 0;    
   }
-  return false;
+
+  if(anguloYPR[1] >= 0)
+  {
+    mensajeEstado[4] = anguloYPR[1];
+    mensajeEstado[5] = 0;    
+  }
+  else
+  {
+    mensajeEstado[5] = abs(anguloYPR[1]);
+    mensajeEstado[4] = 0;
+  }
+
+  if(anguloYPR[2] >= 0)
+  {
+    mensajeEstado[6] = anguloYPR[2];
+    mensajeEstado[7] = 0;
+  }
+  else
+  {
+    mensajeEstado[7] = abs(anguloYPR[2]);
+    mensajeEstado[6] = 0;
+  }
+
+  if(G_velocidadYPR[0] >= 0)
+  {
+    mensajeEstado[8] = G_velocidadYPR[0];
+    mensajeEstado[9] = 0;
+  }
+  else
+  {
+    mensajeEstado[9] = abs(G_velocidadYPR[0]);
+    mensajeEstado[8] = 0;
+  }
+
+  if(G_velocidadYPR[1] >= 0)
+  {
+    mensajeEstado[10] = G_velocidadYPR[1];
+    mensajeEstado[11] = 0;
+  }
+  else
+  {
+    mensajeEstado[11] = abs(G_velocidadYPR[1]);
+    mensajeEstado[10] = 0;
+  }
+
+  if(G_velocidadYPR[2] >= 0)
+  {
+    mensajeEstado[12] = G_velocidadYPR[2];
+    mensajeEstado[13] = 0;
+  }
+  else
+  {
+    mensajeEstado[13] = abs(G_velocidadYPR[2]);
+    mensajeEstado[12] = 0;
+  }
+
+  mensajeEstado[14] = USAltura;
 }
-*/
+
+void EnviarMensajeEstado()
+{
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  {
+    PrepararPaqueteMensajeEstado();
+    mensajeEstado[0]=255;//HEADER
+    mensajeEstado[1] = 7;//CODIGO MENSAJE
+    mensajeEstado[15]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13] ^ mensajeEstado[14]);//CHECKSUM 
+    Serial.write(mensajeEstado, 16);//ENVIAR EL PAQUETE DE 16 BYTES
+    tiempoUltimoEnvio = millis();
+  }
+}
+

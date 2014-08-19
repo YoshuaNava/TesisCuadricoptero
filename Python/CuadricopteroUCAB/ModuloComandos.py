@@ -44,21 +44,21 @@ class HiloJoystick:
         else:
             self.ventanaPrincipal = None
                 
-        self.hilo = Thread(target=self.Run)
+        self.hilo = Thread(target=self.run)
 
 
     
-    def Start(self):
+    def start(self):
         if (self.hilo.isAlive() == False):
             self.hilo.start()
         else:
-            self.hilo = Thread(target=self.Run)
-            self.hilo.start()            
+            self.hilo = Thread(target=self.run)
+            self.hilo.start()        
             
                 
     
 
-    def DetectarJoystick(self):
+    def detectarJoystick(self):
         pygame.joystick.init() #initialize joystick module
         pygame.joystick.get_init() #verify initialization (boolean)    
         joystick_count = pygame.joystick.get_count()#get number of joysticks
@@ -96,11 +96,11 @@ class HiloJoystick:
             self.ventanaPrincipal.setComandos(self.comandoPitch, self.comandoRoll, self.comandoAltura, self.motoresEncendidos)
     
     
-    def Run(self):
+    def run(self):
         
         pygame.display.init()
                 
-        joystick_object = self.DetectarJoystick()
+        joystick_object = self.detectarJoystick()
         
         if (joystick_object != None):
 
