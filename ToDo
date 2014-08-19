@@ -1,8 +1,9 @@
 #######################################################		¿Qué falta por hacer?		#######################################################
 
 
-Estación de control (Hasta el 19 de agosto)
+Estación de control (Hasta el 21 de agosto)
 	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
+	Mejorar la velocidad de graficación.
 
 
 Circuitos (Hasta el 29 de agosto)
