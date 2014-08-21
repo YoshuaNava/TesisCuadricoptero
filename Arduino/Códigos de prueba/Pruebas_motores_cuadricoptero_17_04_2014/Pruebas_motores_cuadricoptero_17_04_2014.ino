@@ -131,8 +131,10 @@ void loop()
 {
   //prenderMotoresSecuencia();
     //motor1Continuo();
-  parMotoresSecuencia();
+  //parMotoresSecuencia();
   //prenderMotoresJuntosAcelerarVariableDetener();
   //prenderMotoresJuntos();
+  analogWrite(motor4,250);
+
 }
 
