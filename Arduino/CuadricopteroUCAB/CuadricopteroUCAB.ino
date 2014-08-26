@@ -89,7 +89,7 @@ char modoEjecucion = '_';
 
 
 //VARIABLES PARA LA COMUNICACION
-unsigned char mensajeEstado[16];
+unsigned char mensajeEstado[13];
 unsigned char ack[4];
 
 
@@ -613,6 +613,7 @@ boolean recibir_comando()
  */
 void PrepararPaqueteMensajeEstado()
 {
+  /**POSICION YAW**/
   if(anguloYPR[0] >= 0)
   {
     mensajeEstado[2] = anguloYPR[0];
@@ -623,63 +624,45 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[3] = abs(anguloYPR[0]);
     mensajeEstado[2] = 0;    
   }
-
-  if(anguloYPR[1] >= 0)
+    /**POSICION PICH**/
+    mensajeEstado[4] = anguloYPR[1]+90;
+    /**POSICION ROLL**/
+    mensajeEstado[5] = anguloYPR[2]+90;
+    /**VELOCIDAD YAW**/
+  if(G_velocidadYPR[0] >= 0)
   {
-    mensajeEstado[4] = anguloYPR[1];
-    mensajeEstado[5] = 0;    
-  }
-  else
-  {
-    mensajeEstado[5] = abs(anguloYPR[1]);
-    mensajeEstado[4] = 0;
-  }
-
-  if(anguloYPR[2] >= 0)
-  {
-    mensajeEstado[6] = anguloYPR[2];
+    mensajeEstado[6] = G_velocidadYPR[0];
     mensajeEstado[7] = 0;
   }
   else
   {
-    mensajeEstado[7] = abs(anguloYPR[2]);
+    mensajeEstado[7] = abs(G_velocidadYPR[0]);
     mensajeEstado[6] = 0;
   }
-
-  if(G_velocidadYPR[0] >= 0)
+  /**VELOCIDAD PITCH**/
+  if(G_velocidadYPR[1] >= 0)
   {
-    mensajeEstado[8] = G_velocidadYPR[0];
+    mensajeEstado[8] = G_velocidadYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(G_velocidadYPR[0]);
+    mensajeEstado[9] = abs(G_velocidadYPR[1]);
     mensajeEstado[8] = 0;
   }
-
-  if(G_velocidadYPR[1] >= 0)
+  /**VELOCIDAD ROLL**/
+  if(G_velocidadYPR[2] >= 0)
   {
-    mensajeEstado[10] = G_velocidadYPR[1];
+    mensajeEstado[10] = G_velocidadYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(G_velocidadYPR[1]);
+    mensajeEstado[11] = abs(G_velocidadYPR[2]);
     mensajeEstado[10] = 0;
   }
 
-  if(G_velocidadYPR[2] >= 0)
-  {
-    mensajeEstado[12] = G_velocidadYPR[2];
-    mensajeEstado[13] = 0;
-  }
-  else
-  {
-    mensajeEstado[13] = abs(G_velocidadYPR[2]);
-    mensajeEstado[12] = 0;
-  }
-
-  mensajeEstado[14] = USAltura;
+  mensajeEstado[12] = USAltura;
 }
 
 void EnviarMensajeEstado()
@@ -689,7 +672,7 @@ void EnviarMensajeEstado()
     PrepararPaqueteMensajeEstado();
     mensajeEstado[0]=255;//HEADER
     mensajeEstado[1] = 7;//CODIGO MENSAJE
-    mensajeEstado[15]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13] ^ mensajeEstado[14]);//CHECKSUM 
+    mensajeEstado[13]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]);//CHECKSUM 
     Serial.write(mensajeEstado, 16);//ENVIAR EL PAQUETE DE 16 BYTES
     tiempoUltimoEnvio = millis();
   }
