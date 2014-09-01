@@ -5,7 +5,7 @@ int motor2 = 9;
 int motor3 = 10;
 int motor4 = 11;
 
-int valorPWM = 60;
+int valorPWM = 250;
 int milisegundosActivo = 2000;
 int reposo = 500;
 
@@ -133,8 +133,10 @@ void loop()
     //motor1Continuo();
   //parMotoresSecuencia();
   //prenderMotoresJuntosAcelerarVariableDetener();
-  //prenderMotoresJuntos();
-  analogWrite(motor4,250);
-
+  prenderMotoresJuntos();
+//  analogWrite(motor4,10);
+//  delay(3000);
+//  analogWrite(motor4,0);
+//  delay(3000);
 }
 
