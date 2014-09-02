@@ -8,7 +8,7 @@
 //IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
 
 //ULTRASONIDO:
-#define USPIN 14 //puerto de datos del ultradonido.
+#define USPIN 15 //puerto de datos del ultradonido.
 #define ALTURA_MAXIMA 200
 //FIN ULTRASONIDO
 
@@ -194,7 +194,7 @@ void loop()
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
-  modoEjecucion = '_';
+  modoEjecucion = 'T';
   velocidadBasePWM = 255;
   RecibirComando();
   SecuenciaDeInicio();
