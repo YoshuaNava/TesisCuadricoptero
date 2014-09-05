@@ -2,24 +2,24 @@ EAGLE AutoRouter Statistics:
 
 Job           : C:/Users/Yoshua/Documents/eagle/CircuitoMA_Tesis/Prototipo_3X.brd
 
-Start at      : 01:12:21 (11-08-2014)
-End at        : 01:12:22 (11-08-2014)
-Elapsed time  : 00:00:01
+Start at      : 16:27:49 (05-09-2014)
+End at        : 16:27:49 (05-09-2014)
+Elapsed time  : 00:00:00
 
-Signals       :    14   RoutingGrid: 50 mil  Layers: 1
-Connections   :    27   predefined:  0 ( 0 Vias )
+Signals       :    19   RoutingGrid: 50 mil  Layers: 2
+Connections   :    46   predefined:  0 ( 0 Vias )
 
-Router memory :   10184
+Router memory :   20672
 
 Passname          :     Route Optimize1 Optimize2 Optimize3 Optimize4
 
-Time per pass     :  00:00:01  00:00:00  00:00:00  00:00:00  00:00:00
-Number of Ripups  :        36         0         0         0         0
-max. Level        :         2         0         0         0         0
-max. Total        :         9         0         0         0         0
+Time per pass     :  00:00:00  00:00:00  00:00:00  00:00:00  00:00:00
+Number of Ripups  :         0         0         0         0         0
+max. Level        :         0         0         0         0         0
+max. Total        :         0         0         0         0         0
 
-Routed            :        27        27        27        27        27
-Vias              :         0         0         0         0         0
-Resolution        :   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
+Routed            :        44        44        44        44        44
+Vias              :         6         1         1         1         1
+Resolution        :    95.7 %    95.7 %    95.7 %    95.7 %    95.7 %
 
-Final             : 100.0% finished
+Final             : 95.7% finished
