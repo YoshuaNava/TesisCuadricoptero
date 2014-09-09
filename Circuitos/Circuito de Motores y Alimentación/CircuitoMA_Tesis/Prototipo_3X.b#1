@@ -123,8 +123,8 @@
 <wire x1="75.5" y1="0" x2="75.5" y2="86.5" width="0" layer="20"/>
 <wire x1="75.5" y1="86.5" x2="0" y2="86.5" width="0" layer="20"/>
 <wire x1="0" y1="86.5" x2="0" y2="0" width="0" layer="20"/>
-<text x="3.5" y="20.5" size="1.27" layer="1" rot="R90">GND</text>
-<text x="3.5" y="12.5" size="1.27" layer="1" rot="R90">+11.1V</text>
+<text x="2.5" y="21" size="1.27" layer="16" rot="MR90">GND</text>
+<text x="2.5" y="13.5" size="1.27" layer="16" rot="MR90">+Vb</text>
 <text x="26.5" y="82.5" size="1.6764" layer="16" rot="MR0">Luis Vicens</text>
 <text x="26.5" y="80" size="1.6764" layer="16" rot="MR0">Yoshua Nava</text>
 <text x="38.5" y="80" size="2.1844" layer="16" rot="MR0">UCAB</text>
