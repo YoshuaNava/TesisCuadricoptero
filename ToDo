@@ -1,17 +1,11 @@
 #######################################################		¿Qué falta por hacer?		#######################################################
 
 
-Estación de control (Hasta el 5 de septiembre)
+Estación de control (Hasta el 11 de septiembre)
 	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
-	Mejorar la velocidad de graficación.
+	* Mejorar la velocidad de graficación.
 
 
-Nuevo circuito de control de motores con IRFZ44N y diodos de rodada libre de mayor capacidad. 
-(Hasta el 12 de septiembre)
-
-
-Chasis (Hasta el 5 de septiembre)
-	* Diseñar y construir la base definitiva que llevará el cuadricóptero. Sin ella no se pueden realizar pruebas con el cuadricóptero libre.
 
 
 Sistemas de control (Desde el 15 de septiembre)
