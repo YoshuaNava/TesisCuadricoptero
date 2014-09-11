@@ -74,16 +74,13 @@ class HiloSerial:
     #    serialport = AbrirPuerto()
     #    if (serialport.inWaiting() > 0)
         header = self.cardinalCaracter_Validar(self.puertoSerial.read())
-    
         if (header == 255):
             comando = self.cardinalCaracter_Validar(self.puertoSerial.read())
             if (comando == 7):
                 P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                P_posicionPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                N_posicionPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                P_posicionRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                N_posicionRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                posicionPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())                
+                posicionRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 P_velocidadYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_velocidadYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 P_velocidadPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
@@ -93,15 +90,13 @@ class HiloSerial:
                 altura = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
     
-                if((header != None) and (comando != None) and (P_posicionYaw != None) and (P_posicionPitch != None) and (P_posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_posicionPitch != None) and (N_posicionRoll != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (altura != None) and (checksum != None)):
-                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ P_posicionPitch ^ N_posicionPitch ^ P_posicionRoll ^ N_posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ altura) == checksum):                        
+                if((header != None) and (comando != None) and (P_posicionYaw != None) and (posicionPitch != None) and (posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (altura != None) and (checksum != None)):
+                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ altura) == checksum):                        
                         """print "\nDatos recibidos:"            
                         print(P_posicionYaw)
                         print(N_posicionYaw)
-                        print(P_posicionPitch)
-                        print(N_posicionPitch)
-                        print(P_posicionRoll)
-                        print(N_posicionRoll)
+                        print(posicionPitch)
+                        print(posicionRoll)
                         print(P_velocidadYaw)
                         print(N_velocidadYaw)
                         print(P_velocidadPitch)
@@ -110,7 +105,6 @@ class HiloSerial:
                         print(N_velocidadRoll)
                         print(altura)
                         print(checksum)"""
-
                         
                         if (self.mensajesEstadoRecibidos + 1 >= self.limiteDatos):
                             self.mensajesEstadoRecibidos = 1
@@ -128,14 +122,10 @@ class HiloSerial:
                             self.posicionYaw[self.mensajesEstadoRecibidos] = P_posicionYaw
                         else:
                             self.posicionYaw[self.mensajesEstadoRecibidos] = - N_posicionYaw
-                        if (P_posicionPitch > 0):
-                            self.posicionPitch[self.mensajesEstadoRecibidos] = P_posicionPitch
-                        else:
-                            self.posicionPitch[self.mensajesEstadoRecibidos] = - N_posicionPitch
-                        if (P_posicionRoll > 0):
-                            self.posicionRoll[self.mensajesEstadoRecibidos] = P_posicionRoll
-                        else:
-                            self.posicionRoll[self.mensajesEstadoRecibidos] = - N_posicionRoll
+                        
+                        self.posicionPitch[self.mensajesEstadoRecibidos] = posicionPitch - 90
+                        self.posicionRoll[self.mensajesEstadoRecibidos] = posicionRoll - 90
+
                         if (P_velocidadYaw > 0):
                             self.velocidadYaw[self.mensajesEstadoRecibidos] = P_velocidadYaw
                         else:

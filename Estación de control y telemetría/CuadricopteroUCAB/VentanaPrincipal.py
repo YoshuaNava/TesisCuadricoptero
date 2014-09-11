@@ -11,7 +11,7 @@ import numpy as np
 import os
 import time
 from ModuloComandos import HiloJoystick
-from ModuloSerial import HiloSerial
+from ModuloComunicacion import HiloSerial
 
 pg.mkQApp()
 
@@ -80,8 +80,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         
         
         #Por defecto se grafican los datos de los sensores.
-        self.graficarDatos = True
-        self.chBoxGraficarDatos.toggle()
+        self.graficarDatos = False
+        #self.chBoxGraficarDatos.toggle()
         
         #Por defecto no se envian comandos desde el Joystick, para evitar accidentes al presionarlo inadvertidamente.
         self.enviarComandos = False
@@ -111,9 +111,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
         self.comandoAltura = '='
-        self.hiloJoystick = HiloJoystick(ventana = self)
-        self.hiloJoystick.start()
-        #self.hiloJoystick.SetVentana(self)
+#        self.hiloJoystick = HiloJoystick(ventana = self)
+#        self.hiloJoystick.start()
         
         self.tasaBaudios = 38400
         self.nombrePuertoSerial = "/dev/ttyUSB0"

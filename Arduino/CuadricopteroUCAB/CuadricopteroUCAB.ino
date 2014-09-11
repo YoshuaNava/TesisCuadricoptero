@@ -20,16 +20,21 @@ NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
-#define CODIGO_APAGADO 'Z'
-#define CODIGO_ENCENDIDO 'T'
-#define CODIGO_MOVIMIENTO 'M'
-#define CODIGO_CONSTANTES 'K'
-#define CODIGO_ENVIO_DATOS 'S'
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
 int motorTrasero = 0;
 //FIN MOTORES
+
+
+//CODIGOS DE COMUNICACION:
+#define LED_ENCENDIDO 13
+#define CODIGO_INICIO_MENSAJE 255
+#define CODIGO_ENCENDIDO 0
+#define CODIGO_MOVIMIENTO 1
+#define CODIGO_ACK 6
+#define CODIGO_ESTADO 7
+//FIN CODIGOS DE COMUNICACION
 
 
 //IMU
@@ -113,7 +118,8 @@ void setup() {
   ///////////////////////////////////////////
 
 
-  // Configuracion de los puertos para sensores y motores //
+  // Configuracion de los puertos para sensores, motores y bandera de encendido//
+  pinMode(LED_ENCENDIDO, OUTPUT);
   pinMode(PUERTOMOTORDERECHO, OUTPUT);
   pinMode(PUERTOMOTORIZQUIERDO, OUTPUT);
   pinMode(PUERTOMOTORSUPERIOR, OUTPUT);
@@ -194,7 +200,7 @@ void loop()
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
-  modoEjecucion = 'T';
+  modoEjecucion = '_';
   velocidadBasePWM = 255;
   RecibirComando();
   SecuenciaDeInicio();
@@ -211,7 +217,6 @@ void SecuenciaDeInicio()
     CalcularAltura();
     USAltura = 0;
     mensajeEstado[8] = 0;
-    //    ImprimirEstado();
     EnviarMensajeEstado();
     i++;
   }
@@ -241,7 +246,7 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       CalcularAltura();
-      ImprimirEstado();
+      EnviarMensajeEstado();
       i++;
       delay(5);
     }
@@ -263,7 +268,7 @@ void SecuenciaDeVuelo()
     RecibirComando();
     FiltroComplementario();
     CalcularAltura();
-    ImprimirEstado();
+    EnviarMensajeEstado();
     PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
@@ -429,67 +434,6 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
 }
 
 
-void RecibirComando()
-{
-  if (Serial.available() > 0)
-  {
-    char comando = Serial.read();
-    if (comando == CODIGO_ENCENDIDO)
-    {
-      modoEjecucion = 'T';
-      Serial.println("ENCENDER!");
-    }
-    if (comando == CODIGO_APAGADO)
-    {
-      modoEjecucion = '_';
-      Serial.println("APAGAR!");
-    }
-    if (comando == CODIGO_MOVIMIENTO)
-    {
-      int checksumCalculado = 0;
-      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
-      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
-      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
-
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoPitch_low = Serial.read();
-        anguloRecibidoPitch_high = Serial.read();
-        anguloRecibidoPitch = anguloRecibidoPitch_high * 256 + anguloRecibidoPitch_low;
-      }
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoRoll_low = Serial.read();
-        anguloRecibidoRoll_high = Serial.read();
-        anguloRecibidoRoll = anguloRecibidoRoll_high * 256 + anguloRecibidoRoll_low;
-      }
-      if (Serial.available() > 0)
-      {
-        checksumRecibido_low = Serial.read();
-        checksumRecibido_high = Serial.read();
-        checksumRecibido = checksumRecibido_high * 256 + checksumRecibido_low;
-      }
-
-      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
-
-      if (checksumRecibido == checksumCalculado)
-      {
-        anguloDeseadoYPR[0] = 0;
-        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
-        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
-        if (modoEjecucion == '_')
-        {
-          Serial.println("Angulos deseados en Pitch y Roll:");
-          Serial.println(anguloDeseadoYPR[1]);
-          Serial.println(anguloDeseadoYPR[2]);
-          Serial.println();
-        }
-      }
-    }
-  }
-
-}
-
 
 void ImprimirEstado()
 {
@@ -528,31 +472,7 @@ void enviar_ack(unsigned char codigoMensaje)
   Serial.write(asd);
 }
 
-/*recepcion de mensajes*/
-/*
-boolean recibir_comando()
- {
- int buffer = Serial.available();
- if (buffer>0)
- {
- unsigned char headerMensaje =Serial.read();
- delay(1);
- while (headerMensaje != 255)
- {
- headerMensaje=Serial.read();
- delay(1);
- }
- if (headerMensaje == 255)
- {
- unsigned char codigoMensaje = Serial.read();
- delay(1);
- comprobar_guardar_mensaje(codigoMensaje);
- 
- }
- }
- return false;
- }
- */
+
 /*chequeo y aplicacion de mensajes*/
 /*
 
@@ -624,11 +544,11 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[3] = abs(anguloYPR[0]);
     mensajeEstado[2] = 0;    
   }
-    /**POSICION PICH**/
-    mensajeEstado[4] = anguloYPR[1]+90;
-    /**POSICION ROLL**/
-    mensajeEstado[5] = anguloYPR[2]+90;
-    /**VELOCIDAD YAW**/
+  /**POSICION PICH**/
+  mensajeEstado[4] = anguloYPR[1]+90;
+  /**POSICION ROLL**/
+  mensajeEstado[5] = anguloYPR[2]+90;
+  /**VELOCIDAD YAW**/
   if(G_velocidadYPR[0] >= 0)
   {
     mensajeEstado[6] = G_velocidadYPR[0];
@@ -669,12 +589,121 @@ void EnviarMensajeEstado()
 {
   if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
   {
+
+    digitalWrite(13, !digitalRead(13));
+    //ImprimirEstado();
     PrepararPaqueteMensajeEstado();
-    mensajeEstado[0]=255;//HEADER
-    mensajeEstado[1] = 7;//CODIGO MENSAJE
-    mensajeEstado[13]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]);//CHECKSUM 
+    mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
+    mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
+    mensajeEstado[13]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12]);//CHECKSUM 
     Serial.write(mensajeEstado, 16);//ENVIAR EL PAQUETE DE 16 BYTES
     tiempoUltimoEnvio = millis();
   }
 }
+
+
+/*recepcion de mensajes*/
+
+void RecibirComando()
+{
+  int buffer = Serial.available();
+  if (buffer > 0)
+  {
+    unsigned char headerMensaje = Serial.read();
+    delay(1);
+    if (headerMensaje == CODIGO_INICIO_MENSAJE)
+    {
+      unsigned char codigoRecibido = Serial.read();
+      delay(1);
+      if (codigoRecibido == CODIGO_ENCENDIDO)
+      {
+          unsigned char comandoEncendidoRecibido = Serial.read();
+          delay(1);
+          unsigned char checksum = Serial.read();
+          delay(1);
+          if(CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
+          {
+            if(comandoEncendidoRecibido == 1)
+            {
+              modoEjecucion = 'T';
+              pinMode(LED_ENCENDIDO, HIGH);
+            }
+            if(comandoEncendidoRecibido == 0)
+            {
+              modoEjecucion = '_';
+              pinMode(LED_ENCENDIDO, LOW);
+            }            
+          }
+      }
+      if (codigoRecibido == CODIGO_MOVIMIENTO)
+      {
+      
+      }            
+    }
+  }
+}
+
+
+
+void RecibirComandoASCII()
+{
+  if (Serial.available() > 0)
+  {
+    char comando = Serial.read();
+    if (comando == 'T')
+    {
+      modoEjecucion = 'T';
+      Serial.println("ENCENDER!");
+    }
+    if (comando == '_')
+    {
+      modoEjecucion = '_';
+      Serial.println("APAGAR!");
+    }
+    if (comando == CODIGO_MOVIMIENTO)
+    {
+      int checksumCalculado = 0;
+      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
+      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
+      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
+
+      if (Serial.available() > 0)
+      {
+        anguloRecibidoPitch_low = Serial.read();
+        anguloRecibidoPitch_high = Serial.read();
+        anguloRecibidoPitch = anguloRecibidoPitch_high * 256 + anguloRecibidoPitch_low;
+      }
+      if (Serial.available() > 0)
+      {
+        anguloRecibidoRoll_low = Serial.read();
+        anguloRecibidoRoll_high = Serial.read();
+        anguloRecibidoRoll = anguloRecibidoRoll_high * 256 + anguloRecibidoRoll_low;
+      }
+      if (Serial.available() > 0)
+      {
+        checksumRecibido_low = Serial.read();
+        checksumRecibido_high = Serial.read();
+        checksumRecibido = checksumRecibido_high * 256 + checksumRecibido_low;
+      }
+
+      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
+
+      if (checksumRecibido == checksumCalculado)
+      {
+        anguloDeseadoYPR[0] = 0;
+        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
+        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
+        if (modoEjecucion == '_')
+        {
+          Serial.println("Angulos deseados en Pitch y Roll:");
+          Serial.println(anguloDeseadoYPR[1]);
+          Serial.println(anguloDeseadoYPR[2]);
+          Serial.println();
+        }
+      }
+    }
+  }
+
+}
+
 
