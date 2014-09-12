@@ -1,18 +1,14 @@
 #######################################################		¿Qué falta por hacer?		#######################################################
 
 
-Estación de control (Hasta el 11 de septiembre)
-	* Incluir la recepción y graficación de datos de sensores mientras se escuchan comandos, así como el envío de comandos mediante un hilo de comunicación.
-	* Mejorar la velocidad de graficación.
-
-
-
-
 Sistemas de control (Desde el 15 de septiembre)
 	* Calibrar nuevamente los sistemas de control de velocidad angular y posición angular. 
 	* Implementar y realizar pruebas del sistema de control de altura bajo condiciones controladas. Verificar si se necesita implementar un Filtro 
 	de Kalman a los datos del sensor ultrasónico. 
 	* Pruebas de vuelo.
+
+Estación de control
+	* Mejorar la velocidad de graficación.
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

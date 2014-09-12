@@ -32,7 +32,7 @@ class HiloJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.MAXIMO_ANGULO = 20
+        self.__MAXIMO_ANGULO = 20
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
@@ -126,10 +126,13 @@ class HiloJoystick:
                         if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                             #print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                             #print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
-                            self.comandoPitch = movimientoY_ruedaDerecha*self.MAXIMO_ANGULO
-                            self.comandoRoll = movimientoX_ruedaDerecha*self.MAXIMO_ANGULO
+                            self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO
+                            self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO
                             #print 'Comando de pitch= %d' %(self.comandoPitch)
                             #print 'Comando de roll= %d' %(self.comandoRoll)
+                        
+                        self.comandoPitch = self.comandoPitch + self.__MAXIMO_ANGULO
+                        self.comandoRoll = self.comandoRoll + self.__MAXIMO_ANGULO
                         
                         self.enviarComandosMovimientoVentana()
                             
