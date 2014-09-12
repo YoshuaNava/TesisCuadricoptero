@@ -21,7 +21,7 @@ unsigned int uS;
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 155 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
@@ -193,26 +193,24 @@ void setup() {
 void loop()
 {
 
-  anguloDeseadoYPR[1] = 0.0;
-  anguloDeseadoYPR[2] = 0.0;
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+  PID_pAngular_Pitch.SetTunings(2.5, 0, 0);
+  PID_pAngular_Roll.SetTunings(2.5, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.3, 0, 0);
-  PID_vAngular_Roll.SetTunings(0, 0, 0);
+  PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.5, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.5, 0, 0);
   PID_altura.SetTunings(0, 0, 0);
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 110;
-  //RecibirComando();
-  RecibirComandoASCII();
+  velocidadBasePWM = 180;
+  RecibirComando();
+  //RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -226,8 +224,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     i++;
   }
 
@@ -235,6 +233,9 @@ void SecuenciaDeInicio()
   i = 0;
   if (modoEjecucion != '_')
   {
+    anguloDeseadoYPR[1] = 0;
+    anguloDeseadoYPR[2] = 0;
+    alturaDeseada = 0;
     while (i < velocidadBasePWM / 2)
     {
       if (modoEjecucion == '_')
@@ -257,8 +258,8 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
-      //RecibirComando();
-      RecibirComandoASCII();
+      RecibirComando();
+      //RecibirComandoASCII();
       i++;
       delay(5);
     }
@@ -277,8 +278,8 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
@@ -582,6 +583,9 @@ void RecibirComando()
                   if(comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
+                    anguloDeseadoYPR[1] = 0;
+                    anguloDeseadoYPR[2] = 0;
+                    alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
                   EnviarAcknowledge(CODIGO_ENCENDIDO);
@@ -609,8 +613,8 @@ void RecibirComando()
                     delay(1);
                     if (CODIGO_INICIO_MENSAJE ^ CODIGO_MOVIMIENTO ^ comandoPitch ^ comandoRoll ^ comandoAltura == checksum)
                     {
-                      anguloDeseadoYPR[1] = comandoPitch;
-                      anguloDeseadoYPR[2] = comandoRoll;
+                      anguloDeseadoYPR[1] = comandoPitch - 20;
+                      anguloDeseadoYPR[2] = comandoRoll - 20;
                       if(comandoAltura == '+')
                       {
                         if(alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
