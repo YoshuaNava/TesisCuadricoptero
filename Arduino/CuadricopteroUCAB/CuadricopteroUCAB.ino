@@ -287,22 +287,6 @@ void SecuenciaDeVuelo()
 
 
 
-
-
-
-void CalcularOffsetYaw()
-{
-  int numMuestras = 500;
-  for (int n = 0; n < numMuestras ; n++) {
-    gyro.read();
-
-    yaw_offset += (int)gyro.g.z * G_GYRO;
-  }
-  yaw_offset = yaw_offset / numMuestras;
-}
-
-
-
 void FiltroComplementario() {
   gyro.read();
   compass.read();
