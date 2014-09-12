@@ -70,20 +70,23 @@ class HiloSerial:
         while (self.detenerComunicacion == False):
             self.recibirComandos()
             
+            
     def enviarComandosMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ comandoAltura
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_COMANDO) + chr(int(comandoPitch)) + chr(int(comandoRoll)) + chr(int(comandoAltura)) + chr(checksum)
-        for i in range(6):
-            print (ord(paquete[i]))
-        self.puertoSerial.write(paquete)
+        self.puertoSerial.write(paquete)        
+        """for i in range(6):
+            print (ord(paquete[i]))"""
+        
 
         
     def enviarComandoEncendido(self, comando):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_ENCENDIDO ^ comando
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_ENCENDIDO) + chr(comando) + chr(checksum)
-        for i in range(4):  
-            print (ord(paquete[i]))
-        self.puertoSerial.write(paquete)
+        self.puertoSerial.write(paquete)        
+        """        for i in range(4):  
+            print (ord(paquete[i]))"""
+
         
             
     def recibirComandos(self):
@@ -92,7 +95,8 @@ class HiloSerial:
         header = self.cardinalCaracter_Validar(self.puertoSerial.read())
         if (header == self.__CODIGO_INICIO_MENSAJE):
             comando = self.cardinalCaracter_Validar(self.puertoSerial.read())
-            if (comando == 7):
+            print comando
+            if (comando == self.__CODIGO_MENSAJE_ESTADO):
                 P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 posicionPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())                
@@ -107,21 +111,7 @@ class HiloSerial:
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
     
                 if((header != None) and (comando != None) and (P_posicionYaw != None) and (posicionPitch != None) and (posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (altura != None) and (checksum != None)):
-                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ altura) == checksum):                        
-                        """print "\nDatos recibidos:"            
-                        print(P_posicionYaw)
-                        print(N_posicionYaw)
-                        print(posicionPitch)
-                        print(posicionRoll)
-                        print(P_velocidadYaw)
-                        print(N_velocidadYaw)
-                        print(P_velocidadPitch)
-                        print(N_velocidadPitch)
-                        print(P_velocidadRoll)
-                        print(N_velocidadRoll)
-                        print(altura)
-                        print(checksum)"""
-                        
+                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ altura) == checksum):
                         if (self.mensajesEstadoRecibidos + 1 >= self.limiteDatos):
                             self.mensajesEstadoRecibidos = 1
                             self.posicionYaw = np.arange(self.limiteDatos)*0
@@ -163,15 +153,16 @@ class HiloSerial:
                     else:
                         return False
 
-            
-            if (comando == 6):
-                comandoACK = self.cardinalCaracter_Validar(self.puertoSerial.read())
+            if (comando == self.__CODIGO_MENSAJE_ACK_QR):
+                codigoACK = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
-            
-                if ((header ^ comando ^ comandoACK) == checksum):
+                print "codigo de ack"
+                print codigoACK
+                
+                if ((header ^ comando ^ codigoACK) == checksum):
                     print(header)
                     print(comando)
-                    print(comandoACK)   
+                    print(codigoACK)
                     print(checksum)
                     return True
                 else:

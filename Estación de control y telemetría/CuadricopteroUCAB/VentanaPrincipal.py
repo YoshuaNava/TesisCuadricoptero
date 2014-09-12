@@ -112,8 +112,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
         self.comandoAltura = ord('=')
-        self.hiloJoystick = HiloJoystick(ventana = self)
-        self.hiloJoystick.start()
+#        self.hiloJoystick = HiloJoystick(ventana = self)
+#        self.hiloJoystick.start()
         
         self.tasaBaudios = 38400
         self.nombrePuertoSerial = "/dev/ttyUSB2"

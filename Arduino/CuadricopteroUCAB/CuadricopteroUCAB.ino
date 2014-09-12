@@ -9,10 +9,11 @@
 
 //ULTRASONIDO:
 #define USPIN 15 //puerto de datos del ultradonido.
-#define ALTURA_MAXIMA 200
+#define ALTURA_MAXIMA 150
+#define INCREMENTO_ALTURA_COMANDO 5
+NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 //FIN ULTRASONIDO
 
-NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 
 //MOTORES:
 #define PUERTOMOTORDERECHO 5 //puerto de PWM del motor derecho
@@ -94,7 +95,7 @@ char modoEjecucion = '_';
 
 
 //VARIABLES PARA LA COMUNICACION
-unsigned char mensajeEstado[13];
+unsigned char mensajeEstado[14];
 unsigned char ack[4];
 
 
@@ -215,8 +216,6 @@ void SecuenciaDeInicio()
   {
     FiltroComplementario();
     CalcularAltura();
-    USAltura = 0;
-    mensajeEstado[8] = 0;
     EnviarMensajeEstado();
     RecibirComando();
     i++;
@@ -348,6 +347,7 @@ void CalcularAltura()
     if ((distancia > 0) && (distancia < ALTURA_MAXIMA))
     {
       USAltura = distancia;
+      mensajeEstado[8] = USAltura;
       //    Serial.print(USAltura);
       //    Serial.println("cm");
     }
@@ -462,76 +462,24 @@ void ImprimirEstado()
 
 ///////////////////COMUNICACION/////////////////////////////////////////
 
-void enviar_ack(unsigned char codigoMensaje)
-{
-  ack[0]=255;
-  ack[1]=6;
-  ack[2]=codigoMensaje;
-  unsigned char asd=(ack[0] ^ ack[1] ^ ack[2] );
-  Serial.write(255);
-  Serial.write(6);
-  Serial.write(codigoMensaje);
-  Serial.write(asd);
-}
-
-
-/*chequeo y aplicacion de mensajes*/
-/*
-
- boolean comprobar_guardar_mensaje(unsigned char codigoMensaje)
- {
- unsigned char checksum;
- if (codigoMensaje == 1)
- {
- comandoRoll = Serial.read();
- delay(1);
- comandoPitch=Serial.read();
- delay(1);
- comandoAltura=Serial.read();
- delay(1);
- unsigned char asd = Serial.read();
- delay(1);
- checksum = (255 ^ 1 ^ comandoRoll ^ comandoPitch ^ comandoAltura); 
- if (checksum==asd)
- {
- enviar_ack(codigoMensaje);
- return true;
- } 
- }
- if (codigoMensaje == 2)
- {
- comandoMotores = Serial.read();
- checksum = (255 ^ 2 ^ comandoMotores); 
- if (checksum==Serial.read())
- {
- enviar_ack(codigoMensaje);
- 
- return true;   
- }  
- }
- return false;
- }
- */
 
 
 /*Procedimiento para enviar el estado del cuadricoptero
- Envia un paquete de 16 bytes
+ Envia un paquete de 14 bytes
  posicion 0 = HEADER            (255)
  posicion 1 = CODIGO DE MENSAJE (7)
  posicion 2 = POSICION ANGULAR YAW (Valor positivo o == 0)
  posicion 3 = POSICION ANGULAR YAW (Valor negativo)
- posicion 4 = POSICION ANGULAR PITCH (Valor positivo o == 0)
- posicion 5 = POSICION ANGULAR PITCH (Valor negativo)
- posicion 6 = POSICION ANGULAR ROLL (Valor positivo o == 0)
- posicion 7 = POSICION ANGULAR ROLL (Valor negativo)
- posicion 8 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
- posicion 9 = VELOCIDAD ANGULAR YAW (Valor negativo)
- posicion 10 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
- posicion 11 = VELOCIDAD ANGULAR PITCH (Valor negativo)
- posicion 12 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
- posicion 13 = VELOCIDAD ANGULAR ROLL (Valor negativo)
- posicion 14 = ALTURA
- posicion 15 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
+ posicion 4 = POSICION ANGULAR PITCH
+ posicion 5 = POSICION ANGULAR ROLL
+ posicion 6 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
+ posicion 7 = VELOCIDAD ANGULAR YAW (Valor negativo)
+ posicion 8 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
+ posicion 9 = VELOCIDAD ANGULAR PITCH (Valor negativo)
+ posicion 10 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
+ posicion 11 = VELOCIDAD ANGULAR ROLL (Valor negativo)
+ posicion 12 = ALTURA
+ posicion 13 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
  */
 void PrepararPaqueteMensajeEstado()
 {
@@ -591,14 +539,12 @@ void EnviarMensajeEstado()
 {
   if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
   {
-
-    //    digitalWrite(13, !digitalRead(13));
     //ImprimirEstado();
     PrepararPaqueteMensajeEstado();
     mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
     mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
     mensajeEstado[13]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12]);//CHECKSUM 
-    Serial.write(mensajeEstado, 16);//ENVIAR EL PAQUETE DE 16 BYTES
+    Serial.write(mensajeEstado, 14);//ENVIAR EL PAQUETE DE 14 BYTES
     tiempoUltimoEnvio = millis();
   }
 }
@@ -641,14 +587,53 @@ void RecibirComando()
                   {
                     modoEjecucion = '_';
                     digitalWrite(LED_ENCENDIDO, LOW);
-                  }            
+                  }
+                  EnviarAcknowledge(CODIGO_ENCENDIDO);
                 }
               }
             }
           }
           if (codigoRecibido == CODIGO_MOVIMIENTO)
           {
-
+            if (Serial.available() > 0)
+            {
+              unsigned char comandoPitch = Serial.read();
+              delay(1);
+              if (Serial.available() > 0)
+              {
+                unsigned char comandoRoll = Serial.read();
+                delay(1);
+                if (Serial.available() > 0)
+                {
+                  unsigned char comandoAltura = Serial.read();
+                  delay(1);
+                  if (Serial.available() > 0)
+                  {
+                    unsigned char checksum = Serial.read();
+                    delay(1);
+                    if (CODIGO_INICIO_MENSAJE ^ CODIGO_MOVIMIENTO ^ comandoPitch ^ comandoRoll ^ comandoAltura == checksum)
+                    {
+                      anguloDeseadoYPR[1] = comandoPitch;
+                      anguloDeseadoYPR[2] = comandoRoll;
+                      if(comandoAltura == '+')
+                      {
+                        if(alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
+                        {
+                          alturaDeseada = alturaDeseada + INCREMENTO_ALTURA_COMANDO;
+                        }
+                      }
+                      else if(comandoAltura == '-')
+                      {
+                        if(alturaDeseada - INCREMENTO_ALTURA_COMANDO >=0)
+                        {
+                          alturaDeseada = alturaDeseada - INCREMENTO_ALTURA_COMANDO;
+                        }                        
+                      }
+                    }
+                  } 
+                }
+              }
+            }
           }            
         }
       }
@@ -656,6 +641,15 @@ void RecibirComando()
   }
 }
 
+
+void EnviarAcknowledge(unsigned char codigoMensaje)
+{
+  ack[0] = CODIGO_INICIO_MENSAJE;
+  ack[1] = CODIGO_ACK;
+  ack[2] = codigoMensaje;
+  ack[3] =(ack[0] ^ ack[1] ^ ack[2]);
+  Serial.write(ack, 4);
+}
 
 
 void RecibirComandoASCII()
@@ -718,6 +712,8 @@ void RecibirComandoASCII()
   }
 
 }
+
+
 
 
 
