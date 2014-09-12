@@ -12,6 +12,7 @@
 #define ALTURA_MAXIMA 150
 #define INCREMENTO_ALTURA_COMANDO 5
 NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
+unsigned int uS;
 //FIN ULTRASONIDO
 
 
@@ -35,6 +36,13 @@ int motorTrasero = 0;
 #define CODIGO_MOVIMIENTO 1
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
+unsigned char headerMensaje;
+unsigned char codigoRecibido;
+unsigned char comandoEncendidoRecibido;
+unsigned char comandoPitch;
+unsigned char comandoRoll;
+unsigned char comandoAltura;
+unsigned char checksum;
 //FIN CODIGOS DE COMUNICACION
 
 
@@ -341,7 +349,7 @@ void CalcularAltura()
 {
   if (millis() - tiempoUltimoMuestreoAltura > DT_sensor_altura)
   {
-    unsigned int uS = sonar.ping();
+    uS = sonar.ping();
     distancia = (double) (uS / US_ROUNDTRIP_CM);
 
     if ((distancia > 0) && (distancia < ALTURA_MAXIMA))
@@ -558,23 +566,23 @@ void RecibirComando()
   {
     if (Serial.available() > 0)
     {
-      unsigned char headerMensaje = Serial.read();
+      headerMensaje = Serial.read();
       delay(1);
       if (headerMensaje == CODIGO_INICIO_MENSAJE)
       {
         if (Serial.available() > 0)
         {
-          unsigned char codigoRecibido = Serial.read();
+          codigoRecibido = Serial.read();
           delay(1);
           if (codigoRecibido == CODIGO_ENCENDIDO)
           {
             if (Serial.available() > 0)
             {
-              unsigned char comandoEncendidoRecibido = Serial.read();
+              comandoEncendidoRecibido = Serial.read();
               delay(1);
               if (Serial.available() > 0)
               {
-                unsigned char checksum = Serial.read();
+                checksum = Serial.read();
                 delay(1);
                 if(CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
                 {
@@ -597,19 +605,19 @@ void RecibirComando()
           {
             if (Serial.available() > 0)
             {
-              unsigned char comandoPitch = Serial.read();
+              comandoPitch = Serial.read();
               delay(1);
               if (Serial.available() > 0)
               {
-                unsigned char comandoRoll = Serial.read();
+                comandoRoll = Serial.read();
                 delay(1);
                 if (Serial.available() > 0)
                 {
-                  unsigned char comandoAltura = Serial.read();
+                  comandoAltura = Serial.read();
                   delay(1);
                   if (Serial.available() > 0)
                   {
-                    unsigned char checksum = Serial.read();
+                    checksum = Serial.read();
                     delay(1);
                     if (CODIGO_INICIO_MENSAJE ^ CODIGO_MOVIMIENTO ^ comandoPitch ^ comandoRoll ^ comandoAltura == checksum)
                     {

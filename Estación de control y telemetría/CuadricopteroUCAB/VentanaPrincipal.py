@@ -112,8 +112,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
         self.comandoAltura = ord('=')
-#        self.hiloJoystick = HiloJoystick(ventana = self)
-#        self.hiloJoystick.start()
+        self.hiloJoystick = HiloJoystick(ventana = self)
+        self.hiloJoystick.start()
         
         self.tasaBaudios = 38400
         self.nombrePuertoSerial = "/dev/ttyUSB2"
@@ -141,9 +141,9 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosAltura = datosAltura
         self.mensajesEstadoRecibidos = mensajesRecibidos
         self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock()
-        print "\nDatos de tiempo = "
+        """print "\nDatos de tiempo = "
         print "tiempo= " + str(self.datosTiempoRecepcion[self.mensajesEstadoRecibidos])
-        print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])
+        print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])"""
 
 
     def setComandosMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
@@ -153,14 +153,14 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.comandoPitch = comandoPitch
         self.comandoRoll = comandoRoll
         self.comandoAltura = comandoAltura
-        if (self.enviarComandos == True):
+        if (self.enviarComandos == True) and (self.comunicacionIniciada == True):
             self.hiloComunicacion.enviarComandosMovimiento(comandoPitch, comandoRoll, comandoAltura)
             
         
     def setComandoEncendido(self, comando):
         """print comando"""
         self.motoresEncendidos = comando
-        if (self.enviarComandos == True):            
+        if (self.enviarComandos == True) and (self.comunicacionIniciada == True): 
             self.hiloComunicacion.enviarComandoEncendido(comando)
         
     def iniciarComunicacion(self):

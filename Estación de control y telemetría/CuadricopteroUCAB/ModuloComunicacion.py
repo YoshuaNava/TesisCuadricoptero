@@ -95,7 +95,6 @@ class HiloSerial:
         header = self.cardinalCaracter_Validar(self.puertoSerial.read())
         if (header == self.__CODIGO_INICIO_MENSAJE):
             comando = self.cardinalCaracter_Validar(self.puertoSerial.read())
-            print comando
             if (comando == self.__CODIGO_MENSAJE_ESTADO):
                 P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
@@ -156,14 +155,10 @@ class HiloSerial:
             if (comando == self.__CODIGO_MENSAJE_ACK_QR):
                 codigoACK = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                print "codigo de ack"
-                print codigoACK
+                
                 
                 if ((header ^ comando ^ codigoACK) == checksum):
-                    print(header)
-                    print(comando)
-                    print(codigoACK)
-                    print(checksum)
+                    print "ACK DE ENCENDIDO/APAGADO!!!!!"
                     return True
                 else:
                     return False            
