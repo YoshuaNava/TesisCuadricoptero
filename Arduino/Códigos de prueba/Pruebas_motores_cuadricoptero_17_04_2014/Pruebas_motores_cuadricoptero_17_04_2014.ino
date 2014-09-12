@@ -5,7 +5,7 @@ int motor2 = 9;
 int motor3 = 10;
 int motor4 = 11;
 
-int valorPWM = 250;
+int valorPWM = 180;
 int milisegundosActivo = 2000;
 int reposo = 500;
 

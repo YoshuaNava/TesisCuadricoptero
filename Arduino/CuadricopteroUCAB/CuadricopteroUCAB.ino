@@ -21,7 +21,7 @@ unsigned int uS;
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 155 //maximo PWM que puede enviar el arduino a los motores
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
@@ -197,21 +197,22 @@ void loop()
   anguloDeseadoYPR[2] = 0.0;
 
   // Yaw-  P: 1    I: 0   D: 0
-  PID_pAngular_Yaw.SetTunings(0.7, 0, 0);
-  PID_pAngular_Pitch.SetTunings(3.5, 0.05, 0);
-  PID_pAngular_Roll.SetTunings(3.5, 0.05, 0);
+  PID_pAngular_Yaw.SetTunings(0, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0, 0, 0);
+  PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.7, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.8, 0, 0.01);
-  PID_vAngular_Roll.SetTunings(0.9, 0, 0.01);
-
+  PID_vAngular_Yaw.SetTunings(0, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.3, 0, 0);
+  PID_vAngular_Roll.SetTunings(0, 0, 0);
+  PID_altura.SetTunings(0, 0, 0);
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 255;
-  RecibirComando();
+  velocidadBasePWM = 110;
+  //RecibirComando();
+  RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -225,7 +226,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    RecibirComando();
+    //RecibirComando();
+    RecibirComandoASCII();
     i++;
   }
 
@@ -255,7 +257,8 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
-      RecibirComando();
+      //RecibirComando();
+      RecibirComandoASCII();
       i++;
       delay(5);
     }
@@ -274,7 +277,8 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    RecibirComando();
+    //RecibirComando();
+    RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();

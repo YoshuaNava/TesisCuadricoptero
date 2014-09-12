@@ -116,7 +116,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.hiloJoystick.start()
         
         self.tasaBaudios = 38400
-        self.nombrePuertoSerial = "/dev/ttyUSB2"
+        self.nombrePuertoSerial = "/dev/ttyUSB0"
         self.hiloComunicacion = HiloSerial(ventana = self, limiteDatos = self.limiteDatosGraficas, nombrePuerto = self.nombrePuertoSerial, tasaBaudios = self.tasaBaudios)
         
         self.show()
