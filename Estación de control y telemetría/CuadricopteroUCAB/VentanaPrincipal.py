@@ -84,7 +84,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         #self.chBoxGraficarDatos.toggle()
         
         #Por defecto no se envian comandos desde el Joystick, para evitar accidentes al presionarlo inadvertidamente.
-        self.enviarComandos = False
+        self.enviarComandos = True
+        self.chBoxEnviarComandos.toggle()
         
         #Manejadores de eventos para los botones.
         self.botonIniciarCom.clicked.connect(self.iniciarComunicacion)
@@ -110,12 +111,12 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.motoresEncendidos = 0
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
-        self.comandoAltura = '='
-#        self.hiloJoystick = HiloJoystick(ventana = self)
-#        self.hiloJoystick.start()
+        self.comandoAltura = ord('=')
+        self.hiloJoystick = HiloJoystick(ventana = self)
+        self.hiloJoystick.start()
         
         self.tasaBaudios = 38400
-        self.nombrePuertoSerial = "/dev/ttyUSB0"
+        self.nombrePuertoSerial = "/dev/ttyUSB2"
         self.hiloComunicacion = HiloSerial(ventana = self, limiteDatos = self.limiteDatosGraficas, nombrePuerto = self.nombrePuertoSerial, tasaBaudios = self.tasaBaudios)
         
         self.show()
@@ -145,16 +146,22 @@ class VentanaPrincipal(ClaseBasePlantilla):
         print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])
 
 
-    def setComandos(self, comandoPitch, comandoRoll, comandoAltura, motoresEncendidos):
-        print comandoPitch
+    def setComandosMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
+        """print comandoPitch
         print comandoRoll
-        print comandoAltura
-        print motoresEncendidos
+        print comandoAltura"""
         self.comandoPitch = comandoPitch
         self.comandoRoll = comandoRoll
         self.comandoAltura = comandoAltura
-        self.motoresEncendidos = motoresEncendidos
+        if (self.enviarComandos == True):
+            self.hiloComunicacion.enviarComandosMovimiento(comandoPitch, comandoRoll, comandoAltura)
             
+        
+    def setComandoEncendido(self, comando):
+        """print comando"""
+        self.motoresEncendidos = comando
+        if (self.enviarComandos == True):            
+            self.hiloComunicacion.enviarComandoEncendido(comando)
         
     def iniciarComunicacion(self):
         if(self.comunicacionIniciada == False):

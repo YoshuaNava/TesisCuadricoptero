@@ -218,6 +218,7 @@ void SecuenciaDeInicio()
     USAltura = 0;
     mensajeEstado[8] = 0;
     EnviarMensajeEstado();
+    RecibirComando();
     i++;
   }
 
@@ -247,6 +248,7 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
+      RecibirComando();
       i++;
       delay(5);
     }
@@ -590,7 +592,7 @@ void EnviarMensajeEstado()
   if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
   {
 
-    digitalWrite(13, !digitalRead(13));
+    //    digitalWrite(13, !digitalRead(13));
     //ImprimirEstado();
     PrepararPaqueteMensajeEstado();
     mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
@@ -606,39 +608,50 @@ void EnviarMensajeEstado()
 
 void RecibirComando()
 {
-  int buffer = Serial.available();
-  if (buffer > 0)
+  if (Serial.available() > 0)
   {
-    unsigned char headerMensaje = Serial.read();
-    delay(1);
-    if (headerMensaje == CODIGO_INICIO_MENSAJE)
+    if (Serial.available() > 0)
     {
-      unsigned char codigoRecibido = Serial.read();
+      unsigned char headerMensaje = Serial.read();
       delay(1);
-      if (codigoRecibido == CODIGO_ENCENDIDO)
+      if (headerMensaje == CODIGO_INICIO_MENSAJE)
       {
-          unsigned char comandoEncendidoRecibido = Serial.read();
+        if (Serial.available() > 0)
+        {
+          unsigned char codigoRecibido = Serial.read();
           delay(1);
-          unsigned char checksum = Serial.read();
-          delay(1);
-          if(CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
+          if (codigoRecibido == CODIGO_ENCENDIDO)
           {
-            if(comandoEncendidoRecibido == 1)
+            if (Serial.available() > 0)
             {
-              modoEjecucion = 'T';
-              pinMode(LED_ENCENDIDO, HIGH);
+              unsigned char comandoEncendidoRecibido = Serial.read();
+              delay(1);
+              if (Serial.available() > 0)
+              {
+                unsigned char checksum = Serial.read();
+                delay(1);
+                if(CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
+                {
+                  if(comandoEncendidoRecibido == 1)
+                  {
+                    modoEjecucion = 'T';
+                    digitalWrite(LED_ENCENDIDO, HIGH);
+                  }
+                  if(comandoEncendidoRecibido == 0)
+                  {
+                    modoEjecucion = '_';
+                    digitalWrite(LED_ENCENDIDO, LOW);
+                  }            
+                }
+              }
             }
-            if(comandoEncendidoRecibido == 0)
-            {
-              modoEjecucion = '_';
-              pinMode(LED_ENCENDIDO, LOW);
-            }            
           }
+          if (codigoRecibido == CODIGO_MOVIMIENTO)
+          {
+
+          }            
+        }
       }
-      if (codigoRecibido == CODIGO_MOVIMIENTO)
-      {
-      
-      }            
     }
   }
 }
@@ -705,5 +718,6 @@ void RecibirComandoASCII()
   }
 
 }
+
 
 

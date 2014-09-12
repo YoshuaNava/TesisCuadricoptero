@@ -8,6 +8,7 @@ from threading import Thread
 
 class HiloSerial:
     def __init__(self, ventana, limiteDatos, nombrePuerto, tasaBaudios):
+        self.__CODIGO_INICIO_MENSAJE = 255        
         self.__CODIGO_MENSAJE_ENCENDIDO = 0
         self.__CODIGO_MENSAJE_COMANDO = 1
         self.__CODIGO_MENSAJE_ACK_QR = 6
@@ -69,12 +70,27 @@ class HiloSerial:
         while (self.detenerComunicacion == False):
             self.recibirComandos()
             
+    def enviarComandosMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
+        checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ comandoAltura
+        paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_COMANDO) + chr(int(comandoPitch)) + chr(int(comandoRoll)) + chr(int(comandoAltura)) + chr(checksum)
+        for i in range(6):
+            print (ord(paquete[i]))
+        self.puertoSerial.write(paquete)
+
+        
+    def enviarComandoEncendido(self, comando):
+        checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_ENCENDIDO ^ comando
+        paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_ENCENDIDO) + chr(comando) + chr(checksum)
+        for i in range(4):  
+            print (ord(paquete[i]))
+        self.puertoSerial.write(paquete)
+        
             
     def recibirComandos(self):
     #    serialport = AbrirPuerto()
     #    if (serialport.inWaiting() > 0)
         header = self.cardinalCaracter_Validar(self.puertoSerial.read())
-        if (header == 255):
+        if (header == self.__CODIGO_INICIO_MENSAJE):
             comando = self.cardinalCaracter_Validar(self.puertoSerial.read())
             if (comando == 7):
                 P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
