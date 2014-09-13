@@ -182,7 +182,7 @@ void loop()
 {
   PID_pAngular_Pitch.SetTunings(0, 0, 0);
   PID_pAngular_Roll.SetTunings(0, 0, 0);
-  PID_vAngular_Yaw.SetTunings(0, 0, 0);
+  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
   PID_altura.SetTunings(0, 0, 0);
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
