@@ -13,6 +13,10 @@
 #define INCREMENTO_ALTURA_COMANDO 5
 NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 unsigned int uS;
+double alturaDeseada = 0;
+double distancia = 0;
+double USAltura = 0; // Distancia medida por el sensor de ultrasonido
+double correccionAltura = 0;
 //FIN ULTRASONIDO
 
 
@@ -22,6 +26,8 @@ unsigned int uS;
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 120;
+char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
 int motorDelantero = 0;
@@ -43,6 +49,8 @@ unsigned char comandoPitch;
 unsigned char comandoRoll;
 unsigned char comandoAltura;
 unsigned char checksum;
+unsigned char mensajeEstado[14];
+unsigned char ack[4];
 //FIN CODIGOS DE COMUNICACION
 
 
@@ -51,7 +59,7 @@ unsigned char checksum;
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.99
+#define K_COMP 0.93
 #define DT_envioDatos 100
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
@@ -86,25 +94,15 @@ double velocidadDeseadaYPR[3] = {
 double correccionPWM_YPR[3] = {
   0, 0, 0
 };
-double alturaDeseada = 0;
-long duracion = 0;
-double distancia = 0;
-double USAltura = 0; // Distancia medida por el sensor de ultrasonido
-double correccionAltura = 0;
 double DT = 0;
 //FIN IMU
 
 //VARIABLES GLOBALES:
-int velocidadBasePWM = 0;
 long tiempoUltimoMuestreoAngulos = 0;
 long tiempoUltimoMuestreoAltura = 0;
 long tiempoUltimoEnvio = 0;
-char modoEjecucion = '_';
 
 
-//VARIABLES PARA LA COMUNICACION
-unsigned char mensajeEstado[14];
-unsigned char ack[4];
 
 
 
@@ -196,8 +194,8 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(2.5, 0, 0);
-  PID_pAngular_Roll.SetTunings(2.5, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0, 0, 0);
+  PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
@@ -208,7 +206,6 @@ void loop()
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  velocidadBasePWM = 180;
   RecibirComando();
   //RecibirComandoASCII();
   SecuenciaDeInicio();
@@ -282,11 +279,11 @@ void SecuenciaDeVuelo()
     //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
-    EnviarMensajeEstado();
     PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
+    EnviarMensajeEstado();    
   }
 }
 
@@ -385,8 +382,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
   if (modoEjecucion == 'T')
   {
-    motorDerecho = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
-    motorIzquierdo = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorDerecho = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorIzquierdo = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
     motorDelantero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
     motorTrasero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
   }
@@ -434,28 +431,6 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
 
 
 
-void ImprimirEstado()
-{
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
-  {
-    Serial.println('Y');
-    Serial.println(int(anguloYPR[0]));
-    Serial.println('P');
-    Serial.println(int(anguloYPR[1]));
-    Serial.println('R');
-    Serial.println(int(anguloYPR[2]));
-    Serial.println('y');
-    Serial.println(int(G_velocidadYPR[0]));
-    Serial.println('p');
-    Serial.println(int(G_velocidadYPR[1]));
-    Serial.println('r');
-    Serial.println(int(G_velocidadYPR[2]));
-    Serial.println('A');
-    Serial.println(int(USAltura));
-    //    Serial.println(correccionAltura);
-    tiempoUltimoEnvio = millis();
-  }
-}
 
 ///////////////////COMUNICACION/////////////////////////////////////////
 
@@ -714,6 +689,25 @@ void RecibirComandoASCII()
 }
 
 
-
-
-
+void ImprimirEstado()
+{
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  {
+    Serial.println('Y');
+    Serial.println(int(anguloYPR[0]));
+    Serial.println('P');
+    Serial.println(int(anguloYPR[1]));
+    Serial.println('R');
+    Serial.println(int(anguloYPR[2]));
+    Serial.println('y');
+    Serial.println(int(G_velocidadYPR[0]));
+    Serial.println('p');
+    Serial.println(int(G_velocidadYPR[1]));
+    Serial.println('r');
+    Serial.println(int(G_velocidadYPR[2]));
+    Serial.println('A');
+    Serial.println(int(USAltura));
+    //    Serial.println(correccionAltura);
+    tiempoUltimoEnvio = millis();
+  }
+}

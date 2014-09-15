@@ -80,8 +80,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         
         
         #Por defecto se grafican los datos de los sensores.
-        self.graficarDatos = False
-        #self.chBoxGraficarDatos.toggle()
+        self.graficarDatos = True
+        self.chBoxGraficarDatos.toggle()
         
         #Por defecto no se envian comandos desde el Joystick, para evitar accidentes al presionarlo inadvertidamente.
         self.enviarComandos = True
