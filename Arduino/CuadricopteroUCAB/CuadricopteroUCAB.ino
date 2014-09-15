@@ -26,7 +26,7 @@ double correccionAltura = 0;
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 120;
+int velocidadBasePWM = 160;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -63,7 +63,7 @@ unsigned char ack[4];
 #define DT_envioDatos 100
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 20
+#define DT_PID_posicionAngular 10
 #define DT_PID_velocidadAngular 1
 
 L3G gyro;
@@ -111,7 +111,7 @@ PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDese
 PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
-PID PID_pAngular_Roll(&anguloYPR[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, DIRECT);
+PID PID_pAngular_Roll(&anguloYPR[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
 PID PID_altura(&USAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
 
 
@@ -194,13 +194,13 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0.5, 0, 0.01);
+  PID_pAngular_Roll.SetTunings(0.5, 0, 0.01);
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.6, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.6, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.65, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.65, 0, 0);
   PID_altura.SetTunings(0, 0, 0);
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
