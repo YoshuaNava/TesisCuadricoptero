@@ -17,7 +17,14 @@ double alturaDeseada = 0;
 double distancia = 0;
 double USAltura = 0; // Distancia medida por el sensor de ultrasonido
 double correccionAltura = 0;
+double covarianzaProcesoFisicoAltura = 0.1;
+double covarianzaRuidoSensorAltura = 10.0;
+double estimacionAltura = 0.0;
+double covarianzaRuidoEstimacionAltura = 3.0;
+double gananciaKalman = 0.0;
 //FIN ULTRASONIDO
+
+
 
 
 //MOTORES:
@@ -350,12 +357,22 @@ void CalcularAltura()
     if ((distancia > 0) && (distancia < ALTURA_MAXIMA))
     {
       USAltura = distancia;
-      mensajeEstado[8] = USAltura;
+      FiltroKalmanAltura();
+      mensajeEstado[8] = estimacionAltura;
       //    Serial.print(USAltura);
       //    Serial.println("cm");
     }
     tiempoUltimoMuestreoAltura = millis();
   }
+}
+
+
+void FiltroKalmanAltura()
+{
+  covarianzaRuidoEstimacionAltura = covarianzaRuidoEstimacionAltura + covarianzaProcesoFisicoAltura;
+  gananciaKalman = covarianzaRuidoEstimacionAltura/(covarianzaRuidoEstimacionAltura + covarianzaRuidoSensorAltura);
+  estimacionAltura = estimacionAltura + gananciaKalman * (USAltura - estimacionAltura);
+  covarianzaRuidoEstimacionAltura = (1 - gananciaKalman) * covarianzaRuidoEstimacionAltura;
 }
 
 
