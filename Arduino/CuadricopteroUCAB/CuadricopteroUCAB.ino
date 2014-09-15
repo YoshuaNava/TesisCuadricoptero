@@ -64,7 +64,7 @@ unsigned char ack[4];
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 20
-#define DT_PID_velocidadAngular 5
+#define DT_PID_velocidadAngular 1
 
 L3G gyro;
 LSM303 compass;
@@ -198,16 +198,16 @@ void loop()
   PID_pAngular_Roll.SetTunings(0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.5, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.5, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.5, 0, 0);
+  PID_vAngular_Yaw.SetTunings(0.3, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.6, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.6, 0, 0);
   PID_altura.SetTunings(0, 0, 0);
   alturaDeseada = 30;
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  RecibirComando();
-  //RecibirComandoASCII();
+  //RecibirComando();
+  RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -221,8 +221,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    RecibirComando();
-    //RecibirComandoASCII();
+    //RecibirComando();
+    RecibirComandoASCII();
     i++;
   }
 
@@ -255,8 +255,8 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
-      RecibirComando();
-      //RecibirComandoASCII();
+      //RecibirComando();
+      RecibirComandoASCII();
       i++;
       delay(5);
     }
@@ -275,15 +275,24 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    RecibirComando();
-    //RecibirComandoASCII();
+    //RecibirComando();
+    RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
-    EnviarMensajeEstado();    
+/*    Serial.println("*************** Motores *****************");
+    Serial.println(motorDerecho);
+    Serial.println(motorIzquierdo);
+    Serial.println(motorDelantero);    
+    Serial.println(motorTrasero);
+    Serial.println(correccionPWM_YPR[0]);
+    Serial.println(correccionPWM_YPR[1]);
+    Serial.println(correccionPWM_YPR[2]);    
+    Serial.println();*/
+//    EnviarMensajeEstado();    
   }
 }
 
@@ -382,8 +391,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
   if (modoEjecucion == 'T')
   {
-    motorDerecho = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
-    motorIzquierdo = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorDerecho = velocidadMotoresPWM + correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
+    motorIzquierdo = velocidadMotoresPWM - correccionPWM_YPR[2] + correccionPWM_YPR[0] + correccionAltura;
     motorDelantero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
     motorTrasero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
   }
