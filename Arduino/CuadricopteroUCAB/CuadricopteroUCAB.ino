@@ -4,13 +4,26 @@
 #include <PID_v1.h>
 #include <NewPing.h>
 
-//CONSTANTES:
-//IMPORTANTE!!: ARREGLAR CON LOS PUERTOS QUE VAMOS A CONECTAR EN EL ARDUINO
+//CONSTANTES y VARIABLES:
+//MOTORES:
+#define PUERTOMOTORDERECHO 5 //puerto de PWM del motor derecho
+#define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
+#define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
+#define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
+#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 160;
+char modoEjecucion = '_';
+int motorDerecho = 0;
+int motorIzquierdo = 0;
+int motorDelantero = 0; 
+int motorTrasero = 0;
+//FIN MOTORES
+
 
 //ULTRASONIDO:
 #define USPIN 15 //puerto de datos del ultradonido.
 #define ALTURA_MAXIMA 150
-#define INCREMENTO_ALTURA_COMANDO 5
+#define INCREMENTO_ALTURA_COMANDO 10 ///////////////////////////// CAMBIAR A 5????
 NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 unsigned int uS;
 double alturaDeseada = 0;
@@ -23,23 +36,6 @@ double estimacionAltura = 0.0;
 double covarianzaRuidoEstimacionAltura = 3.0;
 double gananciaKalman = 0.0;
 //FIN ULTRASONIDO
-
-
-
-
-//MOTORES:
-#define PUERTOMOTORDERECHO 5 //puerto de PWM del motor derecho
-#define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
-#define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
-#define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 160;
-char modoEjecucion = '_';
-int motorDerecho = 0;
-int motorIzquierdo = 0;
-int motorDelantero = 0;
-int motorTrasero = 0;
-//FIN MOTORES
 
 
 //CODIGOS DE COMUNICACION:
@@ -70,8 +66,8 @@ unsigned char ack[4];
 #define DT_envioDatos 100
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 10
-#define DT_PID_velocidadAngular 1
+#define DT_PID_posicionAngular 30
+#define DT_PID_velocidadAngular 5
 
 L3G gyro;
 LSM303 compass;
@@ -119,7 +115,7 @@ PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDesea
 PID PID_pAngular_Yaw(&anguloYPR[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
-PID PID_altura(&USAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
+PID PID_altura(&estimacionAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
 
 
 void setup() {
@@ -201,20 +197,20 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(0.5, 0, 0.01);
-  PID_pAngular_Roll.SetTunings(0.5, 0, 0.01);
+  PID_pAngular_Pitch.SetTunings(1, 0, 0.01);
+  PID_pAngular_Roll.SetTunings(1.2, 0, 0.01);
 
   // Yaw-  P: 1.3  I: 0    D: 0
   PID_vAngular_Yaw.SetTunings(0.3, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.65, 0, 0);
-  PID_vAngular_Roll.SetTunings(0.65, 0, 0);
-  PID_altura.SetTunings(0, 0, 0);
-  alturaDeseada = 30;
+  PID_vAngular_Pitch.SetTunings(0.95, 0, 0);
+  PID_vAngular_Roll.SetTunings(0.95, 0, 0);
+  PID_altura.SetTunings(1.0, 0, 0);
+
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = '_';
-  //RecibirComando();
-  RecibirComandoASCII();
+  RecibirComando();
+  //RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -228,8 +224,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     i++;
   }
 
@@ -262,10 +258,10 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
-      //RecibirComando();
-      RecibirComandoASCII();
+      RecibirComando();
+      //RecibirComandoASCII();
       i++;
-      delay(5);
+      delay(1);
     }
   }
   else
@@ -282,8 +278,8 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     PIDAltura();
