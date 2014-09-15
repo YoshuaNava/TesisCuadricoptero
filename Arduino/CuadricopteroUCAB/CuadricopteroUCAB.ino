@@ -292,7 +292,7 @@ void SecuenciaDeVuelo()
     Serial.println(correccionPWM_YPR[1]);
     Serial.println(correccionPWM_YPR[2]);    
     Serial.println();*/
-//    EnviarMensajeEstado();    
+    EnviarMensajeEstado();    
   }
 }
 

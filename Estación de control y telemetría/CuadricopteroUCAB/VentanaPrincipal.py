@@ -69,6 +69,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosVelRoll = np.arange(self.limiteDatosGraficas)*0.0
         self.datosVelYaw = np.arange(self.limiteDatosGraficas)*0.0
         self.datosAltura = np.arange(self.limiteDatosGraficas)*0.0
+        self.filtroKalmanAltura = np.arange(self.limiteDatosGraficas)*0.0
         self.datosTiempoRecepcion = np.arange(self.limiteDatosGraficas)*0.0
         
         
@@ -118,8 +119,22 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.tasaBaudios = 38400
         self.nombrePuertoSerial = "/dev/ttyUSB0"
         self.hiloComunicacion = HiloSerial(ventana = self, limiteDatos = self.limiteDatosGraficas, nombrePuerto = self.nombrePuertoSerial, tasaBaudios = self.tasaBaudios)
+
+        self.q = 0.1 #Covarianza del ruido del proceso fisico
+        self.r = 10.0 #Covarianza del ruido del sensor
+        self.z = 0.0 #Prediccion
+        self.p = 3.0 #Covarianza del ruido de la estimacion
+        self.k = 0.0 #Ganancia de Kalman
         
         self.show()
+
+
+    def FiltroKalman(self, valor):
+        self.p = self.p + self.q
+        self.k = self.p/(self.p + self.r)
+        self.z = self.z + self.k*(valor - self.z)
+        self.p = (1 - self.k)*self.p
+        return self.z
         
         
     def chBoxGraficarStateChanged(self):
@@ -141,6 +156,11 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosAltura = datosAltura
         self.mensajesEstadoRecibidos = mensajesRecibidos
         self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock()
+        
+
+        self.filtroKalmanAltura[self.mensajesEstadoRecibidos] = self.FiltroKalman(float(self.datosAltura[self.mensajesEstadoRecibidos]))
+        #print self.datosAltura[self.mensajesEstadoRecibidos]
+        #print self.FiltroKalman(self.datosAltura[self.mensajesEstadoRecibidos])
         """print "\nDatos de tiempo = "
         print "tiempo= " + str(self.datosTiempoRecepcion[self.mensajesEstadoRecibidos])
         print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])"""
@@ -228,7 +248,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
             self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
             self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('g', width=2))
-
+            self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.filtroKalmanAltura[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('w', width=2))
+            
 ventana = VentanaPrincipal()
 
 """ TODO:
