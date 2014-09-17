@@ -56,18 +56,33 @@ B_jacobiano_f_senalControl(Vm1,Vm2,Vm3,Vm4) = jacobian(funcionIncrementoAngulos(
 A = double(A_jacobiano_f_estado(0,0,0,0.1,0,0.1))
 B = double(B_jacobiano_f_senalControl(0,0,0,0))
 C = eye(6)
-
+D = zeros(6,4)
 poles_A = eig(A)
 
 
-t = 0:0.01:2;
-u = [zeros(size(t)); zeros(size(t)); zeros(size(t)); zeros(size(t))];
-x0 = [0; 0; 0; 0.1; 0; 0.1];
 
-sys = ss(A,B,C,0);
 
-[y,t,x] = lsim(sys,u,t,x0);
-plot(t,y)
-title('Open-Loop Response to Non-Zero Initial Condition')
-xlabel('Time (sec)')
-ylabel('Ball Position (m)')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      Simulacion      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+X0 = [10; -10; 0; 0.1; 0.1; 0.1];
+referencia = [0; 0; 0; 0; 0; 0];
+t0 = 0;
+tf = 10;
+dt = 0.05;
+array_t = t0:dt:tf;
+
+N = numel(array_t);
+
+X = X0;
+error_previo = [0; 0; 0; 0; 0; 0];
+error_integral = [0; 0; 0; 0; 0; 0];
+
+for t = array_t
+    error = referencia - X;
+    u = PID(error, error_integral, error_previo);
+    error_previo = error;
+    error_integral = error_integral + error;
+    
+    dX = A*X + B*u;
+    X = X + dt*dX
+end
