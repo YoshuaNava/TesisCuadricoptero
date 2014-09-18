@@ -83,7 +83,8 @@ class HiloSerial:
     def enviarComandoEncendido(self, comando):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_ENCENDIDO ^ comando
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_ENCENDIDO) + chr(comando) + chr(checksum)
-        self.puertoSerial.write(paquete)        
+        self.puertoSerial.write(paquete)
+        self.mensajesEstadoRecibidos = 0
         """        for i in range(4):  
             print (ord(paquete[i]))"""
 

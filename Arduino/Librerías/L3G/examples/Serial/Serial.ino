@@ -4,7 +4,7 @@
 L3G gyro;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(38400);
   Wire.begin();
 
   if (!gyro.init())
@@ -27,5 +27,5 @@ void loop() {
   Serial.print(" Z: ");
   Serial.println((int)gyro.g.z);
 
-  delay(100);
+  //delay(100);
 }

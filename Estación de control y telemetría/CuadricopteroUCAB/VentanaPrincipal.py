@@ -71,7 +71,14 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosAltura = np.arange(self.limiteDatosGraficas)*0.0
         self.datosTiempoRecepcion = np.arange(self.limiteDatosGraficas)*0.0
         
-        
+        self.curva_posPitch = self.plot_posPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('y', width=2))
+        self.curva_posRoll = self.plot_posRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('b', width=2))
+        self.curva_posYaw = self.plot_posYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('r', width=2))
+        self.curva_velPitch = self.plot_velPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('y', width=2))
+        self.curva_velRoll = self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('b', width=2))
+        self.curva_velYaw = self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('r', width=2))
+        self.curva_altura = self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('g', width=2))
+    
         #Objetos para gestionar las acciones del usuario sobre los botones de la interfaz.
         self.botonIniciarCom = self.ui.pB_iniciarComunicacion
         self.botonDetenerCom = self.ui.pB_detenerComunicacion
@@ -142,6 +149,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosAltura = datosAltura
         self.mensajesEstadoRecibidos = mensajesRecibidos
         self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock()
+        self.updatePlots()
         
         """print "\nDatos de tiempo = "
         print "tiempo= " + str(self.datosTiempoRecepcion[self.mensajesEstadoRecibidos])
@@ -211,25 +219,25 @@ class VentanaPrincipal(ClaseBasePlantilla):
             textoTimer += str(self.tiempoEjecucionSegundos)
             
         self.label_timerSesion.setText(textoTimer)
-        self.updatePlots()
+        #self.updatePlots()
             
         
     def updatePlots(self):
         if(self.graficarDatos == True):
-            """self.plot_posPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
-            self.plot_posRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
-            self.plot_posYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
-            self.plot_velPitch.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('y', width=2))
-            self.plot_velRoll.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('b', width=2))
-            self.plot_velYaw.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('r', width=2))
-            self.plot_altura.plot(np.random.normal(size=100), clear=True, pen = pg.mkPen('g', width=2))"""
-            self.plot_posPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
-            self.plot_posRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
-            self.plot_posYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
-            self.plot_velPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
-            self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
-            self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
-            self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('g', width=2))
+            self.curva_posPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos])
+            self.curva_posRoll.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos])
+            self.curva_posYaw.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos])
+            self.curva_velPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos])
+            self.curva_velPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos])
+            self.curva_velPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos])
+            self.curva_altura.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos])
+            #self.plot_posPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
+            #self.plot_posRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
+            #self.plot_posYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
+            #self.plot_velPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
+            #self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
+            #self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
+            #self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('g', width=2))
             
             
 ventana = VentanaPrincipal()

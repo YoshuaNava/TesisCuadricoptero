@@ -58,7 +58,8 @@ void L3G::enableDefault(void)
 {
   // 0x0F = 0b00001111
   // Normal power mode, all axes enabled
-  writeReg(L3G_CTRL_REG1, 0x0F);
+  writeReg(L3G_CTRL_REG1, B11001111);
+  //writeReg(L3G_CTRL_REG1, B00001111);
 }
 
 // Writes a gyro register
