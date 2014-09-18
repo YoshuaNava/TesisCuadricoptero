@@ -10,6 +10,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 import os
 import time
+from threading import Thread
 from ModuloComandos import HiloJoystick
 from ModuloComunicacion import HiloSerial
 
@@ -37,6 +38,13 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.plot_altura = self.ui.alturaPlot.getPlotItem()
         
         #Configuracion de las propiedades de las graficas.
+        """self.plot_posPitch.setXRange(0,20)
+        self.plot_posRoll.setXRange(0,20)
+        self.plot_posYaw.setXRange(0,20)
+        self.plot_velPitch.setXRange(0,20)
+        self.plot_velRoll.setXRange(0,20)
+        self.plot_velYaw.setXRange(0,20)
+        self.plot_altura.setXRange(0,50)"""
         self.plot_posPitch.setYRange(-90,90)
         self.plot_posRoll.setYRange(-90,90)
         self.plot_posYaw.setYRange(-90,90)
@@ -78,6 +86,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.curva_velRoll = self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('b', width=2))
         self.curva_velYaw = self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('r', width=2))
         self.curva_altura = self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], pen = pg.mkPen('g', width=2))
+        
     
         #Objetos para gestionar las acciones del usuario sobre los botones de la interfaz.
         self.botonIniciarCom = self.ui.pB_iniciarComunicacion
@@ -140,6 +149,15 @@ class VentanaPrincipal(ClaseBasePlantilla):
 
 
     def setDatos(self, datosPosYaw, datosPosPitch, datosPosRoll, datosVelYaw, datosVelPitch, datosVelRoll, datosAltura, mensajesRecibidos):
+        """if (self.mensajesEstadoRecibidos == 1):
+            self.plot_posPitch.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_posRoll.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_posYaw.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_velPitch.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_velRoll.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_velYaw.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+            self.plot_altura.setXRange(0 + self.tiempoFinalTelemetria,20 + self.tiempoFinalTelemetria)
+        """
         self.datosPosPitch = datosPosPitch
         self.datosPosRoll = datosPosRoll
         self.datosPosYaw = datosPosYaw
@@ -148,9 +166,8 @@ class VentanaPrincipal(ClaseBasePlantilla):
         self.datosVelYaw = datosVelYaw
         self.datosAltura = datosAltura
         self.mensajesEstadoRecibidos = mensajesRecibidos
-        self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock()
-        self.updatePlots()
-        
+        self.datosTiempoRecepcion[self.mensajesEstadoRecibidos] = time.clock() - self.tiempoInicioTelemetria
+        self.tiempoFinalTelemetria = time.clock() - self.tiempoInicioTelemetria
         """print "\nDatos de tiempo = "
         print "tiempo= " + str(self.datosTiempoRecepcion[self.mensajesEstadoRecibidos])
         print "valor de pitch= " + str(self.datosPosPitch[self.mensajesEstadoRecibidos])"""
@@ -173,6 +190,7 @@ class VentanaPrincipal(ClaseBasePlantilla):
         if (self.enviarComandos == True) and (self.comunicacionIniciada == True): 
             self.hiloComunicacion.enviarComandoEncendido(comando)
         
+        
     def iniciarComunicacion(self):
         if(self.comunicacionIniciada == False):
             print "Iniciar comunicacion"
@@ -184,7 +202,11 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.timerTiempoEjecucion = QtCore.QTimer()
             self.timerTiempoEjecucion.timeout.connect(self.updateTimerLabel)
             self.timerTiempoEjecucion.start(1000)
+            self.tiempoInicioTelemetria = time.clock()
+            self.tiempoFinalTelemetria = self.tiempoInicioEjecucion
             self.hiloComunicacion.start()
+            self.hiloPlotUpdater = Thread(target=self.runPlotUpdater)
+            self.startPlotUpdater()
         
         
     def detenerComunicacion(self):
@@ -231,13 +253,18 @@ class VentanaPrincipal(ClaseBasePlantilla):
             self.curva_velPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos])
             self.curva_velPitch.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos])
             self.curva_altura.setData(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos])
-            #self.plot_posPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
-            #self.plot_posRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
-            #self.plot_posYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosPosYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
-            #self.plot_velPitch.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelPitch[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('y', width=2))
-            #self.plot_velRoll.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelRoll[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('b', width=2))
-            #self.plot_velYaw.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosVelYaw[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('r', width=2))
-            #self.plot_altura.plot(x=self.datosTiempoRecepcion[1:self.mensajesEstadoRecibidos], y=self.datosAltura[1:self.mensajesEstadoRecibidos], clear=True, pen = pg.mkPen('g', width=2))
+            
+    def startPlotUpdater(self):
+        if (self.hiloPlotUpdater.isAlive() == False):
+            self.hiloPlotUpdater.start()
+        else:
+            self.hiloPlotUpdater = Thread(target=self.runPlotUpdater)
+            self.hiloPlotUpdater.start()        
+            
+    def runPlotUpdater(self):
+        while (self.comunicacionIniciada == True):
+            self.updatePlots()
+            time.sleep(1)
             
             
 ventana = VentanaPrincipal()
