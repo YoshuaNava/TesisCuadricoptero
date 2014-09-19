@@ -15,7 +15,7 @@ win.setWindowTitle('Datos de los sensores')
 
 tasaBaudios = 38400
 limiteDatos = 500
-nombrePuertoSerial = "/dev/ttyUSB0"
+nombrePuertoSerial = "/dev/ttyUSB1"
 hiloComunicacion = HiloSerial(None, limiteDatos, nombrePuerto = nombrePuertoSerial, tasaBaudios = tasaBaudios)
 hiloComunicacion.start()
 

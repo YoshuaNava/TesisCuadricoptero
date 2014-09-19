@@ -493,9 +493,9 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[2] = 0;    
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = correccionPWM_YPR[1]+90;
+  mensajeEstado[4] = anguloYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = correccionPWM_YPR[2]+90;
+  mensajeEstado[5] = anguloYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if(G_velocidadYPR[0] >= 0)
   {
