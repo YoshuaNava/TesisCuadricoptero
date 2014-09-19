@@ -32,7 +32,7 @@ class HiloJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO = 10
+        self.__MAXIMO_ANGULO = 30
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
