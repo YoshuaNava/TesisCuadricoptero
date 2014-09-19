@@ -209,8 +209,8 @@ void loop()
   //  PID_altura.SetTunings(1, 0, 0);
 
   modoEjecucion = 'T';
-  //RecibirComando();
-  RecibirComandoASCII();
+  RecibirComando();
+  //RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -224,8 +224,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     i++;
   }
 
@@ -258,8 +258,8 @@ void SecuenciaDeInicio()
       FiltroComplementario();
       CalcularAltura();
       EnviarMensajeEstado();
-      //RecibirComando();
-      RecibirComandoASCII();
+      RecibirComando();
+      //RecibirComandoASCII();
       i++;
       delay(1);
     }
@@ -278,8 +278,8 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    //RecibirComando();
-    RecibirComandoASCII();
+    RecibirComando();
+    //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     PIDAltura();
