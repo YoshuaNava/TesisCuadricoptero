@@ -66,7 +66,7 @@ unsigned char ack[4];
 #define K_COMP 0.96
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 30
+#define DT_PID_posicionAngular 20
 #define DT_PID_velocidadAngular 1
 
 L3G gyro;
@@ -197,13 +197,13 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(1.2, 0.05, 0);
-  PID_pAngular_Roll.SetTunings(1.4, 0.05, 0);
+  PID_pAngular_Pitch.SetTunings(1.1, 0.3, 0.05);
+  PID_pAngular_Roll.SetTunings(1.1, 0.3, 0.05);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.2, 0, 0);
-  PID_vAngular_Pitch.SetTunings(0.75, 0.025, 0.001); //P=0.75   //P=0.55
-  PID_vAngular_Roll.SetTunings(0.85, 0.025, 0.003); //P=0.75   //P=0.55
+  PID_vAngular_Yaw.SetTunings(0.3, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.85, 0.025, 0.001); //P=0.75   //P=0.55
+  PID_vAngular_Roll.SetTunings(0.95, 0.025, 0.003); //P=0.75   //P=0.55
   PID_altura.SetTunings(0.0, 0, 0);
 
   //  PID_altura.SetTunings(1, 0, 0);
