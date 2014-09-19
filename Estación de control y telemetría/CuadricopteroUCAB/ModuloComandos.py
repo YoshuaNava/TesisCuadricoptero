@@ -32,10 +32,12 @@ class HiloJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO = 20
+        self.__MAXIMO_ANGULO = 10
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
+        self.comandoPitchEnviar = self.comandoPitch + self.__MAXIMO_ANGULO
+        self.comandoRollEnviar = self.comandoRoll + self.__MAXIMO_ANGULO        
         self.comandoAltura = ord('=')
         self.motoresEncendidos = 0
         
@@ -93,11 +95,13 @@ class HiloJoystick:
     
     def enviarComandosMovimientoVentana(self):
         if(self.ventanaPrincipal != None):
-            self.ventanaPrincipal.setComandosMovimiento(self.comandoPitch, self.comandoRoll, self.comandoAltura)
+            self.ventanaPrincipal.setComandosMovimiento(self.comandoPitchEnviar, self.comandoRollEnviar, self.comandoAltura)
+            
             
     def enviarComandoEncendidoVentana(self):
         if(self.ventanaPrincipal != None):
             self.ventanaPrincipal.setComandoEncendido(self.motoresEncendidos)
+
     
     def run(self):
         
@@ -128,13 +132,14 @@ class HiloJoystick:
                             #print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
                             self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO
                             self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO
-                            #print 'Comando de pitch= %d' %(self.comandoPitch)
-                            #print 'Comando de roll= %d' %(self.comandoRoll)
                         
-                        self.comandoPitch = self.comandoPitch + self.__MAXIMO_ANGULO
-                        self.comandoRoll = self.comandoRoll + self.__MAXIMO_ANGULO
-                        
-                        self.enviarComandosMovimientoVentana()
+                        if((int(self.comandoPitch) != int(self.comandoPitchEnviar - self.__MAXIMO_ANGULO)) or (int(self.comandoRoll) != int(self.comandoRollEnviar - self.__MAXIMO_ANGULO))):
+                            print 'Comando de pitch= %d' %(self.comandoPitch)
+                            print 'Comando de roll= %d' %(self.comandoRoll)                            
+                            self.comandoPitchEnviar = self.comandoPitch + self.__MAXIMO_ANGULO
+                            self.comandoRollEnviar = self.comandoRoll + self.__MAXIMO_ANGULO
+                            
+                            self.enviarComandosMovimientoVentana()
                             
         
                     if evento.type == pygame.JOYBUTTONDOWN:
@@ -165,7 +170,7 @@ class HiloJoystick:
 
                     
      #                   print 'Boton R1, Valor %d' %(estado_boton_R1)
-                time.sleep(0) #Permitir que otros hilos pasen a ejecutarse. Es como un yield()
+                time.sleep(0.0) #Permitir que otros hilos pasen a ejecutarse. Es como un yield()
         
         
     

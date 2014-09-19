@@ -49,24 +49,24 @@ k = 0
 
 def updateYaw():
     global curvaYaw, k, timerYaw, limiteDatos, yaw, hiloComunicacion
-    yaw = hiloComunicacion.velocidadYaw
-    #yaw = hiloComunicacion.posicionYaw
+    #yaw = hiloComunicacion.velocidadYaw
+    yaw = hiloComunicacion.posicionYaw
     curvaYaw.setData(yaw)
 
 
 
 def updatePitch():
     global curvaPitch, i, timerPitch, limiteDatos, pitch, hiloComunicacion
-    pitch = hiloComunicacion.velocidadPitch
-    #pitch = hiloComunicacion.posicionPitch
+    #pitch = hiloComunicacion.velocidadPitch
+    pitch = hiloComunicacion.posicionPitch
     curvaPitch.setData(pitch)
 
 
 
 def updateRoll():
     global curvaRoll, j, timerRoll, limiteDatos, roll, hiloComunicacion
-    roll = hiloComunicacion.velocidadRoll 
-    #roll = hiloComunicacion.posicionRoll
+    #roll = hiloComunicacion.velocidadRoll 
+    roll = hiloComunicacion.posicionRoll
     curvaRoll.setData(roll)
 
 
