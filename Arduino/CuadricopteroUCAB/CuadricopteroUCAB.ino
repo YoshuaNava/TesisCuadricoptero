@@ -204,7 +204,7 @@ void loop()
   PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
   PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
   PID_vAngular_Roll.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
-  PID_altura.SetTunings(0.0, 0, 0);
+  PID_altura.SetTunings(2.0, 0, 0);
 
   //  PID_altura.SetTunings(1, 0, 0);
 
@@ -226,16 +226,18 @@ void SecuenciaDeInicio()
     EnviarMensajeEstado();
     RecibirComando();
     //RecibirComandoASCII();
+    anguloDeseadoYPR[1] = 0;
+    anguloDeseadoYPR[2] = 0;
+    alturaDeseada = 0;
     i++;
   }
+
+  alturaDeseada = estimacionAltura;
 
 
   i = 0;
   if (modoEjecucion != '_')
   {
-    anguloDeseadoYPR[1] = 0;
-    anguloDeseadoYPR[2] = 0;
-    alturaDeseada = 0;
     while (i < velocidadBasePWM / 2)
     {
       if (modoEjecucion == '_')
@@ -492,9 +494,9 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[2] = 0;    
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = anguloDeseadoYPR[1] + 90;
+  mensajeEstado[4] = anguloYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = anguloDeseadoYPR[2] + 90;
+  mensajeEstado[5] = anguloYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if(G_velocidadYPR[0] >= 0)
   {
@@ -529,7 +531,8 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[10] = 0;
   }
 
-  mensajeEstado[12] = USAltura;
+//  mensajeEstado[12] = estimacionltura;
+  mensajeEstado[12] = alturaDeseada;
 }
 
 void EnviarMensajeEstado()
