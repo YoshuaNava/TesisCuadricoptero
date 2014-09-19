@@ -39,6 +39,7 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
+#define DT_envioDatos 50
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -62,8 +63,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.93
-#define DT_envioDatos 100
+#define K_COMP 0.96
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 30
@@ -208,7 +208,7 @@ void loop()
 
   //  PID_altura.SetTunings(1, 0, 0);
 
-  modoEjecucion = '_';
+  modoEjecucion = 'T';
   //RecibirComando();
   RecibirComandoASCII();
   SecuenciaDeInicio();
