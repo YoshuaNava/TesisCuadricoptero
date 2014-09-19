@@ -23,7 +23,7 @@ int motorTrasero = 0;
 //ULTRASONIDO:
 #define USPIN 15 //puerto de datos del ultradonido.
 #define ALTURA_MAXIMA 150
-#define INCREMENTO_ALTURA_COMANDO 10 ///////////////////////////// CAMBIAR A 5????
+#define INCREMENTO_ALTURA_COMANDO 5 ///////////////////////////// CAMBIAR A 5????
 NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
 unsigned int uS;
 double alturaDeseada = 0;
