@@ -11,7 +11,7 @@
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 190;
+int velocidadBasePWM = 180;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -208,9 +208,9 @@ void loop()
 
   //  PID_altura.SetTunings(1, 0, 0);
 
-  modoEjecucion = 'T';
-  RecibirComando();
-  //RecibirComandoASCII();
+  modoEjecucion = '_';
+  //RecibirComando();
+  RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
 }
@@ -224,8 +224,8 @@ void SecuenciaDeInicio()
     FiltroComplementario();
     CalcularAltura();
     EnviarMensajeEstado();
-    RecibirComando();
-    //RecibirComandoASCII();
+    //RecibirComando();
+    RecibirComandoASCII();
     i++;
   }
 
@@ -257,9 +257,12 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       CalcularAltura();
+      PID_PosicionAngular();
+      PID_VelocidadAngular();
+      AplicarPWMmotores(velocidadBasePWM);
       EnviarMensajeEstado();
-      RecibirComando();
-      //RecibirComandoASCII();
+      //RecibirComando();
+      RecibirComandoASCII();
       i++;
       delay(1);
     }
@@ -278,8 +281,8 @@ void SecuenciaDeVuelo()
 {
   while (modoEjecucion != '_')
   {
-    RecibirComando();
-    //RecibirComandoASCII();
+    //RecibirComando();
+    RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     PIDAltura();
