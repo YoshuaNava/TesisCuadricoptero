@@ -64,7 +64,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.92
+#define K_COMP 0.96
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 15
@@ -102,7 +102,7 @@ double correccionPWM_YPR[3] = {
   0, 0, 0
 };
 double DT = 0;
-double alpha_LPF_velocidad = 0.98;
+double alpha_LPF_velocidad = 0.82;
 //FIN IMU
 
 //VARIABLES GLOBALES:
@@ -320,10 +320,10 @@ void FiltroComplementario() {
   G_lecturaVelocidadYPR[1] = (double) gyro.g.x * G_GYRO;
   G_lecturaVelocidadYPR[2] = (double) gyro.g.y * G_GYRO;
 
-  G_velocidadYPR[0] = G_velocidadYPR[0] * alpha_LPF_velocidad + (1 - alpha_LPF_velocidad)*G_lecturaVelocidadYPR[0];
-  G_velocidadYPR[1] = G_velocidadYPR[1] * alpha_LPF_velocidad + (1 - alpha_LPF_velocidad)*G_lecturaVelocidadYPR[1];
-  G_velocidadYPR[2] = G_velocidadYPR[2] * alpha_LPF_velocidad + (1 - alpha_LPF_velocidad)*G_lecturaVelocidadYPR[2];
-
+  G_velocidadYPR[0] = G_velocidadYPR[0] + alpha_LPF_velocidad*(G_lecturaVelocidadYPR[0] - G_velocidadYPR[0]);
+  G_velocidadYPR[1] = G_velocidadYPR[1] + alpha_LPF_velocidad*(G_lecturaVelocidadYPR[1] - G_velocidadYPR[1]);
+  G_velocidadYPR[2] = G_velocidadYPR[2] + alpha_LPF_velocidad*(G_lecturaVelocidadYPR[2] - G_velocidadYPR[2]);
+  
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
