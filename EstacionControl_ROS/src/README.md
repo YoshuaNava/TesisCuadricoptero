@@ -6,7 +6,7 @@ Estación de control en ROS
 # Probado con ROS Indigo Igloo.
 
 # Instalación:
-# En la carpeta src:
+ En la carpeta src:
 * sudo apt-get install libsdl-image1.2-dev
 * cd pygame
 * python setup.py build
