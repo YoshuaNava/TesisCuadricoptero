@@ -5,9 +5,18 @@ from handler_serial import HandlerSerial
 from comunicacion_serial.msg import *
 import rospy
 
+publisher = None
+handlerSerial = None
+
+def callbackEnvioComandoEncendido(data):
+    rospy.loginfo(rospy.get_caller_id()+"I heard %s",data.data)
+    
+    
+def callbackEnvioComandoMovimiento(data):
+    rospy.loginfo(rospy.get_caller_id()+"I heard %s",data.data)
 
 
-def secuenciaRecepcion(publisher, handlerSerial):
+def secuenciaRecepcion():
     resultadoAccion = handlerSerial.recibirComandos()
     if (resultadoAccion == True):
         """
@@ -37,19 +46,22 @@ def secuenciaRecepcion(publisher, handlerSerial):
 
 
 
-def talker():
+def run():
+    global publisher, handlerSerial
     publisher = rospy.Publisher('estado_cuadricoptero', EstadoCuadricoptero, queue_size=10)
-    rospy.init_node('LectorPuertoSerial', anonymous=True)
-    frecuencia = rospy.Rate(100)
+    rospy.init_node('ManejadorPuertoSerial', anonymous=True)    
+    frecuencia = rospy.Rate(100)    
     handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 38400)
     handlerSerial.abrirPuerto()
+    rospy.Subscriber("encendido_cuadricoptero", Encendido, callbackEnvioComandoEncendido)
+    rospy.Subscriber("movimientos_cuadricoptero", Movimiento, callbackEnvioComandoMovimiento)    
     while not rospy.is_shutdown():
-        secuenciaRecepcion(publisher, handlerSerial)
+        secuenciaRecepcion()
         frecuencia.sleep()
     hiloSerial.cerrarPuerto()
         
 if __name__ == '__main__':
     try:
-        talker()
+        run()
     except rospy.ROSInterruptException: pass
     
