@@ -3,9 +3,9 @@ Estación de control en ROS
 
 (Mejorar)
 
-# Probado con ROS Indigo Igloo.
+## Probado con ROS Indigo Igloo.
 
-# Instalación:
+## Instalación:
  En la carpeta src:
 * sudo apt-get install libsdl-image1.2-dev
 * cd pygame
@@ -14,7 +14,7 @@ Estación de control en ROS
 
 
 
-# Ejecución
+## Ejecución:
 Pararse en la carpeta raiz (esta), y hacer catkin_make
 * EN una terminal ejecutar "roscore"
 * Abrir tres terminales, pararse en esta carpeta, y hacer "source devel/setup.bash" en cada una. Luego:
