@@ -37,7 +37,7 @@ def secuenciaRecepcion():
         """
         estado = EstadoCuadricoptero()
         estado.anguloPitch = handlerSerial.posicionPitch
-        estado.anguloRoll = handlerSerial.posicionPitch
+        estado.anguloRoll = handlerSerial.posicionRoll
         estado.anguloYaw = handlerSerial.posicionYaw
         estado.velocidadPitch = handlerSerial.velocidadPitch
         estado.velocidadRoll = handlerSerial.velocidadRoll
