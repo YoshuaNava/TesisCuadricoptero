@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sys
 from handler_serial import HandlerSerial
 from comunicacion_serial.msg import *
 import rospy
