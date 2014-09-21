@@ -15,14 +15,14 @@ add_custom_target(logitech_rumblepad_ii_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg" NAME_WE)
 add_custom_target(_logitech_rumblepad_ii_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "logitech_rumblepad_ii" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "logitech_rumblepad_ii" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg" ""
 )
 
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg" NAME_WE)
 add_custom_target(_logitech_rumblepad_ii_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "logitech_rumblepad_ii" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "logitech_rumblepad_ii" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg" ""
 )
 
 #
@@ -32,13 +32,13 @@ add_custom_target(_logitech_rumblepad_ii_generate_messages_check_deps_${_filenam
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/logitech_rumblepad_ii
 )
 _generate_msg_cpp(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/logitech_rumblepad_ii
@@ -58,9 +58,9 @@ add_custom_target(logitech_rumblepad_ii_generate_messages_cpp
 add_dependencies(logitech_rumblepad_ii_generate_messages logitech_rumblepad_ii_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_cpp _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_cpp _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -73,13 +73,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS logitech_rumblepad_ii_generate_mess
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/logitech_rumblepad_ii
 )
 _generate_msg_lisp(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/logitech_rumblepad_ii
@@ -99,9 +99,9 @@ add_custom_target(logitech_rumblepad_ii_generate_messages_lisp
 add_dependencies(logitech_rumblepad_ii_generate_messages logitech_rumblepad_ii_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_lisp _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_lisp _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -114,13 +114,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS logitech_rumblepad_ii_generate_mess
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/logitech_rumblepad_ii
 )
 _generate_msg_py(logitech_rumblepad_ii
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/logitech_rumblepad_ii
@@ -140,9 +140,9 @@ add_custom_target(logitech_rumblepad_ii_generate_messages_py
 add_dependencies(logitech_rumblepad_ii_generate_messages logitech_rumblepad_ii_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_py _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg" NAME_WE)
 add_dependencies(logitech_rumblepad_ii_generate_messages_py _logitech_rumblepad_ii_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

@@ -15,19 +15,19 @@ add_custom_target(comunicacion_serial_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg" NAME_WE)
 add_custom_target(_comunicacion_serial_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "comunicacion_serial" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "comunicacion_serial" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg" ""
+)
+
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg" NAME_WE)
+add_custom_target(_comunicacion_serial_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "comunicacion_serial" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg" ""
 )
 
 get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg" NAME_WE)
 add_custom_target(_comunicacion_serial_generate_messages_check_deps_${_filename}
   COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "comunicacion_serial" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg" ""
-)
-
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg" NAME_WE)
-add_custom_target(_comunicacion_serial_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "comunicacion_serial" "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg" ""
 )
 
 #
@@ -37,7 +37,7 @@ add_custom_target(_comunicacion_serial_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/comunicacion_serial
@@ -49,7 +49,7 @@ _generate_msg_cpp(comunicacion_serial
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/comunicacion_serial
 )
 _generate_msg_cpp(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/comunicacion_serial
@@ -69,11 +69,11 @@ add_custom_target(comunicacion_serial_generate_messages_cpp
 add_dependencies(comunicacion_serial_generate_messages comunicacion_serial_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg" NAME_WE)
+add_dependencies(comunicacion_serial_generate_messages_cpp _comunicacion_serial_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_cpp _comunicacion_serial_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg" NAME_WE)
-add_dependencies(comunicacion_serial_generate_messages_cpp _comunicacion_serial_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_cpp _comunicacion_serial_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -86,7 +86,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS comunicacion_serial_generate_messag
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/comunicacion_serial
@@ -98,7 +98,7 @@ _generate_msg_lisp(comunicacion_serial
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/comunicacion_serial
 )
 _generate_msg_lisp(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/comunicacion_serial
@@ -118,11 +118,11 @@ add_custom_target(comunicacion_serial_generate_messages_lisp
 add_dependencies(comunicacion_serial_generate_messages comunicacion_serial_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg" NAME_WE)
+add_dependencies(comunicacion_serial_generate_messages_lisp _comunicacion_serial_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_lisp _comunicacion_serial_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg" NAME_WE)
-add_dependencies(comunicacion_serial_generate_messages_lisp _comunicacion_serial_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_lisp _comunicacion_serial_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -135,7 +135,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS comunicacion_serial_generate_messag
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/comunicacion_serial
@@ -147,7 +147,7 @@ _generate_msg_py(comunicacion_serial
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/comunicacion_serial
 )
 _generate_msg_py(comunicacion_serial
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/comunicacion_serial
@@ -167,11 +167,11 @@ add_custom_target(comunicacion_serial_generate_messages_py
 add_dependencies(comunicacion_serial_generate_messages comunicacion_serial_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg" NAME_WE)
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg" NAME_WE)
+add_dependencies(comunicacion_serial_generate_messages_py _comunicacion_serial_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_py _comunicacion_serial_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg" NAME_WE)
-add_dependencies(comunicacion_serial_generate_messages_py _comunicacion_serial_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg" NAME_WE)
 add_dependencies(comunicacion_serial_generate_messages_py _comunicacion_serial_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

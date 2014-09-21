@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/logitech_rumblepad_ii_generate_messages_py"
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/lib/python2.7/dist-packages/logitech_rumblepad_ii/msg/_Encendido.py"
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/lib/python2.7/dist-packages/logitech_rumblepad_ii/msg/_Movimiento.py"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/lib/python2.7/dist-packages/logitech_rumblepad_ii/msg/_ComandoMovimiento.py"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/lib/python2.7/dist-packages/logitech_rumblepad_ii/msg/_ComandoEncendido.py"
   "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/lib/python2.7/dist-packages/logitech_rumblepad_ii/msg/__init__.py"
 )
 

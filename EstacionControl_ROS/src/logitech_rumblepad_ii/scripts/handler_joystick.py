@@ -17,7 +17,7 @@ from threading import Thread
 
 
 
-class HiloJoystick:
+class HandlerJoystick:
 
     def __init__(self):
         self.__BOTON_2 = 1
@@ -33,12 +33,10 @@ class HiloJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO = 30
+        self.__MAXIMO_ANGULO_COMANDO = 30
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
-        self.comandoPitchEnviar = self.comandoPitch + self.__MAXIMO_ANGULO
-        self.comandoRollEnviar = self.comandoRoll + self.__MAXIMO_ANGULO        
         self.comandoAltura = ord('=')
         self.motoresEncendidos = 0
         self.comandoEncendidoEjecutado = False
@@ -111,14 +109,12 @@ class HiloJoystick:
                     if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
                         #print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                         #print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
-                        self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO
-                        self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO
+                        self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
+                        self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
+                        self.comandoAltura = ord('=')
                     
-                    if((int(self.comandoPitch) != int(self.comandoPitchEnviar - self.__MAXIMO_ANGULO)) or (int(self.comandoRoll) != int(self.comandoRollEnviar - self.__MAXIMO_ANGULO))):
                         print 'Comando de pitch= %d' %(self.comandoPitch)
                         print 'Comando de roll= %d' %(self.comandoRoll)                            
-                        self.comandoPitchEnviar = self.comandoPitch + self.__MAXIMO_ANGULO
-                        self.comandoRollEnviar = self.comandoRoll + self.__MAXIMO_ANGULO
                         
                         self.comandoMovimientoEjecutado = True
                         
@@ -150,8 +146,8 @@ class HiloJoystick:
                             self.comandoAltura = ord('=')
                             
                         if (estado_boton_R1 == 1):
-                            self.comandoPitchEnviar = 0 + self.__MAXIMO_ANGULO
-                            self.comandoRollEnviar = 0 + self.__MAXIMO_ANGULO
+                            self.comandoPitchEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
+                            self.comandoRollEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
                             
                         self.comandoMovimientoEjecutado = True
 

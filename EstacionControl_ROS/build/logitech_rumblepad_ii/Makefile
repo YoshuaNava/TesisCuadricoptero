@@ -150,32 +150,32 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule
 
 # Convenience name for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Encendido: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Encendido
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido
 
 # fast build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Encendido/fast:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Encendido/fast
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido/fast:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido/fast
 
 # Convenience name for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule
 
 # Convenience name for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento
 
 # fast build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento/fast:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento/fast
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento/fast:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento/fast
 
 # Convenience name for target.
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_gencpp.dir/rule:
@@ -281,8 +281,8 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_Encendido"
-	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento"
+	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido"
+	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento"
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"

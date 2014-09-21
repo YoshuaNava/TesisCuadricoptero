@@ -1,11 +1,11 @@
 (cl:defpackage comunicacion_serial-msg
   (:use )
   (:export
-   "<MOVIMIENTO>"
-   "MOVIMIENTO"
+   "<COMANDOMOVIMIENTO>"
+   "COMANDOMOVIMIENTO"
    "<ESTADOCUADRICOPTERO>"
    "ESTADOCUADRICOPTERO"
-   "<ENCENDIDO>"
-   "ENCENDIDO"
+   "<COMANDOENCENDIDO>"
+   "COMANDOENCENDIDO"
   ))
 

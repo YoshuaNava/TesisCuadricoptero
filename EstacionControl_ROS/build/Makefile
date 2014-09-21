@@ -228,17 +228,30 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
-# Target rules for targets named _comunicacion_serial_generate_messages_check_deps_Encendido
+# Target rules for targets named _comunicacion_serial_generate_messages_check_deps_ComandoEncendido
 
 # Build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Encendido: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _comunicacion_serial_generate_messages_check_deps_Encendido
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Encendido
+_comunicacion_serial_generate_messages_check_deps_ComandoEncendido: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _comunicacion_serial_generate_messages_check_deps_ComandoEncendido
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoEncendido
 
 # fast build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Encendido/fast:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Encendido/fast
+_comunicacion_serial_generate_messages_check_deps_ComandoEncendido/fast:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoEncendido/fast
+
+#=============================================================================
+# Target rules for targets named _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento
+
+# Build rule for target.
+_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento
+
+# fast build rule for target.
+_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento/fast:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento/fast
 
 #=============================================================================
 # Target rules for targets named _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero
@@ -252,19 +265,6 @@ _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero: cmake_che
 _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero/fast:
 	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/build
 .PHONY : _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero/fast
-
-#=============================================================================
-# Target rules for targets named _comunicacion_serial_generate_messages_check_deps_Movimiento
-
-# Build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Movimiento: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _comunicacion_serial_generate_messages_check_deps_Movimiento
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Movimiento
-
-# fast build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Movimiento/fast:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Movimiento/fast
 
 #=============================================================================
 # Target rules for targets named comunicacion_serial_gencpp
@@ -397,30 +397,30 @@ std_msgs_generate_messages_py/fast:
 .PHONY : std_msgs_generate_messages_py/fast
 
 #=============================================================================
-# Target rules for targets named _logitech_rumblepad_ii_generate_messages_check_deps_Encendido
+# Target rules for targets named _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido
 
 # Build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Encendido: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _logitech_rumblepad_ii_generate_messages_check_deps_Encendido
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Encendido
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido
 
 # fast build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Encendido/fast:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Encendido/fast
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido/fast:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido/fast
 
 #=============================================================================
-# Target rules for targets named _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento
+# Target rules for targets named _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento
 
 # Build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento
 
 # fast build rule for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento/fast:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento/fast
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento/fast:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento/fast
 
 #=============================================================================
 # Target rules for targets named logitech_rumblepad_ii_gencpp
@@ -532,9 +532,9 @@ help:
 	@echo "... tests"
 	@echo "... gtest"
 	@echo "... gtest_main"
-	@echo "... _comunicacion_serial_generate_messages_check_deps_Encendido"
+	@echo "... _comunicacion_serial_generate_messages_check_deps_ComandoEncendido"
+	@echo "... _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento"
 	@echo "... _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero"
-	@echo "... _comunicacion_serial_generate_messages_check_deps_Movimiento"
 	@echo "... comunicacion_serial_gencpp"
 	@echo "... comunicacion_serial_generate_messages"
 	@echo "... comunicacion_serial_generate_messages_cpp"
@@ -545,8 +545,8 @@ help:
 	@echo "... std_msgs_generate_messages_cpp"
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_py"
-	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_Encendido"
-	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento"
+	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido"
+	@echo "... _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento"
 	@echo "... logitech_rumblepad_ii_gencpp"
 	@echo "... logitech_rumblepad_ii_generate_messages"
 	@echo "... logitech_rumblepad_ii_generate_messages_cpp"

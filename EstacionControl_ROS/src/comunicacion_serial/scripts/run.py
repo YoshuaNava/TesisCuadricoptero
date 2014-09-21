@@ -4,15 +4,20 @@ from handler_serial import HandlerSerial
 from comunicacion_serial.msg import *
 import rospy
 
+__MAXIMO_ANGULO_COMANDO = 30
 publisher = None
 handlerSerial = None
 
-def callbackEnvioComandoEncendido(data):
-    rospy.loginfo(rospy.get_caller_id()+"I heard %s",data.data)
+def callbackEnvioComandoEncendido(mensaje):
+    #rospy.loginfo(rospy.get_caller_id()+"I heard %s",data)
+    global handlerSerial
+    handlerSerial.enviarComandoEncendido(mensaje.encendido)
     
     
-def callbackEnvioComandoMovimiento(data):
-    rospy.loginfo(rospy.get_caller_id()+"I heard %s",data.data)
+def callbackEnvioComandoMovimiento(mensaje):
+    #rospy.loginfo(rospy.get_caller_id()+"I heard %s",data)
+    global handlerSerial
+    handlerSerial.enviarComandoMovimiento(mensaje.comandoPitch + __MAXIMO_ANGULO_COMANDO, mensaje.comandoRoll + __MAXIMO_ANGULO_COMANDO, mensaje.comandoAltura)
 
 
 def secuenciaRecepcion():
@@ -52,12 +57,12 @@ def run():
     frecuencia = rospy.Rate(100)    
     handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 38400)
     handlerSerial.abrirPuerto()
-    rospy.Subscriber("encendido_cuadricoptero", Encendido, callbackEnvioComandoEncendido)
-    rospy.Subscriber("movimientos_cuadricoptero", Movimiento, callbackEnvioComandoMovimiento)    
+    rospy.Subscriber("encendido_cuadricoptero", ComandoEncendido, callbackEnvioComandoEncendido)
+    rospy.Subscriber("movimientos_cuadricoptero", ComandoMovimiento, callbackEnvioComandoMovimiento)    
     while not rospy.is_shutdown():
         secuenciaRecepcion()
         frecuencia.sleep()
-    hiloSerial.cerrarPuerto()
+    handlerSerial.cerrarPuerto()
         
 if __name__ == '__main__':
     try:

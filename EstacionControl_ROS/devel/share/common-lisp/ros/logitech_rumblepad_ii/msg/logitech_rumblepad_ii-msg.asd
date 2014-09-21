@@ -4,8 +4,8 @@
 (defsystem "logitech_rumblepad_ii-msg"
   :depends-on (:roslisp-msg-protocol :roslisp-utils )
   :components ((:file "_package")
-    (:file "Movimiento" :depends-on ("_package_Movimiento"))
-    (:file "_package_Movimiento" :depends-on ("_package"))
-    (:file "Encendido" :depends-on ("_package_Encendido"))
-    (:file "_package_Encendido" :depends-on ("_package"))
+    (:file "ComandoMovimiento" :depends-on ("_package_ComandoMovimiento"))
+    (:file "_package_ComandoMovimiento" :depends-on ("_package"))
+    (:file "ComandoEncendido" :depends-on ("_package_ComandoEncendido"))
+    (:file "_package_ComandoEncendido" :depends-on ("_package"))
   ))

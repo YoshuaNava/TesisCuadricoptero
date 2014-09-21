@@ -45,16 +45,16 @@ CMAKE_BINARY_DIR = /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS
 # Include the progress variables for this target.
 include comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/progress.make
 
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Movimiento.h
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoEncendido.h
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/EstadoCuadricoptero.h
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Encendido.h
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoMovimiento.h
 
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Movimiento.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Movimiento.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Movimiento.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoEncendido.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoEncendido.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoEncendido.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from comunicacion_serial/Movimiento.msg"
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Movimiento.msg -Icomunicacion_serial:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p comunicacion_serial -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial -e /opt/ros/indigo/share/gencpp/cmake/..
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from comunicacion_serial/ComandoEncendido.msg"
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoEncendido.msg -Icomunicacion_serial:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p comunicacion_serial -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial -e /opt/ros/indigo/share/gencpp/cmake/..
 
 /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/EstadoCuadricoptero.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
 /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/EstadoCuadricoptero.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg
@@ -63,17 +63,17 @@ comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp: /home/
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from comunicacion_serial/EstadoCuadricoptero.msg"
 	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/EstadoCuadricoptero.msg -Icomunicacion_serial:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p comunicacion_serial -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial -e /opt/ros/indigo/share/gencpp/cmake/..
 
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Encendido.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Encendido.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Encendido.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoMovimiento.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoMovimiento.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoMovimiento.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from comunicacion_serial/Encendido.msg"
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/Encendido.msg -Icomunicacion_serial:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p comunicacion_serial -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial -e /opt/ros/indigo/share/gencpp/cmake/..
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from comunicacion_serial/ComandoMovimiento.msg"
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg/ComandoMovimiento.msg -Icomunicacion_serial:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/comunicacion_serial/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p comunicacion_serial -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial -e /opt/ros/indigo/share/gencpp/cmake/..
 
 comunicacion_serial_generate_messages_cpp: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp
-comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Movimiento.h
+comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoEncendido.h
 comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/EstadoCuadricoptero.h
-comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/Encendido.h
+comunicacion_serial_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/comunicacion_serial/ComandoMovimiento.h
 comunicacion_serial_generate_messages_cpp: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/build.make
 .PHONY : comunicacion_serial_generate_messages_cpp
 

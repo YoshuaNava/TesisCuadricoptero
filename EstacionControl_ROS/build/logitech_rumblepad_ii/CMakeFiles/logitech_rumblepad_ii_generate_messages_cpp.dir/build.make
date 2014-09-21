@@ -45,26 +45,26 @@ CMAKE_BINARY_DIR = /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS
 # Include the progress variables for this target.
 include logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/progress.make
 
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Encendido.h
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Movimiento.h
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoMovimiento.h
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoEncendido.h
 
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Encendido.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Encendido.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Encendido.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoMovimiento.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoMovimiento.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoMovimiento.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from logitech_rumblepad_ii/Encendido.msg"
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/logitech_rumblepad_ii && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Encendido.msg -Ilogitech_rumblepad_ii:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p logitech_rumblepad_ii -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii -e /opt/ros/indigo/share/gencpp/cmake/..
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from logitech_rumblepad_ii/ComandoMovimiento.msg"
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/logitech_rumblepad_ii && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoMovimiento.msg -Ilogitech_rumblepad_ii:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p logitech_rumblepad_ii -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii -e /opt/ros/indigo/share/gencpp/cmake/..
 
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Movimiento.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Movimiento.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg
-/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Movimiento.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoEncendido.h: /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoEncendido.h: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg
+/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoEncendido.h: /opt/ros/indigo/share/gencpp/cmake/../msg.h.template
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from logitech_rumblepad_ii/Movimiento.msg"
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/logitech_rumblepad_ii && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/Movimiento.msg -Ilogitech_rumblepad_ii:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p logitech_rumblepad_ii -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii -e /opt/ros/indigo/share/gencpp/cmake/..
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from logitech_rumblepad_ii/ComandoEncendido.msg"
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/logitech_rumblepad_ii && ../catkin_generated/env_cached.sh /usr/bin/python /opt/ros/indigo/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg/ComandoEncendido.msg -Ilogitech_rumblepad_ii:/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/logitech_rumblepad_ii/msg -Istd_msgs:/opt/ros/indigo/share/std_msgs/cmake/../msg -p logitech_rumblepad_ii -o /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii -e /opt/ros/indigo/share/gencpp/cmake/..
 
 logitech_rumblepad_ii_generate_messages_cpp: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp
-logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Encendido.h
-logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/Movimiento.h
+logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoMovimiento.h
+logitech_rumblepad_ii_generate_messages_cpp: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/include/logitech_rumblepad_ii/ComandoEncendido.h
 logitech_rumblepad_ii_generate_messages_cpp: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/build.make
 .PHONY : logitech_rumblepad_ii_generate_messages_cpp
 

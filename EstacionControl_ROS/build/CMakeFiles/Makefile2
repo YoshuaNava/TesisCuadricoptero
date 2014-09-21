@@ -262,9 +262,9 @@ comunicacion_serial/all: comunicacion_serial/CMakeFiles/comunicacion_serial_gene
 .PHONY : comunicacion_serial/all
 
 # Convenience name for "clean" pass in the directory.
-comunicacion_serial/clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/clean
+comunicacion_serial/clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/clean
+comunicacion_serial/clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/clean
 comunicacion_serial/clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/clean
-comunicacion_serial/clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/clean
 comunicacion_serial/clean: comunicacion_serial/CMakeFiles/comunicacion_serial_gencpp.dir/clean
 comunicacion_serial/clean: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/clean
 comunicacion_serial/clean: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/clean
@@ -282,34 +282,65 @@ comunicacion_serial/preinstall:
 .PHONY : comunicacion_serial/preinstall
 
 #=============================================================================
-# Target rules for target comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir
+# Target rules for target comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir
 
 # All Build rule for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/depend
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/depend
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
-	@echo "Built target _comunicacion_serial_generate_messages_check_deps_Encendido"
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all
+	@echo "Built target _comunicacion_serial_generate_messages_check_deps_ComandoEncendido"
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all
 
 # Build rule for subdir invocation for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule: cmake_check_build_system
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule
 
 # Convenience name for target.
-_comunicacion_serial_generate_messages_check_deps_Encendido: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Encendido
+_comunicacion_serial_generate_messages_check_deps_ComandoEncendido: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoEncendido
 
 # clean rule for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/clean:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/clean
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/clean
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/clean:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/clean
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/clean
 
 # clean rule for target.
-clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/clean
+clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/clean
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir
+
+# All Build rule for target.
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/depend
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
+	@echo "Built target _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento"
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all
+
+# Build rule for subdir invocation for target.
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
+	$(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule
+
+# Convenience name for target.
+_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento
+
+# clean rule for target.
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/clean:
+	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/clean
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/clean
+
+# clean rule for target.
+clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -341,37 +372,6 @@ comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps
 
 # clean rule for target.
 clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/clean
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir
-
-# All Build rule for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/depend
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
-	@echo "Built target _comunicacion_serial_generate_messages_check_deps_Movimiento"
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all
-
-# Build rule for subdir invocation for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule
-
-# Convenience name for target.
-_comunicacion_serial_generate_messages_check_deps_Movimiento: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Movimiento
-
-# clean rule for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/clean:
-	$(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/clean
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/clean
-
-# clean rule for target.
-clean: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -409,9 +409,9 @@ clean: comunicacion_serial/CMakeFiles/comunicacion_serial_gencpp.dir/clean
 # Target rules for target comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir
 
 # All Build rule for target.
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/all: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/all: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/all: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/all: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/depend
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
@@ -446,10 +446,10 @@ clean: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages.dir/
 # Target rules for target comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir
 
 # All Build rule for target.
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/depend
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  1 2 3
@@ -480,10 +480,10 @@ clean: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_cpp.
 # Target rules for target comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir
 
 # All Build rule for target.
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/depend
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  4 5 6
@@ -514,10 +514,10 @@ clean: comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_lisp
 # Target rules for target comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir
 
 # All Build rule for target.
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/all
 comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_py.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/all
-comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/all
+comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/depend
 	$(MAKE) -f comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/build.make comunicacion_serial/CMakeFiles/comunicacion_serial_generate_messages_py.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  7 8 9 10
@@ -707,8 +707,8 @@ logitech_rumblepad_ii/all: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_i
 .PHONY : logitech_rumblepad_ii/all
 
 # Convenience name for "clean" pass in the directory.
-logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/clean
-logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/clean
+logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/clean
+logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/clean
 logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_gencpp.dir/clean
 logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/clean
 logitech_rumblepad_ii/clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/clean
@@ -723,65 +723,65 @@ logitech_rumblepad_ii/preinstall:
 .PHONY : logitech_rumblepad_ii/preinstall
 
 #=============================================================================
-# Target rules for target logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir
+# Target rules for target logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir
 
 # All Build rule for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/depend
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/depend
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
-	@echo "Built target _logitech_rumblepad_ii_generate_messages_check_deps_Encendido"
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all
+	@echo "Built target _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido"
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all
 
 # Build rule for subdir invocation for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule: cmake_check_build_system
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule
 
 # Convenience name for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Encendido: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Encendido
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido
 
 # clean rule for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/clean:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/clean
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/clean
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/clean:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/clean
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/clean
 
 # clean rule for target.
-clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/clean
+clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir
+# Target rules for target logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir
 
 # All Build rule for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/depend
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/depend
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
-	@echo "Built target _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento"
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all
+	@echo "Built target _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento"
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all
 
 # Build rule for subdir invocation for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule: cmake_check_build_system
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 0
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule
 
 # Convenience name for target.
-_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_Movimiento
+_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : _logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento
 
 # clean rule for target.
-logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/clean:
-	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/clean
-.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/clean
+logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/clean:
+	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/build.make logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/clean
+.PHONY : logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/clean
 
 # clean rule for target.
-clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/clean
+clean: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -820,8 +820,8 @@ clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_gencpp.dir/clean
 
 # All Build rule for target.
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/all: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/all: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/all: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/all: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/depend
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles 
@@ -857,8 +857,8 @@ clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages.
 
 # All Build rule for target.
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/depend
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_cpp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  13 14
@@ -890,8 +890,8 @@ clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_
 
 # All Build rule for target.
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/depend
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  15 16
@@ -923,8 +923,8 @@ clean: logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_
 
 # All Build rule for target.
 logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all: comunicacion_serial/CMakeFiles/std_msgs_generate_messages_py.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Encendido.dir/all
-logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_Movimiento.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoEncendido.dir/all
+logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/all: logitech_rumblepad_ii/CMakeFiles/_logitech_rumblepad_ii_generate_messages_check_deps_ComandoMovimiento.dir/all
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/depend
 	$(MAKE) -f logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/build.make logitech_rumblepad_ii/CMakeFiles/logitech_rumblepad_ii_generate_messages_py.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles  17 18 19

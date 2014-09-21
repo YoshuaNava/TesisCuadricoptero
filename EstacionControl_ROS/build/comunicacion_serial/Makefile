@@ -150,18 +150,32 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule
 
 # Convenience name for target.
-_comunicacion_serial_generate_messages_check_deps_Encendido: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/rule
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Encendido
+_comunicacion_serial_generate_messages_check_deps_ComandoEncendido: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/rule
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoEncendido
 
 # fast build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Encendido/fast:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Encendido.dir/build
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Encendido/fast
+_comunicacion_serial_generate_messages_check_deps_ComandoEncendido/fast:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoEncendido.dir/build
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoEncendido/fast
+
+# Convenience name for target.
+comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule
+
+# Convenience name for target.
+_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/rule
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento
+
+# fast build rule for target.
+_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento/fast:
+	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_ComandoMovimiento.dir/build
+.PHONY : _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento/fast
 
 # Convenience name for target.
 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/rule:
@@ -176,20 +190,6 @@ _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero: comunicac
 _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero/fast:
 	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero.dir/build
 .PHONY : _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero/fast
-
-# Convenience name for target.
-comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f CMakeFiles/Makefile2 comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule
-
-# Convenience name for target.
-_comunicacion_serial_generate_messages_check_deps_Movimiento: comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/rule
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Movimiento
-
-# fast build rule for target.
-_comunicacion_serial_generate_messages_check_deps_Movimiento/fast:
-	cd /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build && $(MAKE) -f comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build.make comunicacion_serial/CMakeFiles/_comunicacion_serial_generate_messages_check_deps_Movimiento.dir/build
-.PHONY : _comunicacion_serial_generate_messages_check_deps_Movimiento/fast
 
 # Convenience name for target.
 comunicacion_serial/CMakeFiles/comunicacion_serial_gencpp.dir/rule:
@@ -337,9 +337,9 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... _comunicacion_serial_generate_messages_check_deps_Encendido"
+	@echo "... _comunicacion_serial_generate_messages_check_deps_ComandoEncendido"
+	@echo "... _comunicacion_serial_generate_messages_check_deps_ComandoMovimiento"
 	@echo "... _comunicacion_serial_generate_messages_check_deps_EstadoCuadricoptero"
-	@echo "... _comunicacion_serial_generate_messages_check_deps_Movimiento"
 	@echo "... comunicacion_serial_gencpp"
 	@echo "... comunicacion_serial_generate_messages"
 	@echo "... comunicacion_serial_generate_messages_cpp"

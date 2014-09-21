@@ -37,7 +37,7 @@ class HandlerSerial:
         self.puertoSerial.close()
             
             
-    def enviarComandosMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
+    def enviarComandoMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ comandoAltura
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_COMANDO) + chr(int(comandoPitch)) + chr(int(comandoRoll)) + chr(int(comandoAltura)) + chr(checksum)
         self.puertoSerial.write(paquete)        

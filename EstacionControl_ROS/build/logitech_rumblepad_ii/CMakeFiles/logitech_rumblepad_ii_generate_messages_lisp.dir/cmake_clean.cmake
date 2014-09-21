@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/logitech_rumblepad_ii_generate_messages_lisp"
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/share/common-lisp/ros/logitech_rumblepad_ii/msg/Encendido.lisp"
-  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/share/common-lisp/ros/logitech_rumblepad_ii/msg/Movimiento.lisp"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/share/common-lisp/ros/logitech_rumblepad_ii/msg/ComandoMovimiento.lisp"
+  "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/devel/share/common-lisp/ros/logitech_rumblepad_ii/msg/ComandoEncendido.lisp"
 )
 
 # Per-language clean rules from dependency scanning.
