@@ -64,7 +64,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.96
+#define K_COMP 0.99
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 15
