@@ -102,7 +102,7 @@ double correccionPWM_YPR[3] = {
   0, 0, 0
 };
 double DT = 0;
-double alpha_LPF_velocidad = 0.82;
+double alpha_LPF_velocidad = 0.72;
 //FIN IMU
 
 //VARIABLES GLOBALES:
@@ -201,13 +201,13 @@ void loop()
 
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
-  PID_pAngular_Roll.SetTunings(1.7, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0.0, 0, 0);
+  PID_pAngular_Roll.SetTunings(0.0, 0, 0);
 
   // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
-  PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
-  PID_vAngular_Roll.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
+  PID_vAngular_Yaw.SetTunings(0.6, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.9, 0, 0); //P=0.75   //P=0.55
+  PID_vAngular_Roll.SetTunings(0.9, 0, 0); //P=0.75   //P=0.55
   PID_altura.SetTunings(2.0, 0, 0);
 
   //  PID_altura.SetTunings(1, 0, 0);
