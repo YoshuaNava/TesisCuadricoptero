@@ -225,9 +225,9 @@ void CalcularOffsetGiroscopio(){
   int numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
   gyro.read();
-  G_offsetYPR[0] += (int)gyro.g.z * G_GYRO;
-  G_offsetYPR[1] += (int)gyro.g.x * G_GYRO;
-  G_offsetYPR[2] += (int)gyro.g.y * G_GYRO;
+  G_offsetYPR[0] += gyro.g.z;
+  G_offsetYPR[1] += gyro.g.x;
+  G_offsetYPR[2] += gyro.g.y;
   }
   G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
   G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
