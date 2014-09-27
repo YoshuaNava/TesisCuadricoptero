@@ -229,9 +229,9 @@ void CalcularOffsetGiroscopio(){
   G_offsetYPR[1] += (int)gyro.g.x * G_GYRO;
   G_offsetYPR[2] += (int)gyro.g.y * G_GYRO;
   }
-  G_offsetYPR [0] = yaw_offset / numMuestras;
-  G_offsetYPR [1] = pitch_offset / numMuestras;
-  G_offsetYPR [2] = roll_offset / numMuestras;
+  G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
+  G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
+  G_offsetYPR [2] = G_offsetYPR[2] / numMuestras;
 
 }
 
@@ -334,13 +334,15 @@ void FiltroComplementario() {
 
   
 
-  
-  G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0])* G_GYRO));
-  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.z - G_offsetYPR[1])* G_GYRO));
-  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.z - G_offsetYPR[2])* G_GYRO));
-  
+  G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
+  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
  
-
+ /*
+  G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+  G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+  G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+*/
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
