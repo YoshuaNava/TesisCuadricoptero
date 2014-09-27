@@ -1,8 +1,10 @@
+
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
 #include <PID_v1.h>
 #include <NewPing.h>
+
 
 //CONSTANTES y VARIABLES:
 //MOTORES:
@@ -64,7 +66,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define G_ACC 0.0573
-#define K_COMP 0.99
+#define K_COMP 0.96
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 15
@@ -74,6 +76,11 @@ L3G gyro;
 LSM303 compass;
 char report[80];
 double yaw_offset = 0;
+double pitch_offset = 0;
+double roll_offset = 0;
+double G_offsetYPR [3] ={
+  0, 0, 0
+};
 double anguloDeseadoYPR[3] = {
   0, 0, 0
 };
@@ -145,7 +152,7 @@ void setup() {
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
   Serial.begin(38400);
   Wire.begin();
-
+  
   if (!gyro.init())
   {
     Serial.println("Failed to autodetect gyro type!");
@@ -156,7 +163,6 @@ void setup() {
   compass.init();
   compass.enableDefault();
   /////////////////////////////////////////////////////////////////////////////
-
 
   // Parametros de los Algoritmos PID //
   PID_pAngular_Yaw.SetSampleTime(DT_PID_posicionAngular);
@@ -183,8 +189,7 @@ void setup() {
   PID_vAngular_Roll.SetMode(AUTOMATIC);
   PID_altura.SetMode(AUTOMATIC);
   //////////////////////////////////////
-
-
+  CalcularOffsetGiroscopio();
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
   tiempoUltimoMuestreoAngulos = micros();
   tiempoUltimoMuestreoAltura = millis();
@@ -194,7 +199,6 @@ void setup() {
 
 void loop()
 {
-
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
   PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
@@ -213,6 +217,20 @@ void loop()
   //RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
+}
+
+void CalcularOffsetGiroscopio(){
+  int numMuestras = 500;
+  for (int n = 0; n < numMuestras ; n++) {
+  gyro.read();
+  G_offsetYPR[0] += (int)gyro.g.z * G_GYRO;
+  G_offsetYPR[1] += (int)gyro.g.x * G_GYRO;
+  G_offsetYPR[2] += (int)gyro.g.y * G_GYRO;
+  }
+  G_offsetYPR [0] = yaw_offset / numMuestras;
+  G_offsetYPR [1] = pitch_offset / numMuestras;
+  G_offsetYPR [2] = roll_offset / numMuestras;
+
 }
 
 
@@ -312,9 +330,9 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
-  G_velocidadYPR[0] = (double) (gyro.g.z * G_GYRO - yaw_offset);
-  G_velocidadYPR[1] = (double) gyro.g.x * G_GYRO;
-  G_velocidadYPR[2] = (double) gyro.g.y * G_GYRO;
+  G_velocidadYPR[0] = (double) (gyro.g.z * G_GYRO - G_offsetYPR[0]);
+  G_velocidadYPR[1] = (double) (gyro.g.x * G_GYRO - G_offsetYPR[1]);
+  G_velocidadYPR[2] = (double) (gyro.g.y * G_GYRO - G_offsetYPR[2]);
 
 
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
