@@ -1,3 +1,4 @@
+
 #include <filter.h>
 #include <Wire.h>
 #include <L3G.h>
@@ -201,6 +202,7 @@ void setup() {
 
 void loop()
 {
+/*
   // Yaw-  P: 1    I: 0   D: 0
   PID_pAngular_Yaw.SetTunings(0, 0, 0);
   PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
@@ -211,8 +213,7 @@ void loop()
   PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
   PID_vAngular_Roll.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
   PID_altura.SetTunings(2.0, 0, 0);
-
-  //  PID_altura.SetTunings(1, 0, 0);
+*/
 
   modoEjecucion = '_';
   RecibirComando();
