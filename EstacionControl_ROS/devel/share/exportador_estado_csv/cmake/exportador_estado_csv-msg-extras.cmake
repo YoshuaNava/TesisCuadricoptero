@@ -1,0 +1,2 @@
+set(exportador_estado_csv_MESSAGE_FILES "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_csv/msg/ComandoEncendido.msg;/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_csv/msg/ComandoMovimiento.msg;/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_csv/msg/EstadoCuadricoptero.msg")
+set(exportador_estado_csv_SERVICE_FILES "")

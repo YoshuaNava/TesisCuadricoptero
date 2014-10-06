@@ -1,0 +1,2 @@
+set(logitech_rumblepad_ii_MESSAGE_FILES "msg/ComandoEncendido.msg;msg/ComandoMovimiento.msg")
+set(logitech_rumblepad_ii_SERVICE_FILES "")
