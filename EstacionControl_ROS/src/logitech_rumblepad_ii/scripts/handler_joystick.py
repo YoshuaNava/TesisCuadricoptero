@@ -148,8 +148,9 @@ class HandlerJoystick:
                         if (estado_boton_R1 == 1):
                             self.comandoPitchEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
                             self.comandoRollEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
-                            
-                        self.comandoMovimientoEjecutado = True
+
+			if (estado_boton_R1 == 1) or (estado_boton_L1 == 1) or (estado_boton_L2 == 1):
+	                    self.comandoMovimientoEjecutado = True
 
                 
  #                   print 'Boton R1, Valor %d' %(estado_boton_R1)
