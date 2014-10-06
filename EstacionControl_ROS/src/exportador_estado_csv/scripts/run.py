@@ -38,7 +38,6 @@ def procesarMensajeEstado(mensajeEstado):
 def listener():
     rospy.init_node('exportador_estado_csv', anonymous=True)
     rospy.Subscriber('estado_cuadricoptero', EstadoCuadricoptero, procesarMensajeEstado)
-    print "hola"
     rospy.spin()
         
 if __name__ == '__main__':

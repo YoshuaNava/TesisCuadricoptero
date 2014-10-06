@@ -14,7 +14,7 @@ def procesarMensajeEstado(mensajeEstado):
     global numMensajes, handlerArchivo
     if (numMensajes == 0):
         handlerArchivo = open(carpetaHome + "/estado.csv", "w+")
-        filaArchivo = "TiempoEjecucion" + separadorColumnas + "AnguloPitch" + separadorColumnas + "AnguloRoll" + separadorColumnas + "AnguloYaw" + separadorColumnas + "VelocidadPitch" + separadorColumnas + "VelocidadRoll" + separadorColumnas + "VelocidadYaw" + separadorColumnas + "Altura" + separadorColumnas + "EstadoEncendido" + separadorColumnas + "Mensajes Recibidos" + separadorFilas
+        filaArchivo = "TiempoEjecucion" + separadorColumnas + "AnguloPitch" + separadorColumnas + "AnguloRoll" + separadorColumnas + "AnguloYaw" + separadorColumnas + "VelocidadPitch" + separadorColumnas + "VelocidadRoll" + separadorColumnas + "VelocidadYaw" + separadorColumnas + "Altura" + separadorColumnas + "EstadoEncendido" + separadorColumnas + "MensajesRecibidos" + separadorFilas
         handlerArchivo.write(filaArchivo)
     else:
         filaArchivo = str(mensajeEstado.tiempoEjecucion.secs + float(mensajeEstado.tiempoEjecucion.nsecs)/1000000000) + separadorColumnas
