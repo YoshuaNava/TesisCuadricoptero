@@ -14,7 +14,7 @@
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 180;
+int velocidadBasePWM = 160;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -155,7 +155,7 @@ void setup() {
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
   Serial.begin(38400);
   Wire.begin();
-  
+
   if (!gyro.init())
   {
     Serial.println("Failed to autodetect gyro type!");
@@ -202,18 +202,18 @@ void setup() {
 
 void loop()
 {
-/*
+  /*
   // Yaw-  P: 1    I: 0   D: 0
-  PID_pAngular_Yaw.SetTunings(0, 0, 0);
-  PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
-  PID_pAngular_Roll.SetTunings(1.7, 0, 0);
-
-  // Yaw-  P: 1.3  I: 0    D: 0
-  PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
-  PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
-  PID_vAngular_Roll.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
-  PID_altura.SetTunings(2.0, 0, 0);
-*/
+   PID_pAngular_Yaw.SetTunings(0, 0, 0);
+   PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
+   PID_pAngular_Roll.SetTunings(1.7, 0, 0);
+   
+   // Yaw-  P: 1.3  I: 0    D: 0
+   PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
+   PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
+   PID_vAngular_Roll.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
+   PID_altura.SetTunings(2.0, 0, 0);
+   */
 
   modoEjecucion = '_';
   RecibirComando();
@@ -225,10 +225,10 @@ void loop()
 void CalcularOffsetGiroscopio(){
   int numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
-  gyro.read();
-  G_offsetYPR[0] += gyro.g.z;
-  G_offsetYPR[1] += gyro.g.x;
-  G_offsetYPR[2] += gyro.g.y;
+    gyro.read();
+    G_offsetYPR[0] += gyro.g.z;
+    G_offsetYPR[1] += gyro.g.x;
+    G_offsetYPR[2] += gyro.g.y;
   }
   G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
   G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
@@ -312,15 +312,15 @@ void SecuenciaDeVuelo()
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
-/*    Serial.println("*************** Motores *****************");
-    Serial.println(motorDerecho);
-    Serial.println(motorIzquierdo);
-    Serial.println(motorDelantero);    
-    Serial.println(motorTrasero);
-    Serial.println(correccionPWM_YPR[0]);
-    Serial.println(correccionPWM_YPR[1]);
-    Serial.println(correccionPWM_YPR[2]);    
-    Serial.println();*/
+    /*    Serial.println("*************** Motores *****************");
+     Serial.println(motorDerecho);
+     Serial.println(motorIzquierdo);
+     Serial.println(motorDelantero);    
+     Serial.println(motorTrasero);
+     Serial.println(correccionPWM_YPR[0]);
+     Serial.println(correccionPWM_YPR[1]);
+     Serial.println(correccionPWM_YPR[2]);    
+     Serial.println();*/
     EnviarMensajeEstado();    
   }
 }
@@ -333,13 +333,13 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
-  
-/*
+
+  /*
   G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-*/ 
- 
+   G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+   G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+   */
+
   G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
@@ -560,7 +560,7 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[10] = 0;
   }
 
-//  mensajeEstado[12] = estimacionltura;
+  //  mensajeEstado[12] = estimacionltura;
   mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
@@ -774,3 +774,4 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
+
