@@ -7,11 +7,26 @@ function AnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     fft_velocidadPitch = fft(velocidadPitch, numeroDatos);
     fft_velocidadRoll = fft(velocidadRoll, numeroDatos);
     fft_velocidadYaw = fft(velocidadYaw, numeroDatos);
-    frecuencia = (0 : numeroDatos - 1) * ( frecuenciaMuestreo / numeroDatos);
-    potencias_velocidadPitch = fft_velocidadPitch.*conj(fft_velocidadPitch)/numeroDatos;
-    potencias_velocidadRoll = fft_velocidadRoll.*conj(fft_velocidadRoll)/numeroDatos;
-    potencias_velocidadYaw = fft_velocidadYaw.*conj(fft_velocidadYaw)/numeroDatos;
-    plo
-
-
+%     frecuencia = (0 : numeroDatos - 1) * ( frecuenciaMuestreo / numeroDatos);
+%     potencias_velocidadPitch = fft_velocidadPitch.*conj(fft_velocidadPitch)/numeroDatos;
+%     potencias_velocidadRoll = fft_velocidadRoll.*conj(fft_velocidadRoll)/numeroDatos;
+%     potencias_velocidadYaw = fft_velocidadYaw.*conj(fft_velocidadYaw)/numeroDatos;
+%     figure()
+%     plot(frecuencia, potencias_velocidadPitch)
+%     xlabel('Frequency (Hz)')
+%     ylabel('Power')
+%     title('{\bf Periodogram Pitch}')
+%     figure()
+%     plot(frecuencia, potencias_velocidadRoll)
+%     xlabel('Frequency (Hz)')
+%     ylabel('Power')
+%     title('{\bf Periodogram Roll}')
+%     figure()
+%     plot(frecuencia, potencias_velocidadYaw)
+%     xlabel('Frequency (Hz)')
+%     ylabel('Power')
+%     title('{\bf Periodogram Yaw}')
+    frecuencia = frecuenciaMuestreo * (
+    plot(
+    
 end
