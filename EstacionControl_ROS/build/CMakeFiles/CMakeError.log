@@ -1,21 +1,21 @@
 Determining if the pthread_create exist failed with the following output:
 Change Dir: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp
 
-Run Build Command:/usr/bin/make "cmTryCompileExec1862477967/fast"
-/usr/bin/make -f CMakeFiles/cmTryCompileExec1862477967.dir/build.make CMakeFiles/cmTryCompileExec1862477967.dir/build
+Run Build Command:/usr/bin/make "cmTryCompileExec3969409452/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3969409452.dir/build.make CMakeFiles/cmTryCompileExec3969409452.dir/build
 make[1]: Entering directory `/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec1862477967.dir/CheckSymbolExists.c.o
-/usr/bin/cc    -o CMakeFiles/cmTryCompileExec1862477967.dir/CheckSymbolExists.c.o   -c /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTryCompileExec1862477967
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1862477967.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTryCompileExec1862477967.dir/CheckSymbolExists.c.o  -o cmTryCompileExec1862477967 -rdynamic 
-CMakeFiles/cmTryCompileExec1862477967.dir/CheckSymbolExists.c.o: In function `main':
+Building C object CMakeFiles/cmTryCompileExec3969409452.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3969409452.dir/CheckSymbolExists.c.o   -c /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec3969409452
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3969409452.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec3969409452.dir/CheckSymbolExists.c.o  -o cmTryCompileExec3969409452 -rdynamic 
+CMakeFiles/cmTryCompileExec3969409452.dir/CheckSymbolExists.c.o: In function `main':
 CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
-make[1]: *** [cmTryCompileExec1862477967] Error 1
+make[1]: *** [cmTryCompileExec3969409452] Error 1
 make[1]: Leaving directory `/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp'
-make: *** [cmTryCompileExec1862477967/fast] Error 2
+make: *** [cmTryCompileExec3969409452/fast] Error 2
 
 File /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
@@ -35,19 +35,19 @@ int main(int argc, char** argv)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp
 
-Run Build Command:/usr/bin/make "cmTryCompileExec2921002236/fast"
-/usr/bin/make -f CMakeFiles/cmTryCompileExec2921002236.dir/build.make CMakeFiles/cmTryCompileExec2921002236.dir/build
+Run Build Command:/usr/bin/make "cmTryCompileExec1668026016/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1668026016.dir/build.make CMakeFiles/cmTryCompileExec1668026016.dir/build
 make[1]: Entering directory `/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec2921002236.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec2921002236.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
-Linking C executable cmTryCompileExec2921002236
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2921002236.dir/link.txt --verbose=1
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec2921002236.dir/CheckFunctionExists.c.o  -o cmTryCompileExec2921002236 -rdynamic -lpthreads 
+Building C object CMakeFiles/cmTryCompileExec1668026016.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec1668026016.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1668026016
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1668026016.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec1668026016.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1668026016 -rdynamic -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [cmTryCompileExec2921002236] Error 1
+make[1]: *** [cmTryCompileExec1668026016] Error 1
 make[1]: Leaving directory `/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/CMakeFiles/CMakeTmp'
-make: *** [cmTryCompileExec2921002236/fast] Error 2
+make: *** [cmTryCompileExec1668026016/fast] Error 2
 
 

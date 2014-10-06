@@ -269,12 +269,6 @@ exportador_estado_csv_BINARY_DIR:STATIC=/home/alfredoso/GitHub/TesisCuadricopter
 //Value Computed by CMake
 exportador_estado_csv_SOURCE_DIR:STATIC=/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_csv
 
-//Value Computed by CMake
-exportador_pose_excel_BINARY_DIR:STATIC=/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/exportador_estado_csv
-
-//Value Computed by CMake
-exportador_pose_excel_SOURCE_DIR:STATIC=/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_csv
-
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/indigo/share/gencpp/cmake
 

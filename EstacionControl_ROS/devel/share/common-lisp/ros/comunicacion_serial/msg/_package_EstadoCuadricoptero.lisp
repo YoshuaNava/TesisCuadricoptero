@@ -1,5 +1,7 @@
 (cl:in-package comunicacion_serial-msg)
-(cl:export '(ANGULOPITCH-VAL
+(cl:export '(TIEMPOEJECUCION-VAL
+          TIEMPOEJECUCION
+          ANGULOPITCH-VAL
           ANGULOPITCH
           ANGULOROLL-VAL
           ANGULOROLL

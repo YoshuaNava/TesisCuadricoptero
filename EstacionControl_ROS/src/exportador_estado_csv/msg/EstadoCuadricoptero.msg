@@ -1,3 +1,4 @@
+time tiempoEjecucion
 int32 anguloPitch
 int32 anguloRoll
 int32 anguloYaw

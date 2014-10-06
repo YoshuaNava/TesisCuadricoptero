@@ -4,12 +4,14 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
+import genpy
 
 class EstadoCuadricoptero(genpy.Message):
-  _md5sum = "8f35964b2019cfd49ea59abe785649ef"
+  _md5sum = "a177d60ff9bc3445dc3d8bf718819b39"
   _type = "exportador_estado_csv/EstadoCuadricoptero"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """int32 anguloPitch
+  _full_text = """time tiempoEjecucion
+int32 anguloPitch
 int32 anguloRoll
 int32 anguloYaw
 int32 velocidadPitch
@@ -20,8 +22,8 @@ int32 encendido
 int64 mensajesRecibidos
 
 """
-  __slots__ = ['anguloPitch','anguloRoll','anguloYaw','velocidadPitch','velocidadRoll','velocidadYaw','altura','encendido','mensajesRecibidos']
-  _slot_types = ['int32','int32','int32','int32','int32','int32','int32','int32','int64']
+  __slots__ = ['tiempoEjecucion','anguloPitch','anguloRoll','anguloYaw','velocidadPitch','velocidadRoll','velocidadYaw','altura','encendido','mensajesRecibidos']
+  _slot_types = ['time','int32','int32','int32','int32','int32','int32','int32','int32','int64']
 
   def __init__(self, *args, **kwds):
     """
@@ -31,7 +33,7 @@ int64 mensajesRecibidos
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       anguloPitch,anguloRoll,anguloYaw,velocidadPitch,velocidadRoll,velocidadYaw,altura,encendido,mensajesRecibidos
+       tiempoEjecucion,anguloPitch,anguloRoll,anguloYaw,velocidadPitch,velocidadRoll,velocidadYaw,altura,encendido,mensajesRecibidos
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -40,6 +42,8 @@ int64 mensajesRecibidos
     if args or kwds:
       super(EstadoCuadricoptero, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
+      if self.tiempoEjecucion is None:
+        self.tiempoEjecucion = genpy.Time()
       if self.anguloPitch is None:
         self.anguloPitch = 0
       if self.anguloRoll is None:
@@ -59,6 +63,7 @@ int64 mensajesRecibidos
       if self.mensajesRecibidos is None:
         self.mensajesRecibidos = 0
     else:
+      self.tiempoEjecucion = genpy.Time()
       self.anguloPitch = 0
       self.anguloRoll = 0
       self.anguloYaw = 0
@@ -82,7 +87,7 @@ int64 mensajesRecibidos
     """
     try:
       _x = self
-      buff.write(_struct_8iq.pack(_x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos))
+      buff.write(_struct_2I8iq.pack(_x.tiempoEjecucion.secs, _x.tiempoEjecucion.nsecs, _x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(_x))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(_x))))
 
@@ -92,11 +97,14 @@ int64 mensajesRecibidos
     :param str: byte array of serialized message, ``str``
     """
     try:
+      if self.tiempoEjecucion is None:
+        self.tiempoEjecucion = genpy.Time()
       end = 0
       _x = self
       start = end
-      end += 40
-      (_x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos,) = _struct_8iq.unpack(str[start:end])
+      end += 48
+      (_x.tiempoEjecucion.secs, _x.tiempoEjecucion.nsecs, _x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos,) = _struct_2I8iq.unpack(str[start:end])
+      self.tiempoEjecucion.canon()
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -110,7 +118,7 @@ int64 mensajesRecibidos
     """
     try:
       _x = self
-      buff.write(_struct_8iq.pack(_x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos))
+      buff.write(_struct_2I8iq.pack(_x.tiempoEjecucion.secs, _x.tiempoEjecucion.nsecs, _x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(_x))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(_x))))
 
@@ -121,14 +129,17 @@ int64 mensajesRecibidos
     :param numpy: numpy python module
     """
     try:
+      if self.tiempoEjecucion is None:
+        self.tiempoEjecucion = genpy.Time()
       end = 0
       _x = self
       start = end
-      end += 40
-      (_x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos,) = _struct_8iq.unpack(str[start:end])
+      end += 48
+      (_x.tiempoEjecucion.secs, _x.tiempoEjecucion.nsecs, _x.anguloPitch, _x.anguloRoll, _x.anguloYaw, _x.velocidadPitch, _x.velocidadRoll, _x.velocidadYaw, _x.altura, _x.encendido, _x.mensajesRecibidos,) = _struct_2I8iq.unpack(str[start:end])
+      self.tiempoEjecucion.canon()
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = genpy.struct_I
-_struct_8iq = struct.Struct("<8iq")
+_struct_2I8iq = struct.Struct("<2I8iq")

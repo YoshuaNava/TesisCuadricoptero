@@ -6,4 +6,4 @@ int32 velocidadRoll
 int32 velocidadYaw
 int32 altura
 int32 encendido
-int32 mensajesRecibidos
+int64 mensajesRecibidos

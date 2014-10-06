@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "logitech_rumblepad_ii")
-set(logitech_rumblepad_ii_MAINTAINER "Yoshua Nava <yoshua.nava.chocron@gmail.com>, Luis Vicens <lfvicens@gmail.com>")
-set(logitech_rumblepad_ii_DEPRECATED "")
-set(logitech_rumblepad_ii_VERSION "0.0.0")
-set(logitech_rumblepad_ii_BUILD_DEPENDS "rospy" "std_msgs" "message_generation")
-set(logitech_rumblepad_ii_RUN_DEPENDS "rospy" "std_msgs" "message_generation")
-set(logitech_rumblepad_ii_BUILDTOOL_DEPENDS "catkin")

@@ -1,8 +1,0 @@
-prefix=/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/install
-
-Name: logitech_rumblepad_ii
-Description: Description of logitech_rumblepad_ii
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/install/lib 
-Requires: 

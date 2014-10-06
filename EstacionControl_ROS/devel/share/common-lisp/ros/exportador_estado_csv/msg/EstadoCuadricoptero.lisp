@@ -7,7 +7,12 @@
 ;//! \htmlinclude EstadoCuadricoptero.msg.html
 
 (cl:defclass <EstadoCuadricoptero> (roslisp-msg-protocol:ros-message)
-  ((anguloPitch
+  ((tiempoEjecucion
+    :reader tiempoEjecucion
+    :initarg :tiempoEjecucion
+    :type cl:real
+    :initform 0)
+   (anguloPitch
     :reader anguloPitch
     :initarg :anguloPitch
     :type cl:integer
@@ -62,6 +67,11 @@
   (cl:unless (cl:typep m 'EstadoCuadricoptero)
     (roslisp-msg-protocol:msg-deprecation-warning "using old message class name exportador_estado_csv-msg:<EstadoCuadricoptero> is deprecated: use exportador_estado_csv-msg:EstadoCuadricoptero instead.")))
 
+(cl:ensure-generic-function 'tiempoEjecucion-val :lambda-list '(m))
+(cl:defmethod tiempoEjecucion-val ((m <EstadoCuadricoptero>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader exportador_estado_csv-msg:tiempoEjecucion-val is deprecated.  Use exportador_estado_csv-msg:tiempoEjecucion instead.")
+  (tiempoEjecucion m))
+
 (cl:ensure-generic-function 'anguloPitch-val :lambda-list '(m))
 (cl:defmethod anguloPitch-val ((m <EstadoCuadricoptero>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader exportador_estado_csv-msg:anguloPitch-val is deprecated.  Use exportador_estado_csv-msg:anguloPitch instead.")
@@ -108,6 +118,16 @@
   (mensajesRecibidos m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <EstadoCuadricoptero>) ostream)
   "Serializes a message object of type '<EstadoCuadricoptero>"
+  (cl:let ((__sec (cl:floor (cl:slot-value msg 'tiempoEjecucion)))
+        (__nsec (cl:round (cl:* 1e9 (cl:- (cl:slot-value msg 'tiempoEjecucion) (cl:floor (cl:slot-value msg 'tiempoEjecucion)))))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __sec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __sec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __sec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __sec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __nsec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __nsec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __nsec) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __nsec) ostream))
   (cl:let* ((signed (cl:slot-value msg 'anguloPitch)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
@@ -169,6 +189,16 @@
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <EstadoCuadricoptero>) istream)
   "Deserializes a message object of type '<EstadoCuadricoptero>"
+    (cl:let ((__sec 0) (__nsec 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __sec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __sec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __sec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __sec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 0) __nsec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __nsec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __nsec) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __nsec) (cl:read-byte istream))
+      (cl:setf (cl:slot-value msg 'tiempoEjecucion) (cl:+ (cl:coerce __sec 'cl:double-float) (cl:/ __nsec 1e9))))
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
@@ -237,18 +267,19 @@
   "exportador_estado_csv/EstadoCuadricoptero")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<EstadoCuadricoptero>)))
   "Returns md5sum for a message object of type '<EstadoCuadricoptero>"
-  "8f35964b2019cfd49ea59abe785649ef")
+  "a177d60ff9bc3445dc3d8bf718819b39")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'EstadoCuadricoptero)))
   "Returns md5sum for a message object of type 'EstadoCuadricoptero"
-  "8f35964b2019cfd49ea59abe785649ef")
+  "a177d60ff9bc3445dc3d8bf718819b39")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<EstadoCuadricoptero>)))
   "Returns full string definition for message of type '<EstadoCuadricoptero>"
-  (cl:format cl:nil "int32 anguloPitch~%int32 anguloRoll~%int32 anguloYaw~%int32 velocidadPitch~%int32 velocidadRoll~%int32 velocidadYaw~%int32 altura~%int32 encendido~%int64 mensajesRecibidos~%~%~%"))
+  (cl:format cl:nil "time tiempoEjecucion~%int32 anguloPitch~%int32 anguloRoll~%int32 anguloYaw~%int32 velocidadPitch~%int32 velocidadRoll~%int32 velocidadYaw~%int32 altura~%int32 encendido~%int64 mensajesRecibidos~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'EstadoCuadricoptero)))
   "Returns full string definition for message of type 'EstadoCuadricoptero"
-  (cl:format cl:nil "int32 anguloPitch~%int32 anguloRoll~%int32 anguloYaw~%int32 velocidadPitch~%int32 velocidadRoll~%int32 velocidadYaw~%int32 altura~%int32 encendido~%int64 mensajesRecibidos~%~%~%"))
+  (cl:format cl:nil "time tiempoEjecucion~%int32 anguloPitch~%int32 anguloRoll~%int32 anguloYaw~%int32 velocidadPitch~%int32 velocidadRoll~%int32 velocidadYaw~%int32 altura~%int32 encendido~%int64 mensajesRecibidos~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <EstadoCuadricoptero>))
   (cl:+ 0
+     8
      4
      4
      4
@@ -262,6 +293,7 @@
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <EstadoCuadricoptero>))
   "Converts a ROS message object to a list"
   (cl:list 'EstadoCuadricoptero
+    (cl:cons ':tiempoEjecucion (tiempoEjecucion msg))
     (cl:cons ':anguloPitch (anguloPitch msg))
     (cl:cons ':anguloRoll (anguloRoll msg))
     (cl:cons ':anguloYaw (anguloYaw msg))

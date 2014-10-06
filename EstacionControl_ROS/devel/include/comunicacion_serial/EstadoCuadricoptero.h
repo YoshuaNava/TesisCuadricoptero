@@ -57,7 +57,8 @@ struct EstadoCuadricoptero_
   typedef EstadoCuadricoptero_<ContainerAllocator> Type;
 
   EstadoCuadricoptero_()
-    : anguloPitch(0)
+    : tiempoEjecucion()
+    , anguloPitch(0)
     , anguloRoll(0)
     , anguloYaw(0)
     , velocidadPitch(0)
@@ -68,7 +69,8 @@ struct EstadoCuadricoptero_
     , mensajesRecibidos(0)  {
     }
   EstadoCuadricoptero_(const ContainerAllocator& _alloc)
-    : anguloPitch(0)
+    : tiempoEjecucion()
+    , anguloPitch(0)
     , anguloRoll(0)
     , anguloYaw(0)
     , velocidadPitch(0)
@@ -80,6 +82,9 @@ struct EstadoCuadricoptero_
     }
 
 
+
+   typedef ros::Time _tiempoEjecucion_type;
+  _tiempoEjecucion_type tiempoEjecucion;
 
    typedef int32_t _anguloPitch_type;
   _anguloPitch_type anguloPitch;
@@ -185,12 +190,12 @@ struct MD5Sum< ::comunicacion_serial::EstadoCuadricoptero_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "8f35964b2019cfd49ea59abe785649ef";
+    return "a177d60ff9bc3445dc3d8bf718819b39";
   }
 
   static const char* value(const ::comunicacion_serial::EstadoCuadricoptero_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x8f35964b2019cfd4ULL;
-  static const uint64_t static_value2 = 0x9ea59abe785649efULL;
+  static const uint64_t static_value1 = 0xa177d60ff9bc3445ULL;
+  static const uint64_t static_value2 = 0xdc3d8bf718819b39ULL;
 };
 
 template<class ContainerAllocator>
@@ -209,7 +214,8 @@ struct Definition< ::comunicacion_serial::EstadoCuadricoptero_<ContainerAllocato
 {
   static const char* value()
   {
-    return "int32 anguloPitch\n\
+    return "time tiempoEjecucion\n\
+int32 anguloPitch\n\
 int32 anguloRoll\n\
 int32 anguloYaw\n\
 int32 velocidadPitch\n\
@@ -236,6 +242,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
+      stream.next(m.tiempoEjecucion);
       stream.next(m.anguloPitch);
       stream.next(m.anguloRoll);
       stream.next(m.anguloYaw);
@@ -263,6 +270,8 @@ struct Printer< ::comunicacion_serial::EstadoCuadricoptero_<ContainerAllocator> 
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::comunicacion_serial::EstadoCuadricoptero_<ContainerAllocator>& v)
   {
+    s << indent << "tiempoEjecucion: ";
+    Printer<ros::Time>::stream(s, indent + "  ", v.tiempoEjecucion);
     s << indent << "anguloPitch: ";
     Printer<int32_t>::stream(s, indent + "  ", v.anguloPitch);
     s << indent << "anguloRoll: ";
