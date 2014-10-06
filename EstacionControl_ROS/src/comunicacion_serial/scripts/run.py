@@ -48,7 +48,7 @@ def secuenciaRecepcion():
         estado.velocidadRoll = handlerSerial.velocidadRoll
         estado.velocidadYaw = handlerSerial.velocidadYaw
         estado.altura = handlerSerial.altura
-        estado.encendido = 0
+        estado.encendido = handlerSerial.encendidoMotores
         estado.mensajesRecibidos = handlerSerial.mensajesEstadoRecibidos
         rospy.loginfo(estado)
         publisher.publish(estado)

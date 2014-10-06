@@ -1,8 +1,0 @@
-prefix=/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/install
-
-Name: comunicacion_serial
-Description: Description of comunicacion_serial
-Version: 0.0.0
-Cflags: -I/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/install/include
-Libs: -L/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/install/lib 
-Requires: 

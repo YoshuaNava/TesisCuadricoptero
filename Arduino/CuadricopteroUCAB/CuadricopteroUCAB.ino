@@ -59,7 +59,7 @@ unsigned char comandoPitch;
 unsigned char comandoRoll;
 unsigned char comandoAltura;
 unsigned char checksum;
-unsigned char mensajeEstado[14];
+unsigned char mensajeEstado[15];
 unsigned char ack[4];
 //FIN CODIGOS DE COMUNICACION
 
@@ -334,16 +334,16 @@ void FiltroComplementario() {
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
   
-
+/*
   G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
   G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
   G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+*/ 
  
- /*
   G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-*/
+
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
@@ -509,6 +509,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
  */
 void PrepararPaqueteMensajeEstado()
 {
+  mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
+  mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
   if(anguloYPR[0] >= 0)
   {
@@ -560,6 +562,15 @@ void PrepararPaqueteMensajeEstado()
 
 //  mensajeEstado[12] = estimacionltura;
   mensajeEstado[12] = alturaDeseada;
+  if (modoEjecucion == 'T')
+  {
+    mensajeEstado[13] = 1;
+  }
+  else
+  {
+    mensajeEstado[13] = 0;
+  }
+  mensajeEstado[14]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]);//CHECKSUM
 }
 
 void EnviarMensajeEstado()
@@ -568,10 +579,7 @@ void EnviarMensajeEstado()
   {
     //ImprimirEstado();
     PrepararPaqueteMensajeEstado();
-    mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
-    mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
-    mensajeEstado[13]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12]);//CHECKSUM 
-    Serial.write(mensajeEstado, 14);//ENVIAR EL PAQUETE DE 14 BYTES
+    Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 14 BYTES
     tiempoUltimoEnvio = millis();
   }
 }

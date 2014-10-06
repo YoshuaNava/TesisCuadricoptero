@@ -113,8 +113,8 @@ class HandlerJoystick:
                         self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
                         self.comandoAltura = ord('=')
                     
-                        #print 'Comando de pitch= %f' %(self.comandoPitch)
-                        #print 'Comando de roll= %f' %(self.comandoRoll)                            
+                        print 'Comando de pitch= %d' %(self.comandoPitch)
+                        print 'Comando de roll= %d' %(self.comandoRoll)                            
                         
                         self.comandoMovimientoEjecutado = True
                         

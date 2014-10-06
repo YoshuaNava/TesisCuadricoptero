@@ -40,7 +40,7 @@ def secuenciaRecepcion():
         print "\n"
         """
         estado = EstadoCuadricoptero()
-	estado.tiempoEjecucion = rospy.get_time() - tiempoInicioEjecucion
+	estado.tiempoEjecucion = rospy.get_rostime() - tiempoInicioEjecucion
         estado.anguloPitch = handlerSerial.posicionPitch
         estado.anguloRoll = handlerSerial.posicionRoll
         estado.anguloYaw = handlerSerial.posicionYaw
@@ -48,7 +48,7 @@ def secuenciaRecepcion():
         estado.velocidadRoll = handlerSerial.velocidadRoll
         estado.velocidadYaw = handlerSerial.velocidadYaw
         estado.altura = handlerSerial.altura
-        estado.encendido = 0
+        estado.encendido = handlerSerial.encendido
         estado.mensajesRecibidos = handlerSerial.mensajesEstadoRecibidos
         rospy.loginfo(estado)
         publisher.publish(estado)
