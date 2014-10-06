@@ -126,6 +126,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   INCLUDE("/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/gtest/cmake_install.cmake")
   INCLUDE("/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/comunicacion_serial/cmake_install.cmake")
+  INCLUDE("/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/exportador_estado_csv/cmake_install.cmake")
   INCLUDE("/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/build/logitech_rumblepad_ii/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)

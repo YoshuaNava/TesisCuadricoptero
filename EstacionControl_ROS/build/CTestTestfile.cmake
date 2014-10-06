@@ -6,4 +6,5 @@
 # testing this directory and lists subdirectories to be tested as well.
 SUBDIRS(gtest)
 SUBDIRS(comunicacion_serial)
+SUBDIRS(exportador_estado_csv)
 SUBDIRS(logitech_rumblepad_ii)

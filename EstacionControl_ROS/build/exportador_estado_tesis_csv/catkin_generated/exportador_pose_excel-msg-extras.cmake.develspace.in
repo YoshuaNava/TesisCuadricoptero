@@ -1,0 +1,2 @@
+set(exportador_pose_excel_MESSAGE_FILES "/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_tesis_csv/msg/ComandoEncendido.msg;/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_tesis_csv/msg/ComandoMovimiento.msg;/home/alfredoso/GitHub/TesisCuadricoptero/EstacionControl_ROS/src/exportador_estado_tesis_csv/msg/EstadoCuadricoptero.msg")
+set(exportador_pose_excel_SERVICE_FILES "")
