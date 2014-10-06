@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "exportador_estado_csv")
-set(exportador_estado_csv_MAINTAINER "Yoshua Nava <yoshua.nava.chocron@gmail.com>, Luis Vicens <lfvicens@gmail.com>")
-set(exportador_estado_csv_DEPRECATED "")
-set(exportador_estado_csv_VERSION "0.0.0")
-set(exportador_estado_csv_BUILD_DEPENDS "rospy" "std_msgs")
-set(exportador_estado_csv_RUN_DEPENDS "rospy" "std_msgs")
-set(exportador_estado_csv_BUILDTOOL_DEPENDS "catkin")
