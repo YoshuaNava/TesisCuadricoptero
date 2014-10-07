@@ -1,9 +1,9 @@
 function [f, pitch, roll, yaw] = AnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
-    velocidadPitch = datosArchivo(:,5);
-    velocidadRoll = datosArchivo(:,6);
-    velocidadYaw = datosArchivo(:,7);
+    velocidadPitch = datosArchivo(:,2);
+    velocidadRoll = datosArchivo(:,3);
+    velocidadYaw = datosArchivo(:,4);
     fft_velocidadPitch = fft(velocidadPitch, numeroDatos);
     fft_velocidadRoll = fft(velocidadRoll, numeroDatos);
     fft_velocidadYaw = fft(velocidadYaw, numeroDatos);
@@ -18,7 +18,8 @@ function [f, pitch, roll, yaw] = AnalisisFrecuencia(nombreArchivoCSV, frecuencia
     shift_amplitud_fft_velocidadPitch = amplitud_fft_velocidadPitch / longitud_fft;
     shift_amplitud_fft_velocidadRoll = amplitud_fft_velocidadRoll / longitud_fft;
     shift_amplitud_fft_velocidadYaw = amplitud_fft_velocidadYaw / longitud_fft;
-    maximoValor = max([max(shift_amplitud_fft_velocidadPitch), max(shift_amplitud_fft_velocidadRoll), max(shift_amplitud_fft_velocidadYaw)]);
+    maximoValor = max([max(shift_amplitud_fft_velocidadPitch(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_velocidadRoll(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_velocidadYaw(longitud_fft/2:longitud_fft))]);
+    %maximoValor = max([max(shift_amplitud_fft_velocidadPitch), max(shift_amplitud_fft_velocidadRoll), max(shift_amplitud_fft_velocidadYaw)]);
     
     f=(-longitud_fft/2 : (longitud_fft/2-1)) * frecuenciaMuestreo/longitud_fft;
     figure('name',nombreArchivoCSV)
