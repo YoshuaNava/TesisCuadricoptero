@@ -14,7 +14,7 @@
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 160;
+int velocidadBasePWM = 200;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
