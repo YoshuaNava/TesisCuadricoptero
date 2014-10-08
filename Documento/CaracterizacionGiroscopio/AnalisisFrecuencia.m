@@ -4,6 +4,10 @@ function [f, pitch, roll, yaw] = AnalisisFrecuencia(nombreArchivoCSV, frecuencia
     velocidadPitch = datosArchivo(:,2);
     velocidadRoll = datosArchivo(:,3);
     velocidadYaw = datosArchivo(:,4);
+    figure()
+    plot(velocidadPitch)
+    figure()
+    plot(velocidadRoll)
     fft_velocidadPitch = fft(velocidadPitch, numeroDatos);
     fft_velocidadRoll = fft(velocidadRoll, numeroDatos);
     fft_velocidadYaw = fft(velocidadYaw, numeroDatos);

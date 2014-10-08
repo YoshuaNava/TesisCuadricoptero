@@ -90,6 +90,9 @@ double anguloDeseadoYPR[3] = {
 double G_velocidadYPR[3] = {
   0, 0, 0
 };
+double G_velocidadYPRoriginal[3] = {
+  0, 0, 0
+};
 double G_anguloYPR[3] = {
   0, 0, 0
 };
@@ -334,16 +337,19 @@ void FiltroComplementario() {
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
 
-  
+
   G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-   G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-   G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-   
-/*
+  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+
+  G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+  G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+  G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );   
+  /*
   G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-  G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-  G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-*/
+   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+   */
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
@@ -514,18 +520,18 @@ void PrepararPaqueteMensajeEstado()
   /**POSICION YAW**/
   if(anguloYPR[0] >= 0)
   {
-    mensajeEstado[2] = A_anguloYPR[0];
+    mensajeEstado[2] = G_velocidadYPRoriginal[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(A_anguloYPR[0]);
+    mensajeEstado[3] = abs(G_velocidadYPRoriginal[0]);
     mensajeEstado[2] = 0;    
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = A_anguloYPR[1] + 90;
+  mensajeEstado[4] = G_velocidadYPRoriginal[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = A_anguloYPR[2] + 90;
+  mensajeEstado[5] = G_velocidadYPRoriginal[2] + 90;
   /**VELOCIDAD YAW**/
   if(G_velocidadYPR[0] >= 0)
   {
@@ -774,4 +780,5 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
+
 
