@@ -18,7 +18,7 @@ int velocidadBasePWM = 200;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
-int motorDelantero = 0; 
+int motorDelantero = 0;
 int motorTrasero = 0;
 //FIN MOTORES
 
@@ -44,7 +44,7 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 50
+#define DT_envioDatos 10
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -68,7 +68,7 @@ unsigned char ack[4];
 #define ToRad(x) ((x)*0.01745329252)  // *pi/180
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
-#define G_ACC 0.0573
+#define G_ACC 1.0
 #define K_COMP 0.99
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
@@ -81,7 +81,7 @@ char report[80];
 double yaw_offset = 0;
 double pitch_offset = 0;
 double roll_offset = 0;
-double G_offsetYPR [3] ={
+double G_offsetYPR [3] = {
   0, 0, 0
 };
 double anguloDeseadoYPR[3] = {
@@ -210,7 +210,7 @@ void loop()
    PID_pAngular_Yaw.SetTunings(0, 0, 0);
    PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
    PID_pAngular_Roll.SetTunings(1.7, 0, 0);
-   
+
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
@@ -225,7 +225,7 @@ void loop()
   SecuenciaDeVuelo();
 }
 
-void CalcularOffsetGiroscopio(){
+void CalcularOffsetGiroscopio() {
   int numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
     gyro.read();
@@ -275,7 +275,7 @@ void SecuenciaDeInicio()
       {
         motorDerecho = i;
         motorIzquierdo = i;
-        motorDelantero = i;  
+        motorDelantero = i;
         motorTrasero = i;
         PIDAltura();
         PID_VelocidadAngular();
@@ -318,13 +318,13 @@ void SecuenciaDeVuelo()
     /*    Serial.println("*************** Motores *****************");
      Serial.println(motorDerecho);
      Serial.println(motorIzquierdo);
-     Serial.println(motorDelantero);    
+     Serial.println(motorDelantero);
      Serial.println(motorTrasero);
      Serial.println(correccionPWM_YPR[0]);
      Serial.println(correccionPWM_YPR[1]);
-     Serial.println(correccionPWM_YPR[2]);    
+     Serial.println(correccionPWM_YPR[2]);
      Serial.println();*/
-    EnviarMensajeEstado();    
+    EnviarMensajeEstado();
   }
 }
 
@@ -337,19 +337,19 @@ void FiltroComplementario() {
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
 
-
-  G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-
+  /*
+    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
+    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+  */
   G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
   G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-  G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );   
-  /*
+  G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+
   G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-   */
+  G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+  G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+
   A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
   A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
   A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
@@ -404,7 +404,7 @@ void CalcularAltura()
 void FiltroKalmanAltura()
 {
   covarianzaRuidoEstimacionAltura = covarianzaRuidoEstimacionAltura + covarianzaProcesoFisicoAltura;
-  gananciaKalman = covarianzaRuidoEstimacionAltura/(covarianzaRuidoEstimacionAltura + covarianzaRuidoSensorAltura);
+  gananciaKalman = covarianzaRuidoEstimacionAltura / (covarianzaRuidoEstimacionAltura + covarianzaRuidoSensorAltura);
   estimacionAltura = estimacionAltura + gananciaKalman * (USAltura - estimacionAltura);
   covarianzaRuidoEstimacionAltura = (1 - gananciaKalman) * covarianzaRuidoEstimacionAltura;
 }
@@ -515,10 +515,10 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
  */
 void PrepararPaqueteMensajeEstado()
 {
-  mensajeEstado[0]= CODIGO_INICIO_MENSAJE;//HEADER
+  mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if(anguloYPR[0] >= 0)
+  if (anguloYPR[0] >= 0)
   {
     mensajeEstado[2] = G_velocidadYPRoriginal[0];
     mensajeEstado[3] = 0;
@@ -526,14 +526,14 @@ void PrepararPaqueteMensajeEstado()
   else
   {
     mensajeEstado[3] = abs(G_velocidadYPRoriginal[0]);
-    mensajeEstado[2] = 0;    
+    mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
   mensajeEstado[4] = G_velocidadYPRoriginal[1] + 90;
   /**POSICION ROLL**/
   mensajeEstado[5] = G_velocidadYPRoriginal[2] + 90;
   /**VELOCIDAD YAW**/
-  if(G_velocidadYPR[0] >= 0)
+  if (G_velocidadYPR[0] >= 0)
   {
     mensajeEstado[6] = G_velocidadYPR[0];
     mensajeEstado[7] = 0;
@@ -544,7 +544,7 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if(G_velocidadYPR[1] >= 0)
+  if (G_velocidadYPR[1] >= 0)
   {
     mensajeEstado[8] = G_velocidadYPR[1];
     mensajeEstado[9] = 0;
@@ -555,7 +555,7 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if(G_velocidadYPR[2] >= 0)
+  if (G_velocidadYPR[2] >= 0)
   {
     mensajeEstado[10] = G_velocidadYPR[2];
     mensajeEstado[11] = 0;
@@ -576,7 +576,7 @@ void PrepararPaqueteMensajeEstado()
   {
     mensajeEstado[13] = 0;
   }
-  mensajeEstado[14]=(mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]);//CHECKSUM
+  mensajeEstado[14] = (mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]); //CHECKSUM
 }
 
 void EnviarMensajeEstado()
@@ -617,14 +617,14 @@ void RecibirComando()
               {
                 checksum = Serial.read();
                 delay(1);
-                if(CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
+                if (CODIGO_INICIO_MENSAJE ^ CODIGO_ENCENDIDO ^ comandoEncendidoRecibido == checksum)
                 {
-                  if(comandoEncendidoRecibido == 1)
+                  if (comandoEncendidoRecibido == 1)
                   {
                     modoEjecucion = 'T';
                     digitalWrite(LED_ENCENDIDO, HIGH);
                   }
-                  if(comandoEncendidoRecibido == 0)
+                  if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
                     anguloDeseadoYPR[1] = 0;
@@ -659,26 +659,26 @@ void RecibirComando()
                     {
                       anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
                       anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
-                      if(comandoAltura == '+')
+                      if (comandoAltura == '+')
                       {
-                        if(alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
+                        if (alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
                         {
                           alturaDeseada = alturaDeseada + INCREMENTO_ALTURA_COMANDO;
                         }
                       }
-                      else if(comandoAltura == '-')
+                      else if (comandoAltura == '-')
                       {
-                        if(alturaDeseada - INCREMENTO_ALTURA_COMANDO >=0)
+                        if (alturaDeseada - INCREMENTO_ALTURA_COMANDO >= 0)
                         {
                           alturaDeseada = alturaDeseada - INCREMENTO_ALTURA_COMANDO;
-                        }                        
+                        }
                       }
                     }
-                  } 
+                  }
                 }
               }
             }
-          }            
+          }
         }
       }
     }
@@ -691,7 +691,7 @@ void EnviarAcknowledge(unsigned char codigoMensaje)
   ack[0] = CODIGO_INICIO_MENSAJE;
   ack[1] = CODIGO_ACK;
   ack[2] = codigoMensaje;
-  ack[3] =(ack[0] ^ ack[1] ^ ack[2]);
+  ack[3] = (ack[0] ^ ack[1] ^ ack[2]);
   Serial.write(ack, 4);
 }
 
