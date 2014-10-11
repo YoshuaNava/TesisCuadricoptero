@@ -1,8 +1,8 @@
 //Band pass butterworth filter order=5 alpha1=0.0006 alpha2=0.0011 
-class filter
+class FiltroLP_Acelerometro
 {
 	public:
-		filter()
+		FiltroLP_Acelerometro()
 		{
 			for(int i=0; i <= 10; i++)
 				v[i]=0.0;

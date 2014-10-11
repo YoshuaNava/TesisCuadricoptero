@@ -1,5 +1,6 @@
 
-#include <filter.h>
+#include <FiltroLP_Giroscopio.h>
+#include <FiltroLP_Acelerometro.h>
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
@@ -13,7 +14,7 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 255 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
 int velocidadBasePWM = 200;
 char modoEjecucion = '_';
 int motorDerecho = 0;
@@ -21,9 +22,6 @@ int motorIzquierdo = 0;
 int motorDelantero = 0;
 int motorTrasero = 0;
 //FIN MOTORES
-
-filter filtroVelocidadYPR [3];
-filter filtroPosicionYPR [3];
 
 //ULTRASONIDO:
 #define USPIN 15 //puerto de datos del ultradonido.
@@ -68,7 +66,6 @@ unsigned char ack[4];
 #define ToRad(x) ((x)*0.01745329252)  // *pi/180
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
-#define G_ACC 1.0
 #define K_COMP 0.99
 #define DT_sensor_altura 29
 #define DT_PID_altura 50
@@ -111,6 +108,8 @@ double velocidadDeseadaYPR[3] = {
 double correccionPWM_YPR[3] = {
   0, 0, 0
 };
+FiltroLP_Giroscopio filtroVelocidadYPR [3];
+FiltroLP_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
 //FIN IMU
 
@@ -350,9 +349,9 @@ void FiltroComplementario() {
   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
 
-  A_aceleracionYPR[0] = (double) compass.a.z * G_ACC;
-  A_aceleracionYPR[1] = (double) compass.a.y * G_ACC;
-  A_aceleracionYPR[2] = (double) compass.a.x * G_ACC;
+  A_aceleracionYPR[0] = (double) compass.a.z;
+  A_aceleracionYPR[1] = (double) compass.a.y;
+  A_aceleracionYPR[2] = (double) compass.a.x;
 
   A_anguloYPR[0] = 0;
   A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
