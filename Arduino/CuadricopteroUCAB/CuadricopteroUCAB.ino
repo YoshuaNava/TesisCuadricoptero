@@ -517,20 +517,20 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (anguloYPR[0] >= 0)
+  if (A_anguloYPR[0] >= 0)
   {
-    mensajeEstado[2] = G_velocidadYPRoriginal[0];
+    mensajeEstado[2] = A_anguloYPR[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(G_velocidadYPRoriginal[0]);
+    mensajeEstado[3] = abs(A_anguloYPR[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = G_velocidadYPRoriginal[1] + 90;
+  mensajeEstado[4] = A_anguloYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = G_velocidadYPRoriginal[2] + 90;
+  mensajeEstado[5] = A_anguloYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
