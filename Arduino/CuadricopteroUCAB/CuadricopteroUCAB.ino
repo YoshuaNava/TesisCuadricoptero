@@ -336,15 +336,15 @@ void FiltroComplementario() {
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
 
-  /*
-    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-  */
+  
+  G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
+  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+  
   G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
   G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
   G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-
+/*
   G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
   G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
   G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
@@ -352,12 +352,17 @@ void FiltroComplementario() {
   A_aceleracionYPR[0] = (double) compass.a.z;
   A_aceleracionYPR[1] = (double) compass.a.y;
   A_aceleracionYPR[2] = (double) compass.a.x;
+*/
+  A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) compass.a.z);
+  A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) compass.a.y);
+  A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) compass.a.x);
 
   A_anguloYPR[0] = 0;
   A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
   A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
   A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
   A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+
 
 
   anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);

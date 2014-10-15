@@ -1,9 +1,9 @@
 function [f, pitch, roll, yaw] = AnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
-    velocidadPitch = datosArchivo(:,5);
-    velocidadRoll = datosArchivo(:,6);
-    velocidadYaw = datosArchivo(:,7);
+    velocidadPitch = datosArchivo(:,2);
+    velocidadRoll = datosArchivo(:,3);
+    velocidadYaw = datosArchivo(:,4);
      
 %      [b,a] = butter(10,40/(frecuenciaMuestreo/2),'low');
 %      fvtool(b,a)
