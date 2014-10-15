@@ -68,6 +68,8 @@ unsigned char ack[4];
 #define G_GYRO 0.00875
 #define K_COMP 0.99
 #define DT_sensor_altura 29
+#define DT_acelerometro 20
+#define DT_acelerometro 20
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 15
 #define DT_PID_velocidadAngular 5
@@ -111,6 +113,8 @@ double correccionPWM_YPR[3] = {
 FiltroLP_Giroscopio filtroVelocidadYPR [3];
 FiltroLP_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
+long tiempoUltimoMuestreoGiroscopio = 0;
+long tiempoUltimoMuestreoAcelerometro = 0;
 //FIN IMU
 
 //VARIABLES GLOBALES:
@@ -209,7 +213,7 @@ void loop()
    PID_pAngular_Yaw.SetTunings(0, 0, 0);
    PID_pAngular_Pitch.SetTunings(1.7, 0, 0);
    PID_pAngular_Roll.SetTunings(1.7, 0, 0);
-
+   
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0.002);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.01); //P=0.75   //P=0.55
@@ -335,36 +339,42 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
+  if (millis() - tiempoUltimoMuestreoAcelerometro > DT_acelerometro)
+  {
+    /*
+    A_aceleracionYPR[0] = (double) compass.a.z;
+     A_aceleracionYPR[1] = (double) compass.a.y;
+     A_aceleracionYPR[2] = (double) compass.a.x;
+     */
+    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) compass.a.z);
+    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) compass.a.y);
+    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) compass.a.x);
 
-  
-  G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-  G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-  G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-  
-  G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-  G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-  G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-/*
-  G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-  G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-  G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-
-  A_aceleracionYPR[0] = (double) compass.a.z;
-  A_aceleracionYPR[1] = (double) compass.a.y;
-  A_aceleracionYPR[2] = (double) compass.a.x;
-*/
-  A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) compass.a.z);
-  A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) compass.a.y);
-  A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) compass.a.x);
-
-  A_anguloYPR[0] = 0;
-  A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
-  A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-  A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
-  A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    A_anguloYPR[0] = 0;
+    A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
+    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
+    A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
+    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    tiempoUltimoMuestreoAcelerometro = millis();
+  }
 
 
+  if (millis() - tiempoUltimoMuestreoGiroscopio > DT_giroscopio)
+  {
+    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
+    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
+    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
 
+    G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+    G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+    G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+    /*
+    G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+     G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+     G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+     */
+    tiempoUltimoMuestreoGiroscopio = millis();
+  }
   anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
   anguloYPR[0] = ToRad(anguloYPR[0]);
   anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
@@ -784,5 +794,6 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
+
 
 
