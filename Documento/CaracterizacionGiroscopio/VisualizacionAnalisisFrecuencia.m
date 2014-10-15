@@ -1,4 +1,4 @@
-function [f, pitch, roll, yaw] = AnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
+function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     velocidadPitch = datosArchivo(:,2);
