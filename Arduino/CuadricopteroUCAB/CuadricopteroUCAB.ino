@@ -114,6 +114,21 @@ double velocidadDeseadaYPR[3] = {
 double correccionPWM_YPR[3] = {
   0, 0, 0
 };
+double covarianzaProcesoFisicoAcelerometro[3] = {
+  0.7701, 0.5840, 0.7169
+};
+double covarianzaRuidoSensorAcelerometro[3] = {
+  0.0094, 0.0077, 0.0066
+};
+double estimacionAcelerometro[3] = {
+  0.0, 0.0, 0.0
+};
+double covarianzaRuidoEstimacionAcelerometro[3] = {
+  0.0, 0.0, 0.0
+};
+double gananciaKalmanAcelerometro[3] = {
+  0.0, 0.0, 0.0
+};
 FiltroLP_Giroscopio filtroVelocidadYPR [3];
 FiltroLP_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
@@ -447,6 +462,15 @@ void FiltroKalmanAltura()
 }
 
 
+void FiltroKalmanAceleracion()
+{
+  covarianzaRuidoEstimacionAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] + covarianzaProcesoFisicoAcelerometro[0];
+  gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
+  estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR[0] - estimacionAcelerometro[0]);
+  covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
+}
+
+
 void PID_PosicionAngular()
 {
   PID_pAngular_Yaw.Compute();
@@ -572,34 +596,34 @@ void PrepararPaqueteMensajeEstado()
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
-    mensajeEstado[6] = G_velocidadYPR[0];
+    mensajeEstado[6] = estimacionAcelerometro[0];
     mensajeEstado[7] = 0;
   }
   else
   {
-    mensajeEstado[7] = abs(G_velocidadYPR[0]);
+    mensajeEstado[7] = abs(estimacionAcelerometro[0]);
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
   if (G_velocidadYPR[1] >= 0)
   {
-    mensajeEstado[8] = G_velocidadYPR[1];
+    mensajeEstado[8] = estimacionAcelerometro[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(G_velocidadYPR[1]);
+    mensajeEstado[9] = abs(estimacionAcelerometro[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
   if (G_velocidadYPR[2] >= 0)
   {
-    mensajeEstado[10] = G_velocidadYPR[2];
+    mensajeEstado[10] = estimacionAcelerometro[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(G_velocidadYPR[2]);
+    mensajeEstado[11] = abs(estimacionAcelerometro[2]);
     mensajeEstado[10] = 0;
   }
 
