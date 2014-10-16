@@ -67,6 +67,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define K_COMP 0.99
+#define G_ACC 0.00562
 #define DT_sensor_altura 29
 #define DT_acelerometro 20
 #define DT_giroscopio 11
@@ -81,6 +82,9 @@ double yaw_offset = 0;
 double pitch_offset = 0;
 double roll_offset = 0;
 double G_offsetYPR [3] = {
+  0, 0, 0
+};
+double A_offsetYPR [3] = {
   0, 0, 0
 };
 double anguloDeseadoYPR[3] = {
@@ -199,6 +203,7 @@ void setup() {
   PID_altura.SetMode(AUTOMATIC);
   //////////////////////////////////////
   CalcularOffsetGiroscopio();
+  CalcularOffsetAcelerometro();
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
   tiempoUltimoMuestreoAngulos = micros();
   tiempoUltimoMuestreoAltura = millis();
@@ -239,6 +244,21 @@ void CalcularOffsetGiroscopio() {
   G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
   G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
   G_offsetYPR [2] = G_offsetYPR[2] / numMuestras;
+
+}
+
+
+void CalcularOffsetAcelerometro() {
+  int numMuestras = 500;
+  for (int n = 0; n < numMuestras ; n++) {
+    compass.read();
+    A_offsetYPR[0] += compass.a.z;
+    A_offsetYPR[1] += compass.a.y;
+    A_offsetYPR[2] += compass.a.x;
+  }
+  A_offsetYPR [0] = A_offsetYPR[0] / numMuestras;
+  A_offsetYPR [1] = A_offsetYPR[1] / numMuestras;
+  A_offsetYPR [2] = A_offsetYPR[2] / numMuestras;
 
 }
 
@@ -339,18 +359,18 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
-  if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
+//  if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
   {
-/*    
-    A_aceleracionYPR[0] = (double) compass.a.z;
-     A_aceleracionYPR[1] = (double) compass.a.y;
-     A_aceleracionYPR[2] = (double) compass.a.x;
-*/     
 
+   A_aceleracionYPR[0] = (double) (compass.a.z) * G_ACC;
+   A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
+   A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
+
+/*
     A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) compass.a.z);
     A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) compass.a.y);
     A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) compass.a.x);
-
+*/
 
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
@@ -361,21 +381,21 @@ void FiltroComplementario() {
   }
 
 
-  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
+//  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
   {
-    
+/*    
     G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
     G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
     G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
-/*
+
     G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
     G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
     G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-  
+  */
     G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
      G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
      G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-*/     
+     
     tiempoUltimoMuestreoGiroscopio = millis();
   }
   anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
@@ -537,18 +557,18 @@ void PrepararPaqueteMensajeEstado()
   /**POSICION YAW**/
   if (A_anguloYPR[0] >= 0)
   {
-    mensajeEstado[2] = A_anguloYPR[0];
+    mensajeEstado[2] = A_aceleracionYPR[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(A_anguloYPR[0]);
+    mensajeEstado[3] = abs(A_aceleracionYPR[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = A_anguloYPR[1] + 90;
+  mensajeEstado[4] = A_aceleracionYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = A_anguloYPR[2] + 90;
+  mensajeEstado[5] = A_aceleracionYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
