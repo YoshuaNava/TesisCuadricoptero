@@ -115,16 +115,16 @@ double correccionPWM_YPR[3] = {
   0, 0, 0
 };
 double covarianzaProcesoFisicoAcelerometro[3] = {
-  0.7701, 0.5840, 0.7169
+  0.0, 0.0, 0.0
 };
 double covarianzaRuidoSensorAcelerometro[3] = {
-  0.0094, 0.0077, 0.0066
+  0.5925, 0.6905, 0.8495
 };
 double estimacionAcelerometro[3] = {
   0.0, 0.0, 0.0
 };
 double covarianzaRuidoEstimacionAcelerometro[3] = {
-  0.0, 0.0, 0.0
+  69.3104, 64.5187, 52.5640
 };
 double gananciaKalmanAcelerometro[3] = {
   0.0, 0.0, 0.0
@@ -381,17 +381,18 @@ void FiltroComplementario() {
    A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
    A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-
+/*
     A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
     A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
     A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
-
+*/
 
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
     A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
     A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    FiltroKalmanAceleracion();
     tiempoUltimoMuestreoAcelerometro = millis();
   }
 
@@ -468,6 +469,16 @@ void FiltroKalmanAceleracion()
   gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
   estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR[0] - estimacionAcelerometro[0]);
   covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
+  
+  covarianzaRuidoEstimacionAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] + covarianzaProcesoFisicoAcelerometro[1];
+  gananciaKalmanAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] / (covarianzaRuidoEstimacionAcelerometro[1] + covarianzaRuidoSensorAcelerometro[1]);
+  estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR[1] - estimacionAcelerometro[1]);
+  covarianzaRuidoEstimacionAcelerometro[1] = (1 - gananciaKalmanAcelerometro[1]) * covarianzaRuidoEstimacionAcelerometro[1];
+  
+  covarianzaRuidoEstimacionAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] + covarianzaProcesoFisicoAcelerometro[2];
+  gananciaKalmanAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] / (covarianzaRuidoEstimacionAcelerometro[2] + covarianzaRuidoSensorAcelerometro[2]);
+  estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR[2] - estimacionAcelerometro[2]);
+  covarianzaRuidoEstimacionAcelerometro[2] = (1 - gananciaKalmanAcelerometro[2]) * covarianzaRuidoEstimacionAcelerometro[2];
 }
 
 
@@ -579,7 +590,7 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (A_anguloYPR[0] >= 0)
+  if (A_aceleracionYPR[0] >= 0)
   {
     mensajeEstado[2] = A_aceleracionYPR[0];
     mensajeEstado[3] = 0;
@@ -594,7 +605,7 @@ void PrepararPaqueteMensajeEstado()
   /**POSICION ROLL**/
   mensajeEstado[5] = A_aceleracionYPR[2] + 90;
   /**VELOCIDAD YAW**/
-  if (G_velocidadYPR[0] >= 0)
+  if (estimacionAcelerometro[0] >= 0)
   {
     mensajeEstado[6] = estimacionAcelerometro[0];
     mensajeEstado[7] = 0;
@@ -605,7 +616,7 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (G_velocidadYPR[1] >= 0)
+  if (estimacionAcelerometro[1] >= 0)
   {
     mensajeEstado[8] = estimacionAcelerometro[1];
     mensajeEstado[9] = 0;
@@ -616,7 +627,7 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (G_velocidadYPR[2] >= 0)
+  if (estimacionAcelerometro[2] >= 0)
   {
     mensajeEstado[10] = estimacionAcelerometro[2];
     mensajeEstado[11] = 0;

@@ -2,9 +2,10 @@ function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecue
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     maximoValorEnvio = 90;
-    aceleracionX = datosArchivo(:,2) / maximoValorEnvio;
-    aceleracionY = datosArchivo(:,3) / maximoValorEnvio;
-    aceleracionZ = datosArchivo(:,4) / maximoValorEnvio;
+    escala = 90;
+    aceleracionX = datosArchivo(:,2) * (escala/maximoValorEnvio);
+    aceleracionY = datosArchivo(:,3) * (escala/maximoValorEnvio);
+    aceleracionZ = datosArchivo(:,4) * (escala/maximoValorEnvio);
      
 %      [b,a] = butter(10,40/(frecuenciaMuestreo/2),'low');
 %      fvtool(b,a)
@@ -21,7 +22,7 @@ function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecue
     plot(aceleracionX)
     mediaAceleracionX = mean(aceleracionX)
     stdAceleracionX = std(aceleracionX)
-    ylim([-1 1])
+    ylim([-escala escala])
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in X')
@@ -29,7 +30,7 @@ function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecue
     plot(aceleracionY)
     mediaAceleracionY = mean(aceleracionY)
     stdAceleracionY = std(aceleracionY)
-    ylim([-1 1])
+    ylim([-escala escala])
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in Y')
@@ -37,7 +38,7 @@ function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecue
     plot(aceleracionZ)
     mediaAceleracionZ = mean(aceleracionZ)
     stdAceleracionZ = std(aceleracionZ)
-    ylim([-1 1])
+    ylim([-escala escala])
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in Z')
