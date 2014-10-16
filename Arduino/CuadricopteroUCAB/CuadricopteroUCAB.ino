@@ -366,11 +366,11 @@ void FiltroComplementario() {
    A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
    A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-/*
-    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) compass.a.z);
-    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) compass.a.y);
-    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) compass.a.x);
-*/
+
+    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
+    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
+    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
+
 
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
