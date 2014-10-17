@@ -42,7 +42,7 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 50
+#define DT_envioDatos 5
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
