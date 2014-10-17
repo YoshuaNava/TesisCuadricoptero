@@ -1,4 +1,4 @@
-function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
+function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     maximoValorEnvio = 90;

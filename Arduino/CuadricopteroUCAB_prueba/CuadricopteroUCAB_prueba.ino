@@ -644,8 +644,8 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[10] = 0;
   }
 
-  //  mensajeEstado[12] = estimacionltura;
-  mensajeEstado[12] = alturaDeseada;
+  mensajeEstado[12] = estimacionAltura;
+//  mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
     mensajeEstado[13] = 1;
