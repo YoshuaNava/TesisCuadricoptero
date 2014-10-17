@@ -33,7 +33,7 @@ class HandlerJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO_COMANDO = 30
+        self.__MAXIMO_ANGULO_COMANDO = 10
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0

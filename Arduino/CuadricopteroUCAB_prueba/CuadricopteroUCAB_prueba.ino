@@ -85,7 +85,7 @@ double G_offsetYPR [3] = {
   0, 0, 0
 };
 double A_offsetYPR [3] = {
-  0, 0, 0
+  14946, -355, -1957
 };
 double anguloDeseadoYPR[3] = {
   0, 0, 0
@@ -218,7 +218,7 @@ void setup() {
   PID_altura.SetMode(AUTOMATIC);
   //////////////////////////////////////
   CalcularOffsetGiroscopio();
-  CalcularOffsetAcelerometro();
+//  CalcularOffsetAcelerometro();
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
   tiempoUltimoMuestreoAngulos = micros();
   tiempoUltimoMuestreoAltura = millis();
@@ -391,8 +391,8 @@ void FiltroComplementario() {
     tiempoUltimoMuestreoGiroscopio = millis();
 
     anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
-    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT);
-    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT);    
+    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT));
+    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT));
   }
 
   if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
@@ -424,8 +424,8 @@ void FiltroComplementario() {
 
     tiempoUltimoMuestreoAcelerometro = millis();
 
-    anguloYPR[1] += (1 - K_COMP) * A_anguloYPR[1]);
-    anguloYPR[2] += (1 - K_COMP) * A_anguloYPR[2]);
+    anguloYPR[1] += (double)  (1 - K_COMP) * A_anguloYPR[1];
+    anguloYPR[2] += (double)  (1 - K_COMP) * A_anguloYPR[2];
   }
 
   anguloYPR[0] = ToRad(anguloYPR[0]);
@@ -600,20 +600,20 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (anguloYPR[0] >= 0)
+  if (A_aceleracionYPR[0] >= 0)
   {
-    mensajeEstado[2] = anguloYPR[0];
+    mensajeEstado[2] = A_aceleracionYPR[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(anguloYPR[0]);
+    mensajeEstado[3] = abs(A_aceleracionYPR[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = anguloYPR[1] + 90;
+  mensajeEstado[4] = A_aceleracionYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = anguloYPR[2] + 90;
+  mensajeEstado[5] = A_aceleracionYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
