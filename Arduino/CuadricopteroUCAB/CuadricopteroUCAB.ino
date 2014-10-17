@@ -145,9 +145,9 @@ long tiempoUltimoEnvio = 0;
 
 
 
-PID PID_vAngular_Yaw(&G_velocidadYPR[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
-PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
-PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
+PID PID_vAngular_Yaw(&G_velocidadYPRoriginal[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
+PID PID_vAngular_Pitch(&G_velocidadYPRoriginal[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
+PID PID_vAngular_Roll(&G_velocidadYPRoriginal[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, DIRECT);
@@ -236,8 +236,8 @@ void loop()
    
    // Yaw-  P: 1.3  I: 0    D: 0
    //PID_vAngular_Yaw.SetTunings(0.1, 0, 0);
-   PID_vAngular_Pitch.SetTunings(0, 0,0); //P=0.75   //P=0.55
-   PID_vAngular_Roll.SetTunings(0.085, 0, 0.015); //P=0.75   //P=0.55
+   PID_vAngular_Pitch.SetTunings(0.085, 0,0.015); //P=0.75   //P=0.55
+   PID_vAngular_Roll.SetTunings(0.7, 0, 0); //P=0.75   //P=0.55
    //PID_altura.SetTunings(2.0, 0, 0);
    
 
@@ -350,7 +350,7 @@ void SecuenciaDeVuelo()
     FiltroComplementario();
     CalcularAltura();
     PIDAltura();
-    PID_PosicionAngular();
+//    PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
 /*        Serial.println("*************** Motores *****************");
@@ -600,20 +600,20 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (G_velocidadYPR[0] >= 0)
+  if (G_velocidadYPRoriginal[0] >= 0)
   {
-    mensajeEstado[2] = G_velocidadYPR[0];
+    mensajeEstado[2] = G_velocidadYPRoriginal[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(G_velocidadYPR[0]);
+    mensajeEstado[3] = abs(G_velocidadYPRoriginal[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = G_velocidadYPR[1] + 90;
+  mensajeEstado[4] = G_velocidadYPRoriginal[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = G_velocidadYPR[2] + 90;
+  mensajeEstado[5] = G_velocidadYPRoriginal[2] + 90;
   /**VELOCIDAD YAW**/
   if (velocidadDeseadaYPR[0] >= 0)
   {
@@ -743,8 +743,8 @@ void RecibirComando()
                       {
                         //anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
                         //anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
-                        velocidadDeseadaYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
-                        velocidadDeseadaYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;                        
+                        velocidadDeseadaYPR[1] = (comandoPitch - MAXIMO_ANGULO_COMANDO)*6;
+                        velocidadDeseadaYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO)*6; 
                         if (comandoAltura == '+')
                         {
                           if (alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
