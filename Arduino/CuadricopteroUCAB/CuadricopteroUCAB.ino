@@ -232,10 +232,10 @@ void loop()
   // Yaw-  P: 1    I: 0   D: 0
    //PID_pAngular_Yaw.SetTunings(0, 0, 0);
    //PID_pAngular_Pitch.SetTunings(1, 0, 0);
-   PID_pAngular_Roll.SetTunings(4, 0, 0);
+//   PID_pAngular_Roll.SetTunings(8, 0, 0);
    
    // Yaw-  P: 1.3  I: 0    D: 0
-   PID_vAngular_Yaw.SetTunings(0.1, 0, 0);
+   //PID_vAngular_Yaw.SetTunings(0.1, 0, 0);
    PID_vAngular_Pitch.SetTunings(0, 0,0); //P=0.75   //P=0.55
    PID_vAngular_Roll.SetTunings(0.085, 0, 0.015); //P=0.75   //P=0.55
    //PID_altura.SetTunings(2.0, 0, 0);
@@ -739,20 +739,23 @@ void RecibirComando()
                     delay(1);
                     if (CODIGO_INICIO_MENSAJE ^ CODIGO_MOVIMIENTO ^ comandoPitch ^ comandoRoll ^ comandoAltura == checksum)
                     {
-                      anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
-                      anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
-                      if (comandoAltura == '+')
+                      if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < 10) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < 10))
                       {
-                        if (alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
+                        anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
+                        anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
+                        if (comandoAltura == '+')
                         {
-                          alturaDeseada = alturaDeseada + INCREMENTO_ALTURA_COMANDO;
+                          if (alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
+                          {
+                            alturaDeseada = alturaDeseada + INCREMENTO_ALTURA_COMANDO;
+                          }
                         }
-                      }
-                      else if (comandoAltura == '-')
-                      {
-                        if (alturaDeseada - INCREMENTO_ALTURA_COMANDO >= 0)
+                        else if (comandoAltura == '-')
                         {
-                          alturaDeseada = alturaDeseada - INCREMENTO_ALTURA_COMANDO;
+                          if (alturaDeseada - INCREMENTO_ALTURA_COMANDO >= 0)
+                          {
+                            alturaDeseada = alturaDeseada - INCREMENTO_ALTURA_COMANDO;
+                          }
                         }
                       }
                     }

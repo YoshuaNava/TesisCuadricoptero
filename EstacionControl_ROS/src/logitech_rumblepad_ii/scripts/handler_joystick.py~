@@ -146,8 +146,8 @@ class HandlerJoystick:
                             self.comandoAltura = ord('=')
                             
                         if (estado_boton_R1 == 1):
-                            self.comandoPitchEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
-                            self.comandoRollEnviar = 0 + self.__MAXIMO_ANGULO_COMANDO
+                            self.comandoPitchEnviar = 0.0
+                            self.comandoRollEnviar = 0.0
 
 			if (estado_boton_R1 == 1) or (estado_boton_L1 == 1) or (estado_boton_L2 == 1):
 	                    self.comandoMovimientoEjecutado = True
