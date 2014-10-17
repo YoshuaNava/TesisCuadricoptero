@@ -14,8 +14,8 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 200;
+#define PWM_MAXIMO 220 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 180;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -42,7 +42,7 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 5
+#define DT_envioDatos 50
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -72,8 +72,8 @@ unsigned char ack[4];
 #define DT_acelerometro 20
 #define DT_giroscopio 11
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 15
-#define DT_PID_velocidadAngular 5
+#define DT_PID_posicionAngular 20
+#define DT_PID_velocidadAngular 10
 
 L3G gyro;
 LSM303 compass;
@@ -124,7 +124,7 @@ double estimacionAcelerometro[3] = {
   0.0, 0.0, 0.0
 };
 double covarianzaRuidoEstimacionAcelerometro[3] = {
-  35.6785, 32.5234, 40.4478
+  35.6785, 38.5234, 44.4478
 };
 double gananciaKalmanAcelerometro[3] = {
   0.0, 0.0, 0.0
@@ -374,6 +374,27 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
+  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
+  {
+    G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+    G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+    G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+    
+    G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+    G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+    G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
+    
+    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) G_velocidadYPR[0]);
+    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) G_velocidadYPR[1]);
+    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
+
+    tiempoUltimoMuestreoGiroscopio = millis();
+    
+    anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT);
+    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT);    
+  }
+  
   if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
   {
 
@@ -400,43 +421,26 @@ void FiltroComplementario() {
      A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
      A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
      */
+    
     tiempoUltimoMuestreoAcelerometro = millis();
+    
+    anguloYPR[1] += (1 - K_COMP) * A_anguloYPR[1]);
+    anguloYPR[2] += (1 - K_COMP) * A_anguloYPR[2]);
   }
 
-
-  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
-  {
-    G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-    G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-    G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-    
-    G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-    G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-    G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-    
-    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) G_velocidadYPR[0]);
-    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) G_velocidadYPR[1]);
-    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
-
-    tiempoUltimoMuestreoGiroscopio = millis();
-  }
-  anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
   anguloYPR[0] = ToRad(anguloYPR[0]);
   anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
-
-  anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
+  
   anguloYPR[1] = ToRad(anguloYPR[1]);
   anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
   anguloYPR[1] = ToDeg(anguloYPR[1]);
-
-  anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
+  
   anguloYPR[2] = ToRad(anguloYPR[2]);
   anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
   anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   tiempoUltimoMuestreoAngulos = micros();
-
 }
 
 
