@@ -600,51 +600,51 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (anguloYPR[0] >= 0)
+  if (G_velocidadYPR[0] >= 0)
   {
-    mensajeEstado[2] = anguloYPR[0];
+    mensajeEstado[2] = G_velocidadYPR[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(anguloYPR[0]);
+    mensajeEstado[3] = abs(G_velocidadYPR[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = anguloYPR[1] + 90;
+  mensajeEstado[4] = G_velocidadYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = anguloYPR[2] + 90;
+  mensajeEstado[5] = G_velocidadYPR[2] + 90;
   /**VELOCIDAD YAW**/
-  if (anguloDeseadoYPR[0] >= 0)
+  if (velocidadDeseadaYPR[0] >= 0)
   {
-    mensajeEstado[6] = anguloDeseadoYPR[0];
+    mensajeEstado[6] = velocidadDeseadaYPR[0];
     mensajeEstado[7] = 0;
   }
   else
   {
-    mensajeEstado[7] = abs(anguloDeseadoYPR[0]);
+    mensajeEstado[7] = abs(velocidadDeseadaYPR[0]);
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (anguloDeseadoYPR[1] >= 0)
+  if (velocidadDeseadaYPR[1] >= 0)
   {
-    mensajeEstado[8] = anguloDeseadoYPR[1];
+    mensajeEstado[8] = velocidadDeseadaYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(anguloDeseadoYPR[1]);
+    mensajeEstado[9] = abs(velocidadDeseadaYPR[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (anguloDeseadoYPR[2] >= 0)
+  if (velocidadDeseadaYPR[2] >= 0)
   {
-    mensajeEstado[10] = anguloDeseadoYPR[2];
+    mensajeEstado[10] = velocidadDeseadaYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(anguloDeseadoYPR[2]);
+    mensajeEstado[11] = abs(velocidadDeseadaYPR[2]);
     mensajeEstado[10] = 0;
   }
 
@@ -741,8 +741,10 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < 10) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < 10))
                       {
-                        anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
-                        anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
+                        //anguloDeseadoYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
+                        //anguloDeseadoYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;
+                        velocidadDeseadaYPR[1] = comandoPitch - MAXIMO_ANGULO_COMANDO;
+                        velocidadDeseadaYPR[2] = comandoRoll - MAXIMO_ANGULO_COMANDO;                        
                         if (comandoAltura == '+')
                         {
                           if (alturaDeseada + INCREMENTO_ALTURA_COMANDO <= ALTURA_MAXIMA)
