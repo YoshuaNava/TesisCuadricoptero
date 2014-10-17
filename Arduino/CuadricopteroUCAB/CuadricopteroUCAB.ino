@@ -14,8 +14,8 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 200;
+#define PWM_MAXIMO 220 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 180;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -42,7 +42,7 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 5
+#define DT_envioDatos 50
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -72,8 +72,8 @@ unsigned char ack[4];
 #define DT_acelerometro 20
 #define DT_giroscopio 11
 #define DT_PID_altura 50
-#define DT_PID_posicionAngular 15
-#define DT_PID_velocidadAngular 5
+#define DT_PID_posicionAngular 20
+#define DT_PID_velocidadAngular 10
 
 L3G gyro;
 LSM303 compass;
@@ -115,7 +115,7 @@ double correccionPWM_YPR[3] = {
   0, 0, 0
 };
 double covarianzaProcesoFisicoAcelerometro[3] = {
-  0.0, 0.0, 0.0
+  0.1, 0.1, 0.1
 };
 double covarianzaRuidoSensorAcelerometro[3] = {
   0.5925, 0.6905, 0.8495
@@ -124,7 +124,7 @@ double estimacionAcelerometro[3] = {
   0.0, 0.0, 0.0
 };
 double covarianzaRuidoEstimacionAcelerometro[3] = {
-  69.3104, 64.5187, 52.5640
+  35.6785, 38.5234, 44.4478
 };
 double gananciaKalmanAcelerometro[3] = {
   0.0, 0.0, 0.0
@@ -374,63 +374,73 @@ void FiltroComplementario() {
 
   DT = (double)(micros() - tiempoUltimoMuestreoAngulos) / 1000000;
 
-//  if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
+  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
   {
-
-   A_aceleracionYPR[0] = (double) (compass.a.z) * G_ACC;
-   A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
-   A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
-
-/*
-    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
-    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
-    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
-*/
-
-    A_anguloYPR[0] = 0;
-    A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
-    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-    A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
-    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
-    FiltroKalmanAceleracion();
-    tiempoUltimoMuestreoAcelerometro = millis();
-  }
-
-
-//  if (millis() - tiempoUltimoMuestreoGiroscopio >= DT_giroscopio)
-  {
-/*    
-    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO ));
-    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO ));
-    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO ));
+    G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
+    G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
+    G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
 
     G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
     G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
     G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-  */
-    G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
-     G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
-     G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-     
+
+    G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) G_velocidadYPR[0]);
+    G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) G_velocidadYPR[1]);
+    G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
+
     tiempoUltimoMuestreoGiroscopio = millis();
+
+    anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT);
+    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT);    
   }
-  anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+
+  if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
+  {
+
+    A_aceleracionYPR[0] = (double) (compass.a.z) * G_ACC;
+    A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
+    A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
+
+
+    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
+    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
+    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
+
+    FiltroKalmanAceleracion();
+
+    A_anguloYPR[0] = 0;
+    A_anguloYPR[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
+    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
+    A_anguloYPR[2] = (double) atan2(estimacionAcelerometro[2], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[1] * estimacionAcelerometro[1]));
+    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    /*
+    A_anguloYPR[0] = 0;
+     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
+     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
+     A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
+     A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+     */
+
+    tiempoUltimoMuestreoAcelerometro = millis();
+
+    anguloYPR[1] += (1 - K_COMP) * A_anguloYPR[1]);
+    anguloYPR[2] += (1 - K_COMP) * A_anguloYPR[2]);
+  }
+
   anguloYPR[0] = ToRad(anguloYPR[0]);
   anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
 
-  anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
   anguloYPR[1] = ToRad(anguloYPR[1]);
   anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
   anguloYPR[1] = ToDeg(anguloYPR[1]);
 
-  anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
   anguloYPR[2] = ToRad(anguloYPR[2]);
   anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
   anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   tiempoUltimoMuestreoAngulos = micros();
-
 }
 
 
@@ -469,12 +479,12 @@ void FiltroKalmanAceleracion()
   gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
   estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR[0] - estimacionAcelerometro[0]);
   covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
-  
+
   covarianzaRuidoEstimacionAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] + covarianzaProcesoFisicoAcelerometro[1];
   gananciaKalmanAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] / (covarianzaRuidoEstimacionAcelerometro[1] + covarianzaRuidoSensorAcelerometro[1]);
   estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR[1] - estimacionAcelerometro[1]);
   covarianzaRuidoEstimacionAcelerometro[1] = (1 - gananciaKalmanAcelerometro[1]) * covarianzaRuidoEstimacionAcelerometro[1];
-  
+
   covarianzaRuidoEstimacionAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] + covarianzaProcesoFisicoAcelerometro[2];
   gananciaKalmanAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] / (covarianzaRuidoEstimacionAcelerometro[2] + covarianzaRuidoSensorAcelerometro[2]);
   estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR[2] - estimacionAcelerometro[2]);
@@ -590,56 +600,56 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (A_aceleracionYPR[0] >= 0)
+  if (anguloYPR[0] >= 0)
   {
-    mensajeEstado[2] = A_aceleracionYPR[0];
+    mensajeEstado[2] = anguloYPR[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(A_aceleracionYPR[0]);
+    mensajeEstado[3] = abs(anguloYPR[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = A_aceleracionYPR[1] + 90;
+  mensajeEstado[4] = anguloYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = A_aceleracionYPR[2] + 90;
+  mensajeEstado[5] = anguloYPR[2] + 90;
   /**VELOCIDAD YAW**/
-  if (estimacionAcelerometro[0] >= 0)
+  if (G_velocidadYPR[0] >= 0)
   {
-    mensajeEstado[6] = estimacionAcelerometro[0];
+    mensajeEstado[6] = G_velocidadYPR[0];
     mensajeEstado[7] = 0;
   }
   else
   {
-    mensajeEstado[7] = abs(estimacionAcelerometro[0]);
+    mensajeEstado[7] = abs(G_velocidadYPR[0]);
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (estimacionAcelerometro[1] >= 0)
+  if (G_velocidadYPR[1] >= 0)
   {
-    mensajeEstado[8] = estimacionAcelerometro[1];
+    mensajeEstado[8] = G_velocidadYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(estimacionAcelerometro[1]);
+    mensajeEstado[9] = abs(G_velocidadYPR[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (estimacionAcelerometro[2] >= 0)
+  if (G_velocidadYPR[2] >= 0)
   {
-    mensajeEstado[10] = estimacionAcelerometro[2];
+    mensajeEstado[10] = G_velocidadYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(estimacionAcelerometro[2]);
+    mensajeEstado[11] = abs(G_velocidadYPR[2]);
     mensajeEstado[10] = 0;
   }
 
-  //  mensajeEstado[12] = estimacionltura;
-  mensajeEstado[12] = alturaDeseada;
+  mensajeEstado[12] = estimacionAltura;
+  //  mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
     mensajeEstado[13] = 1;
@@ -852,6 +862,8 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
+
+
 
 
 

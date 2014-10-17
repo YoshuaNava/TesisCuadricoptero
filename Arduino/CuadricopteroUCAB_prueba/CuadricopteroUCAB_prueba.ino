@@ -379,22 +379,22 @@ void FiltroComplementario() {
     G_velocidadYPR[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
     G_velocidadYPR[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
     G_velocidadYPR[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-    
+
     G_velocidadYPRoriginal[0] = (double) ((gyro.g.z - G_offsetYPR[0]) * G_GYRO );
     G_velocidadYPRoriginal[1] = (double) ((gyro.g.x - G_offsetYPR[1]) * G_GYRO );
     G_velocidadYPRoriginal[2] = (double) ((gyro.g.y - G_offsetYPR[2]) * G_GYRO );
-    
+
     G_velocidadYPR[0] = filtroVelocidadYPR [0].step ((double) G_velocidadYPR[0]);
     G_velocidadYPR[1] = filtroVelocidadYPR [1].step ((double) G_velocidadYPR[1]);
     G_velocidadYPR[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
 
     tiempoUltimoMuestreoGiroscopio = millis();
-    
+
     anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
     anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT);
     anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT);    
   }
-  
+
   if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
   {
 
@@ -402,11 +402,11 @@ void FiltroComplementario() {
     A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
     A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-    
+
     A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
     A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
     A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
- 
+
     FiltroKalmanAceleracion();
 
     A_anguloYPR[0] = 0;
@@ -421,9 +421,9 @@ void FiltroComplementario() {
      A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
      A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
      */
-    
+
     tiempoUltimoMuestreoAcelerometro = millis();
-    
+
     anguloYPR[1] += (1 - K_COMP) * A_anguloYPR[1]);
     anguloYPR[2] += (1 - K_COMP) * A_anguloYPR[2]);
   }
@@ -431,11 +431,11 @@ void FiltroComplementario() {
   anguloYPR[0] = ToRad(anguloYPR[0]);
   anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
   anguloYPR[0] = ToDeg(anguloYPR[0]);
-  
+
   anguloYPR[1] = ToRad(anguloYPR[1]);
   anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
   anguloYPR[1] = ToDeg(anguloYPR[1]);
-  
+
   anguloYPR[2] = ToRad(anguloYPR[2]);
   anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
   anguloYPR[2] = ToDeg(anguloYPR[2]);
@@ -649,7 +649,7 @@ void PrepararPaqueteMensajeEstado()
   }
 
   mensajeEstado[12] = estimacionAltura;
-//  mensajeEstado[12] = alturaDeseada;
+  //  mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
     mensajeEstado[13] = 1;
@@ -862,6 +862,7 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
+
 
 
 
