@@ -3,8 +3,8 @@ function [f, X, Y, Z] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecue
     numeroDatos = size(datosArchivo,1);
     maximoValorEnvio = 90;
     escala = 90;
-    aceleracionX = datosArchivo(:,2) * (escala/maximoValorEnvio);
-    aceleracionY = datosArchivo(:,3) * (escala/maximoValorEnvio);
+    aceleracionY = datosArchivo(:,2) * (escala/maximoValorEnvio);
+    aceleracionX = datosArchivo(:,3) * (escala/maximoValorEnvio);
     aceleracionZ = datosArchivo(:,4) * (escala/maximoValorEnvio);
      
 %      [b,a] = butter(10,40/(frecuenciaMuestreo/2),'low');
