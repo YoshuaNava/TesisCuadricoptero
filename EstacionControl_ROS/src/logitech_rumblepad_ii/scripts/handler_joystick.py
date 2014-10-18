@@ -27,17 +27,22 @@ class HandlerJoystick:
         self.__BOTON_7 = 6
         self.__RUEDA_DERECHA_x = 2
         self.__RUEDA_DERECHA_y = 3
-        
+        self.__RUEDA_IZQUIERDA_x = 0
+        self.__RUEDA_IZQUIERDA_y = 1        
+
         self.__CODIGO_AUMENTAR_ALTURA = '+'
         self.__CODIGO_DISMINUIR_ALTURA = '-'
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO_COMANDO = 10
+        self.__MAXIMO_ANGULO_COMANDO = 60
+        self.__VELOCIDAD_BASE_PWM = 170
+        self.__VELOCIDAD_MAXIMA_PWM = 220
+        self.__MAXIMA_ALTURA = 150
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
-        self.comandoAltura = ord('=')
+        self.comandoAltura = self.__VELOCIDAD_BASE_PWM
         self.motoresEncendidos = 0
         self.comandoEncendidoEjecutado = False
         self.comandoMovimientoEjecutado = False
@@ -100,18 +105,24 @@ class HandlerJoystick:
                     movimientoX_ruedaDerecha = self.joystick_object.get_axis(self.__RUEDA_DERECHA_x)
                     movimientoY_ruedaDerecha = -self.joystick_object.get_axis(self.__RUEDA_DERECHA_y)
                     
+                    movimientoX_ruedaIzquierda = self.joystick_object.get_axis(self.__RUEDA_IZQUIERDA_x)
+                    movimientoY_ruedaIzquierda = self.joystick_object.get_axis(self.__RUEDA_IZQUIERDA_y)
+
                     if ((movimientoY_ruedaDerecha == 0) and (self.comandoPitch != 0)):
                         self.comandoPitch = 0
                         
-                    if ((movimientoX_ruedaDerecha == 0) and (self.comandoRoll != 0)):                            
+                    if ((movimientoX_ruedaDerecha == 0) and (self.comandoRoll != 0)):                         
                         self.comandoRoll = 0
                         
-                    if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0):
+                    if ((movimientoY_ruedaIzquierda == 0) and (self.comandoAltura != self.__VELOCIDAD_BASE_PWM)):
+                        self.comandoAltura = 0
+                        
+                    if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0) or (movimientoY_ruedaIzquierda != 0):
                         #print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                         #print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
                         self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
                         self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
-                        self.comandoAltura = ord('=')
+                        self.comandoAltura = self.__VELOCIDAD_BASE_PWM + (self.__VELOCIDAD_MAXIMA_PWM - self.__VELOCIDAD_BASE_PWM)*(-1)*movimientoY_ruedaIzquierda
                     
                         #print 'Comando de pitch= %f' %(self.comandoPitch)
                         #print 'Comando de roll= %f' %(self.comandoRoll)                            
@@ -122,8 +133,6 @@ class HandlerJoystick:
                 if evento.type == pygame.JOYBUTTONDOWN:
                     estado_boton_X = self.joystick_object.get_button(self.__BOTON_2)
                     estado_boton_DELTA = self.joystick_object.get_button(self.__BOTON_4)
-                    estado_boton_L1 = self.joystick_object.get_button(self.__BOTON_5)
-                    estado_boton_L2 = self.joystick_object.get_button(self.__BOTON_7)
                     estado_boton_R1 = self.joystick_object.get_button(self.__BOTON_6)
 
                     if(estado_boton_X == 1) or (estado_boton_DELTA == 1):
@@ -137,19 +146,10 @@ class HandlerJoystick:
                             
                         self.comandoEncendidoEjecutado = True
                         
-                    else:
-                        if (estado_boton_L1 != 0) and (estado_boton_L2 == 0):
-                            self.comandoAltura = ord('+')
-                        if (estado_boton_L1 == 0) and (estado_boton_L2 != 0):
-                            self.comandoAltura = ord('-')
-                        if (estado_boton_L1 == 0) and (estado_boton_L2 == 0):
-                            self.comandoAltura = ord('=')
-                            
+                    else:                            
                         if (estado_boton_R1 == 1):
                             self.comandoPitchEnviar = 0.0
                             self.comandoRollEnviar = 0.0
-
-			if (estado_boton_R1 == 1) or (estado_boton_L1 == 1) or (estado_boton_L2 == 1):
 	                    self.comandoMovimientoEjecutado = True
 
                 
