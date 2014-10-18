@@ -321,7 +321,7 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       CalcularAltura();
-      PID_PosicionAngular();
+//      PID_PosicionAngular();
       PID_VelocidadAngular();
       AplicarPWMmotores(velocidadBasePWM);
       EnviarMensajeEstado();
@@ -349,7 +349,7 @@ void SecuenciaDeVuelo()
     //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
-    PIDAltura();
+//    PIDAltura();
 //    PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
