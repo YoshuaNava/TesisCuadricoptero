@@ -5,7 +5,7 @@ longitudEje =  0.47;
 L = longitudEje/2;
 masa = 0.6;
 gravedad = 9.81;
-c = 0.1; %Consultar referencia. Que es eso?
+%c = 0.1; %Consultar referencia. Que es eso?
 
 
 syms Vm1 Vm2 Vm3 Vm4;
@@ -53,8 +53,7 @@ funcionIncrementoAngulos(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4) = [dOmegadt(Vm1,V
 A_jacobiano_f_estado(p,q,r,pitch,roll,yaw) = jacobian(funcionIncrementoAngulos(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4), estado(p,q,r,pitch,roll,yaw))
 B_jacobiano_f_senalControl(Vm1,Vm2,Vm3,Vm4) = jacobian(funcionIncrementoAngulos(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4), senalControl(Vm1,Vm2,Vm3,Vm4))
 
-A = double(A_jacobiano_f_estado(0,0,0,0.1,0,0.1))
+A = double(A_jacobiano_f_estado(0,0,0,0,0,0))
 B = double(B_jacobiano_f_senalControl(0,0,0,0))
 C = eye(6)
 D = zeros(6,4)
-poles_A = eig(A)

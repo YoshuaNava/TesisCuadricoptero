@@ -1,5 +1,11 @@
+LazoAbierto_Kivrak()
+
 matrizObservabilidad = obsv(sys);
-unob = length(A) - rank(matrizObservabilidad)
+estadosNoObservables = length(A) - rank(matrizObservabilidad)
 
 matrizControlabilidad = ctrb(sys);
-unco = length(A) - rank(matrizControlabilidad)
+estadosNoControlables = length(A) - rank(matrizControlabilidad)
+
+polos_A = eig(A)
+
+[NUM_laplace, DEN_laplace] = ss2tf(A, B, C, D, 4)

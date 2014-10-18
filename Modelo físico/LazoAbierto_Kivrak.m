@@ -1,3 +1,4 @@
+Modelo_Kivrak_Param()
 %Respuesta en lazo abierto a condiciones iniciales distintas de cero.
 t = 0:0.01:2;
 u = [zeros(size(t)); zeros(size(t)); zeros(size(t)); zeros(size(t))];
