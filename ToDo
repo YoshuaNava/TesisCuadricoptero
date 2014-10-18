@@ -2,9 +2,6 @@
 
 
 Sistemas de control (Desde el 15 de septiembre)
-	* Calibrar nuevamente los sistemas de control de velocidad angular y posición angular. 
-	* Timeout para los comandos enviados desde la PC, de modo que se se pierde la comunicación, 
-	los comandos paren su ejecución después de un lapso de tiempo establecido.
 	* Pruebas de vuelo.
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
