@@ -285,8 +285,6 @@ void SecuenciaDeInicio()
     i++;
   }
 
-  alturaDeseada = estimacionAltura;
-
 
   i = 0;
   if (modoEjecucion != '_')
@@ -832,8 +830,3 @@ void ImprimirEstado()
     tiempoUltimoEnvio = millis();
   }
 }
-
-
-
-
-
