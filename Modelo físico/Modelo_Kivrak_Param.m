@@ -5,7 +5,7 @@ longitudEje =  0.47;
 L = longitudEje/2;
 masa = 0.6;
 gravedad = 9.81;
-%c = 0.1; %Consultar referencia. Que es eso?
+c = 0.1; %Consultar referencia. Que es eso?
 
 
 syms Vm1 Vm2 Vm3 Vm4;
