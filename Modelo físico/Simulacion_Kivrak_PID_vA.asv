@@ -1,0 +1,47 @@
+ControllabilityObservabillity_Kivrak()
+
+tF = 10;
+dt = 0.01;
+t = 0:dt:tF;
+numIteraciones = tF/dt;
+numEstados = 6;
+numEntradasControl = 4;
+
+kP_vA = [0 0 0];
+kI_vA = [0 0 0];
+kD_vA = [0 0 0];
+vA_deseada = [0 0 0];
+error_vA = [0 0 0];
+errorPrevio_vA = [0 0 0];
+integral_vA = [0 0 0];
+derivada_vA = [0 0 0];
+pid_vA = [0 0 0];
+
+u = zeros(numEntradasControl, numIteraciones);
+x_dot = zeros(numEstados, numIteraciones);
+x = zeros(numEstados, numIteraciones);
+x(1,1:numEstados) = [0 0 0 0 0 0];  %p, q, r, pitch, roll, yaw
+
+for i = 1:numIteraciones
+    vPitch = x(1, i) + x(2, i)*(tan(x(5, i))*sin(x(4, i))) + x(3, i)*(tan(x(5, i))*cos(x(4, i)));
+    vRoll = x(2, i)*(cos(x(4, i))) - x(3, i)*(sin(x(4, i)));
+    vYaw = x(2, i)*(sec(x(5, i))*sin(x(4, i))) + x(3, i)*(sec(x(5, i))*cos(x(4, i)));
+    error_vA(1) = vA_deseada(1) - vPitch;
+    error_vA(2) = vA_deseada(2) - vRoll;
+    error_vA(3) = vA_deseada(3) - vYaw;
+    integral_vA = integral_vA + error_vA;
+    derivada = error_vA - errorPrevio_vA;
+    errorPrevio_vA = error_vA;
+    pid_vA(1) = kP(1)*error_vA(1) + kI(1)*integral_vA(1) + kD(1)*derivada_vA(1);
+    pid_vA(2) = kP(2)*error_vA(2) + kI(2)*integral_vA(2) + kD(2)*derivada_vA(2);
+    pid_vA(3) = kP(3)*error_vA(3) + kI(3)*integral_vA(3) + kD(3)*derivada_vA(1);
+    %pitch: u2 positivo, u4 negativo
+    %roll: u3 positivo, u1 negativo
+    %yaw: 
+    u(2, i) = 
+    x_dot(1:numEstados, i) = A*x(1:numEstados, i) + B*u(1:numEntradasControl, i);
+    x(1:numEstados,i+1) = x(1:numEstados, i) + dt*x_dot(1:numEstados, i);
+end
+
+plot(t,x(3:6,:))
+axis([0 2 -20 20])
