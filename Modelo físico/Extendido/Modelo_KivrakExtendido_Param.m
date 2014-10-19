@@ -64,7 +64,7 @@ v_0 = 0;
 w_0 = 0;
 x_0 = 0;
 y_0 = 0;
-z_0 = 10;
+z_0 = 2;
 numEstados = 9;
 numEntradasControl = 4;
 
