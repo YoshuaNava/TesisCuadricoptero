@@ -74,6 +74,5 @@ B = double(B_jacobiano_f_senalControl(0,0,0,0))
 C = eye(numEstados);
 C(7,7) = 0;
 C(8,8) = 0;
-C(9,9) = 0;
 C
 D = zeros(numEstados,numEntradasControl)
