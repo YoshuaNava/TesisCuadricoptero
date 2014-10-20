@@ -19,14 +19,20 @@ pid_vA = [0 0 0];
 u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
 x = zeros(numEstados, numIteraciones+1);
-x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0];  %p, q, r, pitch, roll, yaw
-z = zeros(1,numIteraciones+1);
-z(1) = z_0;
+x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw
+y = zeros(numEstados, numIteraciones+1);
 
 for i = 1:numIteraciones
-    vPitch = x(1, i);
-    vRoll = x(2, i);
-    vYaw = x(3, i);
+    y(1:numEstados, i) = C*x(1:numEstados, i);
+    vPitch = y(1, i);
+    vRoll = y(2, i);
+    vYaw = y(3, i);
+    aPitch = y(4, i);
+    aRoll = y(5, i);
+    aYaw = y(6, i);
+    vZ = y(9, i);
+    pZ = y(10, i);
+    
     error_vA(1) = vA_deseada(1) - vPitch;
     error_vA(2) = vA_deseada(2) - vRoll;
     error_vA(3) = vA_deseada(3) - vYaw;

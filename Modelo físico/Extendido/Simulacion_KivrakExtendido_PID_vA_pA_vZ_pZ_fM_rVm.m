@@ -56,14 +56,19 @@ u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
 x = zeros(numEstados, numIteraciones+1);
 x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
+y = zeros(numEstados, numIteraciones+1);
 
 for i = 1:numIteraciones
-    vPitch = x(1, i);
-    vRoll = x(2, i);
-    vYaw = x(3, i);
-    aPitch = x(4, i);
-    aRoll = x(5, i);
-    aYaw = x(6, i);    
+    y(1:numEstados, i) = C*x(1:numEstados, i);
+    vPitch = y(1, i);
+    vRoll = y(2, i);
+    vYaw = y(3, i);
+    aPitch = y(4, i);
+    aRoll = y(5, i);
+    aYaw = y(6, i);
+    vZ = y(9, i);
+    pZ = y(10, i);
+    
     if (mod(i*dt,fE_pA) == 0)
         error_pA(1) = pA_deseada(1) - aPitch;
         error_pA(2) = pA_deseada(2) - aRoll;
@@ -88,7 +93,7 @@ for i = 1:numIteraciones
     end
     
     if (mod(i*dt,fE_pZ) == 0)
-        error_pZ(i+1) = (pZ_deseada - x(10,i));
+        error_pZ(i+1) = (pZ_deseada - pZ);
         integral_pZ = integral_pZ + error_pZ(i+1);
         derivada_pZ = error_pZ(i+1) - errorPrevio_pZ;
         errorPrevio_pZ = error_pZ(i+1);
@@ -96,7 +101,7 @@ for i = 1:numIteraciones
     end
     
     if (mod(i*dt,fE_vZ) == 0)
-        error_vZ(i+1) = -(pid_pZ - x(9,i));
+        error_vZ(i+1) = -(pid_pZ - vZ);
         integral_vZ = integral_vZ + error_vZ(i+1);
         derivada_vZ = error_vZ(i+1) - errorPrevio_vZ;
         errorPrevio_vZ = error_vZ(i+1);
