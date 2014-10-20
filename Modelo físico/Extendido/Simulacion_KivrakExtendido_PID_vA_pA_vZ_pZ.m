@@ -1,3 +1,4 @@
+clf;
 ControllabilityObservability_KivrakExtendido()
 
 tF = 20;
@@ -50,9 +51,7 @@ pid_vZ = 0;
 u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
 x = zeros(numEstados, numIteraciones+1);
-x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0];  %p, q, r, pitch, roll, yaw, u, v, w
-z = zeros(1,numIteraciones+1);
-z(1) = z_0;
+x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
 
 for i = 1:numIteraciones
     vPitch = x(1, i);
@@ -80,7 +79,7 @@ for i = 1:numIteraciones
     pid_vA(2) = kP_vA(2)*error_vA(2) + kI_vA(2)*integral_vA(2) + kD_vA(2)*derivada_vA(2);
     pid_vA(3) = kP_vA(3)*error_vA(3) + kI_vA(3)*integral_vA(3) + kD_vA(3)*derivada_vA(3);
     
-    error_pZ(i+1) = (pZ_deseada - z(i));
+    error_pZ(i+1) = (pZ_deseada - x(10,i));
     integral_pZ = integral_pZ + error_pZ(i+1);
     derivada_pZ = error_pZ(i+1) - errorPrevio_pZ;
     errorPrevio_pZ = error_pZ(i+1);
@@ -99,31 +98,40 @@ for i = 1:numIteraciones
     u(4, i) = -pid_vA(1) + pid_vA(3) + pid_vZ;
     u(3, i) = -pid_vA(2) - pid_vA(3) + pid_vZ;
     u(1, i) = pid_vA(2) - pid_vA(3) + pid_vZ;
-    z(i+1) = z(i) + dt*x(9,i);
-    if (z(i+1) < 0)
-        z(i+1) = 0;
-    end
     x_dot(1:numEstados, i) = A*x(1:numEstados, i) + B*u(1:numEntradasControl, i);
     x(1:numEstados,i+1) = x(1:numEstados, i) + dt*x_dot(1:numEstados, i);
+    if (x(10,i+1) < 0)
+        x(10,i+1) = 0;
+    end
 end
 
 figure()
 plot(t,x(1:3,:))
-axis([0 tF -20 20])
+axis([0 tF -100 100])
+xlabel('Tiempo (s)')
+ylabel('Velocidad angular (grados/s)')
 title('Velocidades angulares')
 figure()
 plot(t,x(4:6,:))
 axis([0 tF -20 20])
-title('Angulos')
+xlabel('Tiempo (s)')
+ylabel('Angulo (grados)')
+title('Angulos de Yaw, Pitch y Roll')
 figure()
 plot(t,x(7:9,:))
 axis([0 tF -20 20])
+xlabel('Tiempo (s)')
+ylabel('Velocidad (m/s)')
 title('Velocidades lineales')
 figure()
-plot(t,z)
+plot(t,x(10,:))
 axis([0 tF -20 20])
+xlabel('Tiempo (s)')
+ylabel('Distancia (m)')
 title('Altura (Z)')
 figure()
 plot(t,u)
 axis([0 tF -20 20])
+xlabel('Tiempo (s)')
+ylabel('Voltaje (V)')
 title('Señales de control')

@@ -24,7 +24,7 @@ R(yaw,roll,pitch) = Rz(yaw) * Ry(roll) * Rx(pitch);
 
 syms u v w;
 Vw(u,v,w) = [u; v; w];
-dxdt(yaw,roll,pitch,u,v,w) = R(yaw,roll,pitch)*Vw(u,v,w); % Derivada de la posicion, en funcion de las velocidades lineales del cuerpo u, v y w
+dZdt(roll,pitch,u,v,w) = -sin(roll)*u + sin(pitch)*cos(roll)*v + cos(roll)*cos(pitch)*w;
 
 T(yaw,roll,pitch) = [1, tan(roll)*sin(pitch), tan(roll)*cos(pitch); 0, cos(pitch), -sin(pitch); 0, sec(roll)*sin(pitch), sec(roll)*cos(pitch)];
 syms p q r;
@@ -43,14 +43,14 @@ Torques(Vm1,Vm2,Vm3,Vm4) = [L*(Fm2(Vm2) - Fm4(Vm4)); L*(Fm1(Vm1) - Fm3(Vm3)); c*
 dOmegadt(Vm1,Vm2,Vm3,Vm4,p,q,r) = inv(I)*Torques(Vm1,Vm2,Vm3,Vm4) - cross(inv(I)*Omega(p,q,r), I*Omega(p,q,r)); %Aceleraciones angulares en funcion de:
                                                                                                                 %Las velocidades angulares p, q y r
                                                                                                                 %El voltaje de los motores Vm1, Vm2, Vm3 y Vm4
-
-estado(p,q,r,pitch,roll,yaw,u,v,w) = [p; q; r; pitch; roll; yaw; u; v; w];
+syms z;
+estado(p,q,r,pitch,roll,yaw,u,v,w,z) = [p; q; r; pitch; roll; yaw; u; v; w; z];
 senalControl(Vm1,Vm2,Vm3,Vm4) = [Vm1; Vm2; Vm3; Vm4];
 
-funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w) = [dOmegadt(Vm1,Vm2,Vm3,Vm4,p,q,r); dYPRdt(yaw,roll,pitch,p,q,r); Aw(Vm1,Vm2,Vm3,Vm4,p,q,r,u,v,w)]
+funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w,z) = [dOmegadt(Vm1,Vm2,Vm3,Vm4,p,q,r); dYPRdt(yaw,roll,pitch,p,q,r); Aw(Vm1,Vm2,Vm3,Vm4,p,q,r,u,v,w); dZdt(roll,pitch,u,v,w)]
 
-A_jacobiano_f_estado(p,q,r,pitch,roll,yaw,u,v,w) = jacobian(funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w), estado(p,q,r,pitch,roll,yaw,u,v,w))
-B_jacobiano_f_senalControl(Vm1,Vm2,Vm3,Vm4) = jacobian(funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w), senalControl(Vm1,Vm2,Vm3,Vm4))
+A_jacobiano_f_estado(p,q,r,pitch,roll,yaw,u,v,w,z) = jacobian(funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w,z), estado(p,q,r,pitch,roll,yaw,u,v,w,z))
+B_jacobiano_f_senalControl(Vm1,Vm2,Vm3,Vm4) = jacobian(funcionIncremento(p,q,r,pitch,roll,yaw,Vm1,Vm2,Vm3,Vm4,u,v,w,z), senalControl(Vm1,Vm2,Vm3,Vm4))
 
 
 p_0 = 0;
@@ -64,12 +64,16 @@ v_0 = 0;
 w_0 = 0;
 x_0 = 0;
 y_0 = 0;
-z_0 = 2;
-numEstados = 9;
+z_0 = 1;
+numEstados = 10;
 numEntradasControl = 4;
 
 
-A = double(A_jacobiano_f_estado(p_0, q_0, r_0, pitch_0, roll_0, yaw_0, u_0, v_0, w_0))
+A = double(A_jacobiano_f_estado(p_0, q_0, r_0, pitch_0, roll_0, yaw_0, u_0, v_0, w_0, z_0))
 B = double(B_jacobiano_f_senalControl(0,0,0,0))
-C = eye(numEstados)
+C = eye(numEstados);
+C(7,7) = 0;
+C(8,8) = 0;
+C(9,9) = 0;
+C
 D = zeros(numEstados,numEntradasControl)
