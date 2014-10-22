@@ -38,17 +38,22 @@ double covarianzaRuidoSensorAltura = 10.0;
 double estimacionAltura = 0.0;
 double covarianzaRuidoEstimacionAltura = 3.0;
 double gananciaKalman = 0.0;
+double velocidad_Z = 0.0;
+double Z_previo = 0.0;
 //FIN ULTRASONIDO
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 50
+#define modoTelemetriaTotal 1
+#define DT_envioDatosEstado 50
+#define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
 #define CODIGO_MOVIMIENTO 1
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
+#define CODIGO_TELEMETRIA_TOTAL 8
 #define MAXIMO_ANGULO_COMANDO 60
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
@@ -58,6 +63,7 @@ unsigned char comandoRoll;
 unsigned char comandoAltura;
 unsigned char checksum;
 unsigned char mensajeEstado[15];
+unsigned char mensajeTelemetriaTotal[42];
 unsigned char ack[4];
 //FIN CODIGOS DE COMUNICACION
 
@@ -100,6 +106,9 @@ double G_anguloYPR[3] = {
   0, 0, 0
 };
 double A_aceleracionYPR[3] = {
+  0, 0, 0
+};
+double A_aceleracionYPR_filtrada[3] = {
   0, 0, 0
 };
 double A_anguloYPR[3] = {
@@ -276,7 +285,7 @@ void SecuenciaDeInicio()
   {
     FiltroComplementario();
     CalcularAltura();
-    EnviarMensajeEstado();
+    EnviarMensajesPC();
     RecibirComando();
     //RecibirComandoASCII();
     anguloDeseadoYPR[1] = 0;
@@ -313,7 +322,7 @@ void SecuenciaDeInicio()
 //      PID_PosicionAngular();
       PID_VelocidadAngular();
       AplicarPWMmotores(velocidadBasePWM);
-      EnviarMensajeEstado();
+      EnviarMensajesPC();
       RecibirComando();
       //RecibirComandoASCII();
       i++;
@@ -351,7 +360,7 @@ void SecuenciaDeVuelo()
      Serial.println(correccionPWM_YPR[1]);
      Serial.println(correccionPWM_YPR[2]);
      Serial.println();*/
-    EnviarMensajeEstado();
+    EnviarMensajesPC();
   }
 }
 
@@ -387,9 +396,9 @@ void FiltroComplementario() {
     A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
     A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-    A_aceleracionYPR[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
-    A_aceleracionYPR[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
-    A_aceleracionYPR[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
+    A_aceleracionYPR_filtrada[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
+    A_aceleracionYPR_filtrada[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
+    A_aceleracionYPR_filtrada[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
 
     FiltroKalmanAceleracion();
 
@@ -433,6 +442,8 @@ void CalcularAltura()
       USAltura = distancia;
       FiltroKalmanAltura();
       mensajeEstado[8] = estimacionAltura;
+      velocidad_Z = estimacionAltura - Z_previo;
+      Z_previo = estimacionAltura;
       //    Serial.print(USAltura);
       //    Serial.println("cm");
     }
@@ -454,17 +465,17 @@ void FiltroKalmanAceleracion()
 {
   covarianzaRuidoEstimacionAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] + covarianzaProcesoFisicoAcelerometro[0];
   gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
-  estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR[0] - estimacionAcelerometro[0]);
+  estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR_filtrada[0] - estimacionAcelerometro[0]);
   covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
 
   covarianzaRuidoEstimacionAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] + covarianzaProcesoFisicoAcelerometro[1];
   gananciaKalmanAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] / (covarianzaRuidoEstimacionAcelerometro[1] + covarianzaRuidoSensorAcelerometro[1]);
-  estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR[1] - estimacionAcelerometro[1]);
+  estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR_filtrada[1] - estimacionAcelerometro[1]);
   covarianzaRuidoEstimacionAcelerometro[1] = (1 - gananciaKalmanAcelerometro[1]) * covarianzaRuidoEstimacionAcelerometro[1];
 
   covarianzaRuidoEstimacionAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] + covarianzaProcesoFisicoAcelerometro[2];
   gananciaKalmanAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] / (covarianzaRuidoEstimacionAcelerometro[2] + covarianzaRuidoSensorAcelerometro[2]);
-  estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR[2] - estimacionAcelerometro[2]);
+  estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR_filtrada[2] - estimacionAcelerometro[2]);
   covarianzaRuidoEstimacionAcelerometro[2] = (1 - gananciaKalmanAcelerometro[2]) * covarianzaRuidoEstimacionAcelerometro[2];
 }
 
@@ -639,14 +650,223 @@ void PrepararPaqueteMensajeEstado()
 }
 
 
-void EnviarMensajeEstado()
+void PrepararPaqueteMensajeTelemetriaTotal()
 {
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  mensajeTelemetriaTotal[0] = CODIGO_INICIO_MENSAJE; //HEADER
+  mensajeTelemetriaTotal[1] = CODIGO_TELEMETRIA_TOTAL; //Codigo del mensaje
+  /**POSICION YAW**/
+  if (anguloYPR[0] >= 0)
   {
-    //ImprimirEstado();
-    PrepararPaqueteMensajeEstado();
-    Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 14 BYTES
-    tiempoUltimoEnvio = millis();
+    mensajeTelemetriaTotal[2] = anguloYPR[0];
+    mensajeTelemetriaTotal[3] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[3] = abs(anguloYPR[0]);
+    mensajeTelemetriaTotal[2] = 0;
+  }
+  if (anguloYPR[1] >= 0)
+  {
+    mensajeTelemetriaTotal[4] = anguloYPR[1];
+    mensajeTelemetriaTotal[5] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[5] = abs(anguloYPR[1]);
+    mensajeTelemetriaTotal[4] = 0;
+  }
+  if (anguloYPR[2] >= 0)
+  {
+    mensajeTelemetriaTotal[6] = anguloYPR[2];
+    mensajeTelemetriaTotal[7] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[7] = abs(anguloYPR[2]);
+    mensajeTelemetriaTotal[6] = 0;
+  }
+
+  /**VELOCIDAD YAW**/
+  if (G_velocidadYPR[0] >= 0)
+  {
+    mensajeTelemetriaTotal[8] = G_velocidadYPR[0];
+    mensajeTelemetriaTotal[9] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[9] = abs(G_velocidadYPR[0]);
+    mensajeTelemetriaTotal[8] = 0;
+  }
+  /**VELOCIDAD PITCH**/
+  if (G_velocidadYPR[1] >= 0)
+  {
+    mensajeTelemetriaTotal[10] = G_velocidadYPR[1];
+    mensajeTelemetriaTotal[11] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[11] = abs(G_velocidadYPR[1]);
+    mensajeTelemetriaTotal[10] = 0;
+  }
+  /**VELOCIDAD ROLL**/
+  if (G_velocidadYPR[2] >= 0)
+  {
+    mensajeTelemetriaTotal[12] = G_velocidadYPR[2];
+    mensajeTelemetriaTotal[13] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[13] = abs(G_velocidadYPR[2]);
+    mensajeTelemetriaTotal[12] = 0;
+  }
+
+  /**VELOCIDAD YAW**/
+  if (G_velocidadYPR_filtrada[0] >= 0)
+  {
+    mensajeTelemetriaTotal[14] = G_velocidadYPR_filtrada[0];
+    mensajeTelemetriaTotal[15] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[15] = abs(G_velocidadYPR_filtrada[0]);
+    mensajeTelemetriaTotal[14] = 0;
+  }
+  /**VELOCIDAD PITCH**/
+  if (G_velocidadYPR_filtrada[1] >= 0)
+  {
+    mensajeTelemetriaTotal[16] = G_velocidadYPR_filtrada[1];
+    mensajeTelemetriaTotal[17] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[17] = abs(G_velocidadYPR_filtrada[1]);
+    mensajeTelemetriaTotal[16] = 0;
+  }
+  /**VELOCIDAD ROLL**/
+  if (G_velocidadYPR_filtrada[2] >= 0)
+  {
+    mensajeTelemetriaTotal[18] = G_velocidadYPR_filtrada[2];
+    mensajeTelemetriaTotal[19] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[19] = abs(G_velocidadYPR_filtrada[2]);
+    mensajeTelemetriaTotal[18] = 0;
+  }
+
+  if (A_aceleracionYPR[2] >= 0)
+  {
+    mensajeTelemetriaTotal[20] = A_aceleracionYPR[2];
+    mensajeTelemetriaTotal[21] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[21] = abs(A_aceleracionYPR[2]);
+    mensajeTelemetriaTotal[20] = 0;
+  }
+  if (A_aceleracionYPR[1] >= 0)
+  {
+    mensajeTelemetriaTotal[22] = A_aceleracionYPR[1];
+    mensajeTelemetriaTotal[23] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[23] = abs(A_aceleracionYPR[1]);
+    mensajeTelemetriaTotal[22] = 0;
+  }
+  if (A_aceleracionYPR[0] >= 0)
+  {
+    mensajeTelemetriaTotal[24] = A_aceleracionYPR[0];
+    mensajeTelemetriaTotal[25] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[25] = abs(A_aceleracionYPR[0]);
+    mensajeTelemetriaTotal[24] = 0;
+  }
+
+  if (A_aceleracionYPR_filtrada[2] >= 0)
+  {
+    mensajeTelemetriaTotal[26] = A_aceleracionYPR_filtrada[2];
+    mensajeTelemetriaTotal[27] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[27] = abs(A_aceleracionYPR_filtrada[2]);
+    mensajeTelemetriaTotal[26] = 0;
+  }
+  if (A_aceleracionYPR_filtrada[1] >= 0)
+  {
+    mensajeTelemetriaTotal[28] = A_aceleracionYPR_filtrada[1];
+    mensajeTelemetriaTotal[29] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[29] = abs(A_aceleracionYPR_filtrada[1]);
+    mensajeTelemetriaTotal[28] = 0;
+  }
+  if (A_aceleracionYPR_filtrada[0] >= 0)
+  {
+    mensajeTelemetriaTotal[30] = A_aceleracionYPR_filtrada[0];
+    mensajeTelemetriaTotal[31] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[31] = abs(A_aceleracionYPR_filtrada[0]);
+    mensajeTelemetriaTotal[30] = 0;
+  }
+
+  mensajeTelemetriaTotal[32] = USAltura;
+  mensajeTelemetriaTotal[33] = estimacionAltura;
+  if (velocidad_Z >= 0)
+  {
+    mensajeTelemetriaTotal[34] = velocidad_Z;
+    mensajeTelemetriaTotal[35] = 0;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[35] = abs(velocidad_Z);
+    mensajeTelemetriaTotal[34] = 0;
+  }
+  mensajeTelemetriaTotal[36] = motorDelantero;
+  mensajeTelemetriaTotal[37] = motorTrasero;
+  mensajeTelemetriaTotal[38] = motorDerecho;
+  mensajeTelemetriaTotal[39] = motorIzquierdo;
+  
+  //  mensajeEstado[12] = alturaDeseada;
+  if (modoEjecucion == 'T')
+  {
+    mensajeTelemetriaTotal[40] = 1;
+  }
+  else
+  {
+    mensajeTelemetriaTotal[40] = 0;
+  }
+  mensajeTelemetriaTotal[41] = (mensajeTelemetriaTotal[0] ^  mensajeTelemetriaTotal[1] ^   mensajeTelemetriaTotal[2] ^ mensajeTelemetriaTotal[3] ^ mensajeTelemetriaTotal[4] ^ mensajeTelemetriaTotal[5] ^ mensajeTelemetriaTotal[6] ^ mensajeTelemetriaTotal[7] ^ mensajeTelemetriaTotal[8] ^ mensajeTelemetriaTotal[9] ^ mensajeTelemetriaTotal[10] ^ mensajeTelemetriaTotal[11] ^ mensajeTelemetriaTotal[12] ^ mensajeTelemetriaTotal[13] ^ mensajeTelemetriaTotal[14] ^ mensajeTelemetriaTotal[15] ^ mensajeTelemetriaTotal[16] ^ mensajeTelemetriaTotal[17] ^ mensajeTelemetriaTotal[18] ^ mensajeTelemetriaTotal[19] ^ mensajeTelemetriaTotal[20] ^ mensajeTelemetriaTotal[21] ^ mensajeTelemetriaTotal[22] ^ mensajeTelemetriaTotal[23] ^ mensajeTelemetriaTotal[24] ^ mensajeTelemetriaTotal[25] ^ mensajeTelemetriaTotal[26] ^ mensajeTelemetriaTotal[27] ^ mensajeTelemetriaTotal[28] ^ mensajeTelemetriaTotal[29] ^ mensajeTelemetriaTotal[30] ^ mensajeTelemetriaTotal[31] ^ mensajeTelemetriaTotal[32] ^ mensajeTelemetriaTotal[33] ^ mensajeTelemetriaTotal[34] ^ mensajeTelemetriaTotal[35] ^ mensajeTelemetriaTotal[36] ^ mensajeTelemetriaTotal[37] ^ mensajeTelemetriaTotal[38] ^ mensajeTelemetriaTotal[39] ^ mensajeTelemetriaTotal[40]); //CHECKSUM
+}
+
+
+void EnviarMensajesPC()
+{
+  if (modoTelemetriaTotal == 0)
+  {
+    if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
+    {
+      //ImprimirEstado();
+      PrepararPaqueteMensajeEstado();
+      Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 14 BYTES
+      tiempoUltimoEnvio = millis();
+    }
+  }
+  else
+  {
+    if (millis() - tiempoUltimoEnvio >= DT_envioDatosTelemetriaTotal)
+    {
+      //ImprimirEstado();
+      PrepararPaqueteMensajeTelemetriaTotal();
+      Serial.write(mensajeTelemetriaTotal, 42);//ENVIAR EL PAQUETE DE 42 BYTES
+      tiempoUltimoEnvio = millis();
+    }  
   }
 }
 
@@ -810,7 +1030,7 @@ void RecibirComandoASCII()
 
 void ImprimirEstado()
 {
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
   {
     Serial.println('Y');
     Serial.println(int(anguloYPR[0]));

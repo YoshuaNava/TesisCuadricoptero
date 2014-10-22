@@ -42,13 +42,15 @@ double gananciaKalman = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define DT_envioDatos 5
+#define DT_envioDatosEstado 50
+#define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
 #define CODIGO_MOVIMIENTO 1
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
+#define CODIGO_TELEMETRIA_TOTAL 8
 #define MAXIMO_ANGULO_COMANDO 30
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
@@ -58,6 +60,7 @@ unsigned char comandoRoll;
 unsigned char comandoAltura;
 unsigned char checksum;
 unsigned char mensajeEstado[15];
+unsigned char mensajeTelemetriaTotal[38];
 unsigned char ack[4];
 //FIN CODIGOS DE COMUNICACION
 
@@ -663,7 +666,84 @@ void PrepararPaqueteMensajeEstado()
 
 void EnviarMensajeEstado()
 {
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
+  {
+    //ImprimirEstado();
+    PrepararPaqueteMensajeEstado();
+    Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 14 BYTES
+    tiempoUltimoEnvio = millis();
+  }
+}
+
+void PrepararPaqueteMensajeEstado()
+{
+  mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
+  mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
+  /**POSICION YAW**/
+  if (A_aceleracionYPR[0] >= 0)
+  {
+    mensajeEstado[2] = A_aceleracionYPR[0];
+    mensajeEstado[3] = 0;
+  }
+  else
+  {
+    mensajeEstado[3] = abs(A_aceleracionYPR[0]);
+    mensajeEstado[2] = 0;
+  }
+  /**POSICION PICH**/
+  mensajeEstado[4] = A_aceleracionYPR[1] + 90;
+  /**POSICION ROLL**/
+  mensajeEstado[5] = A_aceleracionYPR[2] + 90;
+  /**VELOCIDAD YAW**/
+  if (G_velocidadYPR[0] >= 0)
+  {
+    mensajeEstado[6] = G_velocidadYPR[0];
+    mensajeEstado[7] = 0;
+  }
+  else
+  {
+    mensajeEstado[7] = abs(G_velocidadYPR[0]);
+    mensajeEstado[6] = 0;
+  }
+  /**VELOCIDAD PITCH**/
+  if (G_velocidadYPR[1] >= 0)
+  {
+    mensajeEstado[8] = G_velocidadYPR[1];
+    mensajeEstado[9] = 0;
+  }
+  else
+  {
+    mensajeEstado[9] = abs(G_velocidadYPR[1]);
+    mensajeEstado[8] = 0;
+  }
+  /**VELOCIDAD ROLL**/
+  if (G_velocidadYPR[2] >= 0)
+  {
+    mensajeEstado[10] = G_velocidadYPR[2];
+    mensajeEstado[11] = 0;
+  }
+  else
+  {
+    mensajeEstado[11] = abs(G_velocidadYPR[2]);
+    mensajeEstado[10] = 0;
+  }
+
+  mensajeEstado[12] = estimacionAltura;
+  //  mensajeEstado[12] = alturaDeseada;
+  if (modoEjecucion == 'T')
+  {
+    mensajeEstado[13] = 1;
+  }
+  else
+  {
+    mensajeEstado[13] = 0;
+  }
+  mensajeEstado[14] = (mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]); //CHECKSUM
+}
+
+void EnviarMensajeEstado()
+{
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
   {
     //ImprimirEstado();
     PrepararPaqueteMensajeEstado();
@@ -842,7 +922,7 @@ void RecibirComandoASCII()
 
 void ImprimirEstado()
 {
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatos)
+  if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
   {
     Serial.println('Y');
     Serial.println(int(anguloYPR[0]));

@@ -43,7 +43,7 @@ class HandlerSerial:
         #Fin de variables mensaje de telemetria total.
 
         self.encendidoMotores = 0;
-        self.mensajesEstadoRecibidos = 0
+        self.mensajesRecibidos = 0
         self.nombrePuerto = nombrePuerto
         self.tasaBaudios = tasaBaudios
                 
@@ -88,6 +88,7 @@ class HandlerSerial:
                 
                 if ((header ^ comando ^ codigoACK) == checksum):
                     print "ACK DE ENCENDIDO/APAGADO!!!!!"
+                    self.ultimoComandoRecibido = comando
                     return True
                 else:
                     return False
@@ -105,13 +106,13 @@ class HandlerSerial:
                 P_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 posZ = self.cardinalCaracter_Validar(self.puertoSerial.read())
-		encendidoMotores = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                encendidoMotores = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
     
                 if((header != None) and (comando != None) and (P_anguloYaw != None) and (anguloPitch != None) and (anguloRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_anguloYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (posZ != None) and (encendidoMotores != None) and (checksum != None)):
                     if ((header ^ comando ^ P_anguloYaw ^ N_anguloYaw ^ anguloPitch ^ anguloRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ posZ ^ encendidoMotores) == checksum):
 
-			self.mensajesEstadoRecibidos = self.mensajesEstadoRecibidos + 1
+			self.mensajesRecibidos = self.mensajesRecibidos + 1
                             
                         if (P_anguloYaw > 0):
                             self.anguloYaw = P_anguloYaw
@@ -137,6 +138,7 @@ class HandlerSerial:
                         self.posZ = posZ
 
                         self.encendidoMotores = encendidoMotores
+                        self.ultimoComandoRecibido = comando
 
                         return True
                     else:
@@ -184,6 +186,8 @@ class HandlerSerial:
                 motorIzquierdo = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 encendidoMotores = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                #print encendidoMotores
+                print checksum
                 
                 validacionCamposMensaje = (header != None) and (comando != None) and (P_anguloYaw != None) and (P_anguloPitch != None) and (P_anguloRoll != None) and (P_G_Yaw != None) and (P_G_Pitch != None) and (P_G_Roll != None) and (P_G_Yaw_filtrada != None) and (P_G_Pitch_filtrada != None) and (P_G_Roll_filtrada != None)
                 validacionCamposMensaje = validacionCamposMensaje and (N_anguloYaw != None) and (N_anguloPitch != None) and (N_anguloRoll != None) and (N_G_Yaw != None) and (N_G_Pitch != None) and (N_G_Roll != None) and (N_G_Yaw_filtrada != None) and (N_G_Pitch_filtrada != None) and (N_G_Roll_filtrada != None)
@@ -194,7 +198,7 @@ class HandlerSerial:
                     checksumMensajeRecibido = (checksumMensajeRecibido ^ P_Ax ^ N_Ax ^ P_Ay ^ N_Ay ^ P_Az ^ N_Az ^ P_Ax_filtrada ^ N_Ax_filtrada ^ P_Ay_filtrada ^ N_Ay_filtrada ^ P_Az_filtrada ^ N_Az_filtrada ^ posZ ^ posZ_filtrada ^ P_velZ ^ N_velZ ^ motorDelantero ^ motorTrasero ^ motorDerecho ^ motorIzquierdo ^ encendidoMotores)
                     if (checksumMensajeRecibido == checksum):
 
-                        self.mensajesEstadoRecibidos = self.mensajesEstadoRecibidos + 1
+                        self.mensajesRecibidos = self.mensajesRecibidos + 1
                             
                         if (P_anguloYaw > 0):
                             self.anguloYaw = P_anguloYaw
@@ -275,6 +279,7 @@ class HandlerSerial:
                         self.motorIzquierdo = motorIzquierdo
                         
                         self.encendidoMotores = encendidoMotores
+                        self.ultimoComandoRecibido = comando
 
                         return True
                     else:
