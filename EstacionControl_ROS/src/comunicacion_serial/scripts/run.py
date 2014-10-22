@@ -21,7 +21,7 @@ def callbackEnvioComandoMovimiento(mensaje):
     handlerSerial.enviarComandoMovimiento(mensaje.comandoPitch + __MAXIMO_ANGULO_COMANDO, mensaje.comandoRoll + __MAXIMO_ANGULO_COMANDO, mensaje.comandoAltura)
 
 
-def secuenciaRecepcion():
+def secuenciaRecepcionEstado():
     global tiempoInicioEjecucion
     resultadoAccion = handlerSerial.recibirComandos()
     if (resultadoAccion == True):
@@ -40,14 +40,14 @@ def secuenciaRecepcion():
         print "\n"
         """
         estado = EstadoCuadricoptero()
-	estado.tiempoEjecucion = rospy.get_rostime() - tiempoInicioEjecucion
-        estado.anguloPitch = handlerSerial.posicionPitch
-        estado.anguloRoll = handlerSerial.posicionRoll
-        estado.anguloYaw = handlerSerial.posicionYaw
-        estado.velocidadPitch = handlerSerial.velocidadPitch
-        estado.velocidadRoll = handlerSerial.velocidadRoll
-        estado.velocidadYaw = handlerSerial.velocidadYaw
-        estado.altura = handlerSerial.altura
+        estado.tiempoEjecucion = rospy.get_rostime() - tiempoInicioEjecucion
+        estado.anguloPitch = handlerSerial.anguloPitch
+        estado.anguloRoll = handlerSerial.anguloRoll
+        estado.anguloYaw = handlerSerial.anguloYaw
+        estado.velocidadPitch = handlerSerial.G_Pitch
+        estado.velocidadRoll = handlerSerial.G_Roll
+        estado.velocidadYaw = handlerSerial.G_Yaw
+        estado.altura = handlerSerial.posZ
         estado.encendido = handlerSerial.encendidoMotores
         estado.mensajesRecibidos = handlerSerial.mensajesEstadoRecibidos
         rospy.loginfo(estado)
@@ -65,7 +65,7 @@ def run():
     rospy.Subscriber("encendido_cuadricoptero", ComandoEncendido, callbackEnvioComandoEncendido)
     rospy.Subscriber("movimientos_cuadricoptero", ComandoMovimiento, callbackEnvioComandoMovimiento)
     while not rospy.is_shutdown():
-        secuenciaRecepcion()
+        secuenciaRecepcionEstado()
         frecuencia.sleep()
     handlerSerial.cerrarPuerto()
         

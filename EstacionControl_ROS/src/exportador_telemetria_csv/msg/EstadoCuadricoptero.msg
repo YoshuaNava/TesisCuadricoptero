@@ -5,6 +5,6 @@ int32 anguloYaw
 int32 velocidadPitch
 int32 velocidadRoll
 int32 velocidadYaw
-int32 posZ
+int32 altura
 int32 encendido
 int64 mensajesRecibidos
