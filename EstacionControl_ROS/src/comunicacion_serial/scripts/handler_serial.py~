@@ -13,15 +13,39 @@ class HandlerSerial:
         self.__CODIGO_MENSAJE_COMANDO = 1
         self.__CODIGO_MENSAJE_ACK_QR = 6
         self.__CODIGO_MENSAJE_ESTADO = 7
+	self.__CODIGO_MENSAJE_TELEMETRIA_TOTAL = 8
         
 
-        self.posicionYaw = 0
-        self.posicionPitch = 0
-        self.posicionRoll = 0
+        self.anguloYaw = 0
+        self.anguloPitch = 0
+        self.anguloRoll = 0
         self.velocidadYaw = 0
         self.velocidadPitch = 0
         self.velocidadRoll = 0
-        self.altura = 0
+	self.G_Yaw = 0;
+	self.G_Pitch = 0;
+	self.G_Roll = 0;
+
+	#Variables de mensaje de telemetría total.
+	self.G_Yaw_filtrada = 0;
+	self.G_Pitch_filtrada = 0;
+	self.G_Roll_filtrada = 0;
+	self.Ax = 0;
+	self.Ay = 0;
+	self.Az = 0;
+	self.Ax_filtrada = 0;
+	self.Ay_filtrada = 0;
+	self.Az_filtrada = 0;
+        self.posZ = 0
+	self.posZ_filtrada = 0;
+	self.velZ = 0;
+	self.motorDelantero = 0;
+	self.motorTrasero = 0;
+	self.motorDerecho = 0;
+	self.motorIzquierdo = 0;
+	#Fin de variables mensaje de telemetría total.
+
+	self.encendidoMotores = 0;
         self.mensajesEstadoRecibidos = 0
         self.nombrePuerto = nombrePuerto
         self.tasaBaudios = tasaBaudios
@@ -38,7 +62,7 @@ class HandlerSerial:
             
             
     def enviarComandoMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
-        checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ comandoAltura
+        checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ int(comandoAltura)
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_COMANDO) + chr(int(comandoPitch)) + chr(int(comandoRoll)) + chr(int(comandoAltura)) + chr(checksum)
         self.puertoSerial.write(paquete)        
         """for i in range(6):
@@ -50,7 +74,7 @@ class HandlerSerial:
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_ENCENDIDO ^ comando
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_ENCENDIDO) + chr(comando) + chr(checksum)
         self.puertoSerial.write(paquete)
-        self.mensajesEstadoRecibidos = 0
+        #self.mensajesEstadoRecibidos = 0
         """        for i in range(4):  
             print (ord(paquete[i]))"""
 
@@ -62,6 +86,18 @@ class HandlerSerial:
         header = self.cardinalCaracter_Validar(self.puertoSerial.read())
         if (header == self.__CODIGO_INICIO_MENSAJE):
             comando = self.cardinalCaracter_Validar(self.puertoSerial.read())
+            if (comando == self.__CODIGO_MENSAJE_ACK_QR):
+                codigoACK = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                
+                
+                if ((header ^ comando ^ codigoACK) == checksum):
+                    print "ACK DE ENCENDIDO/APAGADO!!!!!"
+                    return True
+                else:
+                    return False
+
+
             if (comando == self.__CODIGO_MENSAJE_ESTADO):
                 P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
@@ -73,12 +109,62 @@ class HandlerSerial:
                 N_velocidadPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 P_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 N_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                altura = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                posZ = self.cardinalCaracter_Validar(self.puertoSerial.read())
 		encendidoMotores = self.cardinalCaracter_Validar(self.puertoSerial.read())
                 checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
     
-                if((header != None) and (comando != None) and (P_posicionYaw != None) and (posicionPitch != None) and (posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (altura != None) and (encendidoMotores != None) and (checksum != None)):
-                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ altura ^ encendidoMotores) == checksum):
+                if((header != None) and (comando != None) and (P_posicionYaw != None) and (posicionPitch != None) and (posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (posZ != None) and (encendidoMotores != None) and (checksum != None)):
+                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ posZ ^ encendidoMotores) == checksum):
+
+			self.mensajesEstadoRecibidos = self.mensajesEstadoRecibidos + 1
+                            
+                        if (P_posicionYaw > 0):
+                            self.anguloYaw = P_posicionYaw
+                        else:
+                            self.anguloYaw = - N_posicionYaw
+                        
+                        self.anguloPitch = posicionPitch - 90
+                        self.anguloRoll = posicionRoll - 90
+
+                        if (P_velocidadYaw > 0):
+                            self.velocidadYaw = P_velocidadYaw
+                        else:
+                            self.velocidadYaw = - N_velocidadYaw
+                        if (P_velocidadPitch > 0):
+                            self.velocidadPitch = P_velocidadPitch
+                        else:
+                            self.velocidadPitch = - N_velocidadPitch
+                        if (P_velocidadRoll > 0):
+                            self.velocidadRoll = P_velocidadRoll
+                        else:
+                            self.velocidadRoll = - N_velocidadRoll
+                        
+                        self.posZ = altura
+
+                        self.encendidoMotores = encendidoMotores
+
+                        return True
+                    else:
+                        return False
+
+
+            if (comando == self.__CODIGO_MENSAJE_TELEMETRIA_TOTAL):
+                P_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                N_posicionYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                posicionPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())                
+                posicionRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                P_velocidadYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                N_velocidadYaw = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                P_velocidadPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                N_velocidadPitch = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                P_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                N_velocidadRoll = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                posZ = self.cardinalCaracter_Validar(self.puertoSerial.read())
+		encendidoMotores = self.cardinalCaracter_Validar(self.puertoSerial.read())
+                checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
+    
+                if((header != None) and (comando != None) and (P_posicionYaw != None) and (posicionPitch != None) and (posicionRoll != None) and (P_velocidadYaw != None) and (P_velocidadPitch != None) and (P_velocidadRoll != None) and (N_posicionYaw != None) and (N_velocidadYaw != None) and (N_velocidadPitch != None) and (N_velocidadRoll != None) and (posZ != None) and (encendidoMotores != None) and (checksum != None)):
+                    if ((header ^ comando ^ P_posicionYaw ^ N_posicionYaw ^ posicionPitch ^ posicionRoll ^ P_velocidadYaw ^ N_velocidadYaw ^ P_velocidadPitch ^ N_velocidadPitch ^ P_velocidadRoll ^ N_velocidadRoll ^ posZ ^ encendidoMotores) == checksum):
 
 			self.mensajesEstadoRecibidos = self.mensajesEstadoRecibidos + 1
                             
@@ -103,24 +189,13 @@ class HandlerSerial:
                         else:
                             self.velocidadRoll = - N_velocidadRoll
                         
-                        self.altura = altura
+                        self.posZ = altura
 
                         self.encendidoMotores = encendidoMotores
 
                         return True
                     else:
                         return False
-
-            if (comando == self.__CODIGO_MENSAJE_ACK_QR):
-                codigoACK = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                checksum = self.cardinalCaracter_Validar(self.puertoSerial.read())
-                
-                
-                if ((header ^ comando ^ codigoACK) == checksum):
-                    print "ACK DE ENCENDIDO/APAGADO!!!!!"
-                    return True
-                else:
-                    return False            
 
 
     def cardinalCaracter_Validar(self, caracter):

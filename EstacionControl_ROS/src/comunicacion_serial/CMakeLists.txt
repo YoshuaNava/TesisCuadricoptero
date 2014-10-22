@@ -49,6 +49,7 @@ find_package(catkin REQUIRED COMPONENTS
    ComandoEncendido.msg
    ComandoMovimiento.msg
    EstadoCuadricoptero.msg
+   TelemetriaTotal.msg
  )
 
 ## Generate services in the 'srv' folder
