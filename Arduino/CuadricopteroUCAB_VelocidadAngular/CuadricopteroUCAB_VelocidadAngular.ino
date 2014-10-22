@@ -44,7 +44,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
+#define modoTelemetriaTotal 0
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -73,7 +73,7 @@ unsigned char ack[4];
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
 #define K_COMP 0.98
-#define G_ACC 0.00562
+#define G_ACC 0.015874
 #define DT_sensor_altura 29
 #define DT_acelerometro 20
 #define DT_giroscopio 11

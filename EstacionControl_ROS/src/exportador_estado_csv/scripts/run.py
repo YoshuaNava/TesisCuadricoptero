@@ -24,7 +24,7 @@ def procesarMensajeEstado(mensajeEstado):
         filaArchivo = filaArchivo + str(mensajeEstado.velocidadPitch) + separadorColumnas
         filaArchivo = filaArchivo + str(mensajeEstado.velocidadRoll) + separadorColumnas
         filaArchivo = filaArchivo + str(mensajeEstado.velocidadYaw)  + separadorColumnas
-        filaArchivo = filaArchivo + str(mensajeEstado.posZ) + separadorColumnas
+        filaArchivo = filaArchivo + str(mensajeEstado.altura) + separadorColumnas
         filaArchivo = filaArchivo + str(mensajeEstado.encendido) + separadorColumnas
         filaArchivo = filaArchivo + str(mensajeEstado.mensajesRecibidos)  + separadorFilas
         handlerArchivo.write(filaArchivo)
