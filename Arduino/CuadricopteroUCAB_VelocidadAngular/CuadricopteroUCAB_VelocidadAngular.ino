@@ -44,7 +44,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
+#define modoTelemetriaTotal 0
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -54,7 +54,7 @@ double Z_previo = 0.0;
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
 #define CODIGO_TELEMETRIA_TOTAL 8
-#define MAXIMO_ANGULO_COMANDO 60
+#define MAXIMO_ANGULO_COMANDO 30
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
 unsigned char comandoEncendidoRecibido;
@@ -238,9 +238,9 @@ void setup() {
 void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
-   //PID_vAngular_Yaw.SetTunings(0.1, 0, 0);
-   PID_vAngular_Pitch.SetTunings(0.6, 0,0); //P=0.75   //P=0.55
-   PID_vAngular_Roll.SetTunings(0.6, 0, 0); //P=0.6   //P=0.55
+   PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
+   PID_vAngular_Pitch.SetTunings(0.67, 0, 0); //P=0.75   //P=0.55
+   PID_vAngular_Roll.SetTunings(0.67, 0, 0); //P=0.6   //P=0.55
    
 
   modoEjecucion = '_';
@@ -636,7 +636,8 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[10] = 0;
   }
 
-  mensajeEstado[12] = estimacionAltura;
+  mensajeEstado[12] = velocidadBasePWM;
+//  mensajeEstado[12] = estimacionAltura;
   //  mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
@@ -939,9 +940,12 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        velocidadDeseadaYPR[1] = (comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        velocidadDeseadaYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO); 
-                        velocidadBasePWM = comandoAltura;
+                        velocidadDeseadaYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        velocidadDeseadaYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        if (comandoAltura <= PWM_MAXIMO)
+                        {
+                          velocidadBasePWM = comandoAltura;
+                        }
                       }
                     }
                   }

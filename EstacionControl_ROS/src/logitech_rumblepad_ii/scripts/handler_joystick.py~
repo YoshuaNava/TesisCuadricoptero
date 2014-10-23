@@ -150,8 +150,6 @@ class HandlerJoystick:
                         if (estado_boton_R1 == 1):
                             self.comandoPitchEnviar = 0.0
                             self.comandoRollEnviar = 0.0
-
-			if (estado_boton_R1 == 1):
 	                    self.comandoMovimientoEjecutado = True
 
                 

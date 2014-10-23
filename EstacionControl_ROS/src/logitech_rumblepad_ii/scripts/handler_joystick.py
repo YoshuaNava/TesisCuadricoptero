@@ -35,7 +35,7 @@ class HandlerJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO_COMANDO = 60
+        self.__MAXIMO_ANGULO_COMANDO = 30
         self.__VELOCIDAD_BASE_PWM = 170
         self.__VELOCIDAD_MAXIMA_PWM = 220
         self.__MAXIMA_ALTURA = 150
@@ -150,7 +150,8 @@ class HandlerJoystick:
                         if (estado_boton_R1 == 1):
                             self.comandoPitchEnviar = 0.0
                             self.comandoRollEnviar = 0.0
-	                    self.comandoMovimientoEjecutado = True
+                            self.comandoAltura = self.__VELOCIDAD_BASE_PWM
+                            self.comandoMovimientoEjecutado = True
 
                 
  #                   print 'Boton R1, Valor %d' %(estado_boton_R1)
