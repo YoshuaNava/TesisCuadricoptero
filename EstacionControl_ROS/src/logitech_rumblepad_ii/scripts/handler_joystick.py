@@ -128,6 +128,7 @@ class HandlerJoystick:
                         #print 'Comando de roll= %f' %(self.comandoRoll)                            
                         
                         self.comandoMovimientoEjecutado = True
+#			time.sleep(0.05)
                         
     
                 if evento.type == pygame.JOYBUTTONDOWN:
@@ -155,4 +156,4 @@ class HandlerJoystick:
 
                 
  #                   print 'Boton R1, Valor %d' %(estado_boton_R1)
-            #time.sleep(0.0) #Permitir que otros hilos pasen a ejecutarse. Es como un yield()        
+            #time.sleep(0.075) #Permitir que otros hilos pasen a ejecutarse. Es como un yield()        
