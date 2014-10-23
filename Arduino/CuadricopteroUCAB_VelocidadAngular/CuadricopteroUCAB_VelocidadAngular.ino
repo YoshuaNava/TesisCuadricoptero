@@ -15,7 +15,7 @@
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
 #define PWM_MAXIMO 220 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 170;
+int velocidadBasePWM = 110;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -54,7 +54,7 @@ double Z_previo = 0.0;
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
 #define CODIGO_TELEMETRIA_TOTAL 8
-#define MAXIMO_ANGULO_COMANDO 30
+#define MAXIMO_ANGULO_COMANDO 50
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
 unsigned char comandoEncendidoRecibido;
