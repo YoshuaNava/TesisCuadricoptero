@@ -44,7 +44,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 0
+#define modoTelemetriaTotal 1
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -553,8 +553,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
 
 
-  analogWrite(PUERTOMOTORDERECHO, motorDerecho*0);
-  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo*0);
+  analogWrite(PUERTOMOTORDERECHO, motorDerecho);
+  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);
 }
