@@ -3,9 +3,9 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     numeroDatos = size(datosArchivo,1);
     maximoValorEnvio = 90;
     escala = 90;
-    aceleracionY = datosArchivo(:,2) * (escala/maximoValorEnvio);
-    aceleracionX = datosArchivo(:,3) * (escala/maximoValorEnvio);
-    aceleracionZ = datosArchivo(:,4) * (escala/maximoValorEnvio);
+    aceleracionY = datosArchivo(:,8) * (escala/maximoValorEnvio);
+    aceleracionX = datosArchivo(:,9) * (escala/maximoValorEnvio);
+    aceleracionZ = datosArchivo(:,10) * (escala/maximoValorEnvio);
      
 %      [b,a] = butter(10,40/(frecuenciaMuestreo/2),'low');
 %      fvtool(b,a)
@@ -26,6 +26,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in X')
+    grid()
     figure()
     plot(aceleracionY)
     mediaAceleracionY = mean(aceleracionY)
@@ -34,6 +35,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in Y')
+    grid()
     figure()
     plot(aceleracionZ)
     mediaAceleracionZ = mean(aceleracionZ)
@@ -42,6 +44,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Time (s)')
     ylabel('Acceleration (g)')
     title('Acceleration in Z')
+    grid()
     %lol
     
     fft_aceleracionX = fft(aceleracionX, numeroDatos);
@@ -73,6 +76,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Frequency (Hz)')
     ylabel('Amplitude (g)')
     title('Periodogram X')
+    grid()
     figure('name',nombreArchivoCSV)
     plot(f,shift_amplitud_fft_aceleracionY)
     xlim([0 frecuenciaMuestreo/2])
@@ -84,6 +88,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Frequency (Hz)')
     ylabel('Amplitude (g)')
     title('Periodogram Y')
+    grid()
     figure('name',nombreArchivoCSV)
     plot(f,shift_amplitud_fft_aceleracionZ)
     xlim([0 frecuenciaMuestreo/2])
@@ -95,6 +100,7 @@ function [f, X, Y, Z] = AcelerometroAF(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Frequency (Hz)')
     ylabel('Amplitude (g)')
     title('Periodogram Z')
+    grid()
     
     %X = shift_amplitud_fft_aceleracionX;
     %Y = shift_amplitud_fft_aceleracionY;
