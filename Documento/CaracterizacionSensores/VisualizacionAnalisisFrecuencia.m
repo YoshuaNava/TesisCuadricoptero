@@ -16,12 +16,36 @@ function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCS
 %     b = [1/8 1/8 1/8 1/8 1/8 1/8 1/8 1/8];
 %     velocidadPitch = filter(b,a, velocidadPitch);
 %     velocidadRoll = filter(b,a, velocidadRoll);
-    figure()
+    figure('position', [0, 0, 9999, 9999],'name','Velocidades Angulares')
+    subplot(1,3,1)
     plot(velocidadPitch)
-    ylim([-90 90])
-    figure()
+    title('Pitch')
+    if (abs(min(velocidadPitch)) > max(velocidadPitch))
+        ylim([min(velocidadPitch) abs(min(velocidadPitch))])
+    else
+        ylim([-max(velocidadPitch) max(velocidadPitch)])
+    end
+    xlim([0 length(velocidadPitch)])
+    figure(1)
+    subplot(1,3,2)
     plot(velocidadRoll)
-    ylim([-90 90])
+    title('Roll')
+    if (abs(min(velocidadRoll)) > max(velocidadRoll))
+        ylim([min(velocidadRoll) abs(min(velocidadRoll))])
+    else
+        ylim([-max(velocidadRoll) max(velocidadRoll)])
+    end
+    xlim([0 length(velocidadRoll)])
+    figure(1)
+    subplot(1,3,3)
+    plot(velocidadYaw)
+    title('Yaw')
+    xlim([0 length(velocidadYaw)])
+    if (abs(min(velocidadYaw)) > max(velocidadYaw))
+        ylim([min(velocidadYaw) abs(min(velocidadYaw))])
+    else
+        ylim([-max(velocidadYaw) max(velocidadYaw)])
+    end
     
     %lol
     
@@ -43,7 +67,8 @@ function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCS
     %maximoValor = max([max(shift_amplitud_fft_velocidadPitch), max(shift_amplitud_fft_velocidadRoll), max(shift_amplitud_fft_velocidadYaw)]);
     
     f=(-longitud_fft/2 : (longitud_fft/2-1)) * frecuenciaMuestreo/longitud_fft;
-    figure('name',nombreArchivoCSV)
+    figure('position',[0,0,9999,9999],'name','Frecuencia de Velocidades Angulares')
+    subplot(1,3,1)
     plot(f,shift_amplitud_fft_velocidadPitch)
     xlim([0 frecuenciaMuestreo/2])
     if(maximoValor > 0)
@@ -52,7 +77,7 @@ function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCS
         ylim([0 1])
     end
     title('Pitch')
-    figure('name',nombreArchivoCSV)
+    subplot(1,3,2)
     plot(f,shift_amplitud_fft_velocidadRoll)
     xlim([0 frecuenciaMuestreo/2])
     if(maximoValor > 0)
@@ -61,7 +86,7 @@ function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCS
         ylim([0 1])
     end
     title('Roll')
-    figure('name',nombreArchivoCSV)
+    subplot(1,3,3)
     plot(f,shift_amplitud_fft_velocidadYaw)
     xlim([0 frecuenciaMuestreo/2])
     if(maximoValor > 0)
