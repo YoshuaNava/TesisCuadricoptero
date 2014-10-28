@@ -44,7 +44,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
+#define modoTelemetriaTotal 0
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -633,20 +633,20 @@ void PrepararPaqueteMensajeEstado()
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
   /**POSICION YAW**/
-  if (anguloYPR[0] >= 0)
+  if (anguloYPR_filtrado[0] >= 0)
   {
-    mensajeEstado[2] = anguloYPR[0];
+    mensajeEstado[2] = anguloYPR_filtrado[0];
     mensajeEstado[3] = 0;
   }
   else
   {
-    mensajeEstado[3] = abs(anguloYPR[0]);
+    mensajeEstado[3] = abs(anguloYPR_filtrado[0]);
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = anguloYPR[1] + 90;
+  mensajeEstado[4] = anguloYPR_filtrado[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = anguloYPR[2] + 90;
+  mensajeEstado[5] = anguloYPR_filtrado[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {

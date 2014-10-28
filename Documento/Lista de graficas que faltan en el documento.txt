@@ -9,7 +9,5 @@
 
   
   Pruebas:
-  * Valores leídos por el sensor ultrasónico sin filtro. Interfaz de telemetría.
-  * Valores leídos por el sensor ultrasónico con filtro. Interfaz de telemetría.
   * Rendimiento de los sistemas de control en simulación.
   
