@@ -9,9 +9,6 @@
 
   
   Pruebas:
-  * Aproximado de ángulo a partir del giroscopio solamente, en reposo. Interfaz de telemetría.
-  * Vibraciones con la base y filtros pasa bajos, en el acelerómetro y giroscopio (Ya tenemos los datos).
-  * Estimación de ángulo sin filtros vs. aproximado de ángulo con filtros. Interfaz de telemetría.
   * Valores leídos por el sensor ultrasónico sin filtro. Interfaz de telemetría.
   * Valores leídos por el sensor ultrasónico con filtro. Interfaz de telemetría.
   * Rendimiento de los sistemas de control en simulación.
