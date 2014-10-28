@@ -65,26 +65,136 @@ z_0 = 1;
 numEstados = 10;
 numEntradasControl = 4;
 
-dt = 0.5;
-for i=-10:10
-    pitch_0 = dt*i;
-    roll_0 = dt*i;
-    [pM,qM,rM] = meshgrid(-10:0.5:10,-10:0.5:10,-10:0.5:10);
-    p_dotdot = (3*qM.*rM)/2 + 12310569/1420000000;
-    q_dotdot = 74739447/2840000000 - (3*pM.*rM)/2;
-    r_dotdot = 1017297/14200000;
-    figure
-    quiver(pM,qM,p_dotdot,q_dotdot)
+
+pL = -10:1:10;
+qL = -10:1:10;
+rL = -10:1:10;
+[qM,rM] = meshgrid(qL,rL);
+p_dotdot = (3*qM.*rM)/2 + 12310569/1420000000;
+figure_p_dotdot = figure(1);
+contour(rM,qM,p_dotdot,'ShowText','on');
+[U,V] = gradient(p_dotdot,2.0);
+hold on
+quiver(rM,qM,U,V);
+hold off
+title('Campo vectorial de la aceleracion angular X')
+xlabel('Velocidad angular Z')
+ylabel('Velocidad angular Y')
+
+[pM,rM] = meshgrid(pL,rL);
+q_dotdot = 74739447/2840000000 - (3*pM.*rM)/2;
+figure_q_dotdot = figure(2);
+contour(rM,pM,q_dotdot,'ShowText','on');
+[U,V] = gradient(q_dotdot,2.0);
+hold on
+quiver(rM,pM,U,V);
+hold off
+title('Campo vectorial de la aceleracion angular Y')
+xlabel('Velocidad angular Z')
+ylabel('Velocidad angular X')
 
 
-    [pitchM,rollM,yawM] = meshgrid(-10:0.5:10,-10:0.5:10,-10:0.5:10);
-    pitch_dot = pM + rM.*cos(pitch_0)*tan(roll_0) + qM.*sin(pitch_0)*tan(roll_0);
-    roll_dot = qM.*cos(pitch_0) - rM.*sin(pitch_0);
-    yaw_dot = (rM.*cos(pitch_0))/cos(roll_0) + (qM.*sin(pitch_0))/cos(roll_0);
-    figure
-    quiver(pitchM,rollM,pitch_dot,roll_dot)
-end
-
+% pitchL = -90:15:90;
+% rollL = -90:15:90;
+% yawL = -90:15:90;
+% %[rollM,yawM] = meshgrid(rollL,yawL)
+% %[pitchM,yawM] = meshgrid(pitchL,yawL)
+% [pitchM,rollM] = meshgrid(pitchL,rollL);
+% figure(3)
+% for i=-50:10:50
+%     pV = i;
+%     qV = 0;
+%     rV = 0;
+%     pitch_dot = pV + rV*cos(pitchM)*tan(rollM) + qV*sin(pitchM)*tan(rollM);
+%     [U,V,W] = surfnorm(pitch_dot);
+%     quiver3(pitch_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Pitch')
+%     legend({strcat('p= ',num2str(pV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
+% 
+% figure(4)
+% for i=-50:10:50
+%     pV = 0;
+%     qV = i;
+%     rV = 0;
+%     pitch_dot = pV + rV*cos(pitchM)*tan(rollM) + qV*sin(pitchM)*tan(rollM);
+%     [U,V,W] = surfnorm(pitch_dot);
+%     quiver3(pitch_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Pitch')
+%     legend({strcat('q= ',num2str(qV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
+% 
+% figure(5)
+% for i=-50:10:50
+%     pV = 0;
+%     qV = 0;
+%     rV = i;
+%     pitch_dot = pV + rV*cos(pitchM)*tan(rollM) + qV*sin(pitchM)*tan(rollM);
+%     [U,V,W] = surfnorm(pitch_dot);
+%     quiver3(pitch_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Pitch')
+%     legend({strcat('r= ',num2str(rV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
+% 
+% figure(6)
+% for i=-50:10:50
+%     pV = i;
+%     qV = 0;
+%     rV = 0;
+%     roll_dot = qV*cos(pitchM) - rV*sin(pitchM);
+%     [U,V,W] = surfnorm(roll_dot);
+%     quiver3(roll_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Roll')
+%     legend({strcat('p= ',num2str(pV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
+% 
+% figure(7)
+% for i=-50:10:50
+%     pV = 0;
+%     qV = i;
+%     rV = 0;
+%     roll_dot = qV*cos(pitchM) - rV*sin(pitchM);
+%     [U,V,W] = surfnorm(roll_dot);
+%     quiver3(roll_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Roll')
+%     legend({strcat('q= ',num2str(qV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
+% 
+% figure(8)
+% for i=-50:10:50
+%     pV = 0;
+%     qV = 0;
+%     rV = i;
+%     roll_dot = qV*cos(pitchM) - rV*sin(pitchM);
+%     [U,V,W] = surfnorm(roll_dot);
+%     quiver3(roll_dot,U,V,W)
+%     view(-35,45)
+%     title('Campo vectorial de la velocidad angular de Roll')
+%     legend({strcat('r= ',num2str(rV))},'FontSize',8,'FontWeight','bold')
+%     xlabel('Angulo de Pitch')
+%     ylabel('Angulo de Roll')
+%     pause(0.1);
+% end
 
 A = double(A_jacobiano_f_estado(p_0, q_0, r_0, pitch_0, roll_0, yaw_0, u_0, v_0, w_0, z_0))
 
