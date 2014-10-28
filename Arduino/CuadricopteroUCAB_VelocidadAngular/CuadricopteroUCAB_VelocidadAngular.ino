@@ -44,7 +44,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 0
+#define modoTelemetriaTotal 1
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -72,8 +72,8 @@ unsigned char ack[4];
 #define ToRad(x) ((x)*0.01745329252)  // *pi/180
 #define ToDeg(x) ((x)*57.2957795131)  // *180/pi
 #define G_GYRO 0.00875
-#define K_COMP 0.98
 #define G_ACC 0.015874
+#define K_COMP 0.93
 #define DT_sensor_altura 29
 #define DT_acelerometro 20
 #define DT_giroscopio 11
@@ -114,7 +114,13 @@ double A_aceleracionYPR_filtrada[3] = {
 double A_anguloYPR[3] = {
   0, 0, 0
 };
+double A_anguloYPR_filtrado[3] = {
+  0, 0, 0
+};
 double anguloYPR[3] = {
+  0, 0, 0
+};
+double anguloYPR_filtrado[3] = {
   0, 0, 0
 };
 double velocidadDeseadaYPR[3] = {
@@ -383,15 +389,22 @@ void FiltroComplementario() {
     G_velocidadYPR_filtrada[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
 
     tiempoUltimoMuestreoGiroscopio = millis();
-
+/*
     anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR_filtrada[0] * DT);
     anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR_filtrada[1] * DT));
-    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR_filtrada[2] * DT));    
+    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR_filtrada[2] * DT));
+*/
+    anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
+    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT));
+    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT));
+
+    anguloYPR_filtrado[0] = (double) (anguloYPR_filtrado[0] + G_velocidadYPR[0] * DT);
+    anguloYPR_filtrado[1] = (double) (K_COMP * (anguloYPR_filtrado[1] + G_velocidadYPR[1] * DT));
+    anguloYPR_filtrado[2] = (double) (K_COMP * (anguloYPR_filtrado[2] + G_velocidadYPR[2] * DT));
   }
 
   if (millis() - tiempoUltimoMuestreoAcelerometro >= DT_acelerometro)
   {
-
     A_aceleracionYPR[0] = (double) (compass.a.z) * G_ACC;
     A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
     A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
@@ -401,17 +414,31 @@ void FiltroComplementario() {
     A_aceleracionYPR_filtrada[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
 
     FiltroKalmanAceleracion();
-
+/*
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
     A_anguloYPR[2] = (double) atan2(estimacionAcelerometro[2], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[1] * estimacionAcelerometro[1]));
     A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
-
+*/
+    A_anguloYPR[0] = 0;
+    A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
+    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
+    A_anguloYPR[2] = (double) atan2(A_aceleracionYPR[2], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[1] * A_aceleracionYPR[1]));
+    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
+    
+    A_anguloYPR_filtrado[0] = 0;
+    A_anguloYPR_filtrado[1] = (double) atan2(A_aceleracionYPR_filtrada[1], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[2] * A_aceleracionYPR_filtrada[2]));
+    A_anguloYPR_filtrado[1] = ToDeg(A_anguloYPR_filtrado[1]);
+    A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
+    A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);    
     tiempoUltimoMuestreoAcelerometro = millis();
 
     anguloYPR[1] += (double) ((1 - K_COMP) * A_anguloYPR[1]);
     anguloYPR[2] += (double) ((1 - K_COMP) * A_anguloYPR[2]);
+    
+    anguloYPR_filtrado[1] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[1]);
+    anguloYPR_filtrado[2] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[2]);
   }
 
   anguloYPR[0] = ToRad(anguloYPR[0]);
@@ -426,6 +453,18 @@ void FiltroComplementario() {
   anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
   anguloYPR[2] = ToDeg(anguloYPR[2]);
 
+  anguloYPR_filtrado[0] = ToRad(anguloYPR_filtrado[0]);
+  anguloYPR_filtrado[0] = (double) atan2(sin(anguloYPR_filtrado[0]), cos(anguloYPR_filtrado[0]));
+  anguloYPR_filtrado[0] = ToDeg(anguloYPR_filtrado[0]);
+
+  anguloYPR_filtrado[1] = ToRad(anguloYPR_filtrado[1]);
+  anguloYPR_filtrado[1] = (double) atan2(sin(anguloYPR_filtrado[1]), cos(anguloYPR_filtrado[1]));
+  anguloYPR_filtrado[1] = ToDeg(anguloYPR_filtrado[1]);
+
+  anguloYPR_filtrado[2] = ToRad(anguloYPR_filtrado[2]);
+  anguloYPR_filtrado[2] = (double) atan2(sin(anguloYPR_filtrado[2]), cos(anguloYPR_filtrado[2]));
+  anguloYPR_filtrado[2] = ToDeg(anguloYPR_filtrado[2]);
+  
   tiempoUltimoMuestreoAngulos = micros();
 }
 
@@ -688,36 +727,36 @@ void PrepararPaqueteMensajeTelemetriaTotal()
   }
 
   /**VELOCIDAD YAW**/
-  if (G_velocidadYPR[0] >= 0)
+  if (anguloYPR_filtrado[0] >= 0)
   {
-    mensajeTelemetriaTotal[8] = G_velocidadYPR[0];
+    mensajeTelemetriaTotal[8] = anguloYPR_filtrado[0];
     mensajeTelemetriaTotal[9] = 0;
   }
   else
   {
-    mensajeTelemetriaTotal[9] = abs(G_velocidadYPR[0]);
+    mensajeTelemetriaTotal[9] = abs(anguloYPR_filtrado[0]);
     mensajeTelemetriaTotal[8] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (G_velocidadYPR[1] >= 0)
+  if (anguloYPR_filtrado[1] >= 0)
   {
-    mensajeTelemetriaTotal[10] = G_velocidadYPR[1];
+    mensajeTelemetriaTotal[10] = anguloYPR_filtrado[1];
     mensajeTelemetriaTotal[11] = 0;
   }
   else
   {
-    mensajeTelemetriaTotal[11] = abs(G_velocidadYPR[1]);
+    mensajeTelemetriaTotal[11] = abs(anguloYPR_filtrado[1]);
     mensajeTelemetriaTotal[10] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (G_velocidadYPR[2] >= 0)
+  if (anguloYPR_filtrado[2] >= 0)
   {
-    mensajeTelemetriaTotal[12] = G_velocidadYPR[2];
+    mensajeTelemetriaTotal[12] = anguloYPR_filtrado[2];
     mensajeTelemetriaTotal[13] = 0;
   }
   else
   {
-    mensajeTelemetriaTotal[13] = abs(G_velocidadYPR[2]);
+    mensajeTelemetriaTotal[13] = abs(anguloYPR_filtrado[2]);
     mensajeTelemetriaTotal[12] = 0;
   }
 
