@@ -1,4 +1,4 @@
-function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
+function [f, pitch, roll, yaw] = VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     anguloPitch = datosArchivo(:,2);
@@ -38,7 +38,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(anguloPitch)) > max(anguloPitch))
         ylim([min(anguloPitch) abs(min(anguloPitch))])
     else
-        ylim([-max(anguloPitch) 1+max(anguloPitch)])
+        ylim([-max(anguloPitch) max(anguloPitch)])
     end
     xlim([0 length(anguloPitch)])
     subplot(2,3,2)
@@ -47,7 +47,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(anguloRoll)) > max(anguloRoll))
         ylim([min(anguloRoll) abs(min(anguloRoll))])
     else
-        ylim([-max(anguloRoll) 1+max(anguloRoll)])
+        ylim([-max(anguloRoll) max(anguloRoll)])
     end
     xlim([0 length(anguloRoll)])
     subplot(2,3,3)
@@ -89,7 +89,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(velocidadPitch)) > max(velocidadPitch))
         ylim([min(velocidadPitch) abs(min(velocidadPitch))])
     else
-        ylim([-max(velocidadPitch) 1+max(velocidadPitch)])
+        ylim([-max(velocidadPitch) max(velocidadPitch)])
     end
     xlim([0 length(velocidadPitch)])
     subplot(2,3,2)
@@ -98,7 +98,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(velocidadRoll)) > max(velocidadRoll))
         ylim([min(velocidadRoll) abs(min(velocidadRoll))])
     else
-        ylim([-max(velocidadRoll) 1+max(velocidadRoll)])
+        ylim([-max(velocidadRoll) max(velocidadRoll)])
     end
     xlim([0 length(velocidadRoll)])
     subplot(2,3,3)
@@ -117,16 +117,13 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     fft_velocidadYaw = fft(velocidadYaw, NFFT_senal)/numeroDatos;
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_velocidadPitch(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadPitch)
     title('Pitch')
     subplot(2,3,5)
-    plot(f,2*abs(fft_velocidadRoll(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadRoll)
     title('Roll')
     subplot(2,3,6)
-    plot(f,2*abs(fft_velocidadYaw(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadYaw)
     title('Yaw')    
     
     
@@ -145,7 +142,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(velocidadPitch_filtrada)) > max(velocidadPitch_filtrada))
         ylim([min(velocidadPitch_filtrada) abs(min(velocidadPitch_filtrada))])
     else
-        ylim([-max(velocidadPitch_filtrada) 1+max(velocidadPitch_filtrada)])
+        ylim([-max(velocidadPitch_filtrada) max(velocidadPitch_filtrada)])
     end
     xlim([0 length(velocidadPitch_filtrada)])
     subplot(2,3,2)
@@ -154,7 +151,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(velocidadRoll_filtrada)) > max(velocidadRoll_filtrada))
         ylim([min(velocidadRoll_filtrada) abs(min(velocidadRoll_filtrada))])
     else
-        ylim([-max(velocidadRoll_filtrada) 1+max(velocidadRoll_filtrada)])
+        ylim([-max(velocidadRoll_filtrada) max(velocidadRoll_filtrada)])
     end
     xlim([0 length(velocidadRoll_filtrada)])
     subplot(2,3,3)
@@ -164,24 +161,39 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(velocidadYaw_filtrada)) > max(velocidadYaw_filtrada))
         ylim([min(velocidadYaw_filtrada) abs(min(velocidadYaw_filtrada))])
     else
-        ylim([-max(velocidadYaw_filtrada) 1+max(velocidadYaw_filtrada)])
+        ylim([-max(velocidadYaw_filtrada) max(velocidadYaw_filtrada)])
     end
     
     fft_velocidadPitch_filtrada = fft(velocidadPitch_filtrada, NFFT_senal)/numeroDatos;
     fft_velocidadRoll_filtrada = fft(velocidadRoll_filtrada, NFFT_senal)/numeroDatos;
-    fft_velocidadYaw_filtrada = fft(velocidadYaw_filtrada, NFFT_senal)/numeroDatos;
+    fft_velocidadYaw_filtrada = fft(velocidadYaw_filtrada, numeroDatos);
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_velocidadPitch_filtrada(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadPitch_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Pitch filtrada')
     subplot(2,3,5)
-    plot(f,2*abs(fft_velocidadRoll_filtrada(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadRoll_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Roll filtrada')
     subplot(2,3,6)
-    plot(f,2*abs(fft_velocidadYaw_filtrada(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velocidadYaw_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Yaw filtrada')
     
     
@@ -199,7 +211,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionPitch)) > max(aceleracionPitch))
         ylim([min(aceleracionPitch) abs(min(aceleracionPitch))])
     else
-        ylim([-max(aceleracionPitch) 1+max(aceleracionPitch)])
+        ylim([-max(aceleracionPitch) max(aceleracionPitch)])
     end
     xlim([0 length(aceleracionPitch)])
     subplot(2,3,2)
@@ -208,7 +220,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionRoll)) > max(aceleracionRoll))
         ylim([min(aceleracionRoll) abs(min(aceleracionRoll))])
     else
-        ylim([-max(aceleracionRoll) 1+max(aceleracionRoll)])
+        ylim([-max(aceleracionRoll) max(aceleracionRoll)])
     end
     xlim([0 length(aceleracionRoll)])
     subplot(2,3,3)
@@ -218,21 +230,40 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionYaw)) > max(aceleracionYaw))
         ylim([min(aceleracionYaw) abs(min(aceleracionYaw))])
     else
-        ylim([-max(aceleracionYaw) 1+max(aceleracionYaw)])
+        ylim([-max(aceleracionYaw) max(aceleracionYaw)])
     end
     
-    fft_aceleracionPitch = fft(aceleracionPitch, NFFT_senal)/numeroDatos;
-    fft_aceleracionRoll = fft(aceleracionRoll, NFFT_senal)/numeroDatos;
-    fft_aceleracionYaw = fft(aceleracionYaw, NFFT_senal)/numeroDatos;
+    fft_aceleracionPitch = fft(aceleracionPitch, numeroDatos);
+    fft_aceleracionRoll = fft(aceleracionRoll, numeroDatos);
+    fft_aceleracionYaw = fft(aceleracionYaw, numeroDatos);
+    maximoValor = max([max(shift_amplitud_fft_aceleracionPitch(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_aceleracionRoll(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_aceleracionYaw(longitud_fft/2:longitud_fft))]);
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionPitch)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Pitch')
     subplot(2,3,5)
-    plot(f,2*abs(fft_aceleracionRoll(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionRoll)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Roll')
     subplot(2,3,6)
-    plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionYaw)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Yaw')
     
 
@@ -249,7 +280,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionPitch_filtrada)) > max(aceleracionPitch_filtrada))
         ylim([min(aceleracionPitch_filtrada) abs(min(aceleracionPitch_filtrada))])
     else
-        ylim([-max(aceleracionPitch_filtrada) 1+max(aceleracionPitch_filtrada)])
+        ylim([-max(aceleracionPitch_filtrada) max(aceleracionPitch_filtrada)])
     end
     xlim([0 length(aceleracionPitch_filtrada)])
     subplot(2,3,2)
@@ -258,7 +289,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionRoll_filtrada)) > max(aceleracionRoll_filtrada))
         ylim([min(aceleracionRoll_filtrada) abs(min(aceleracionRoll_filtrada))])
     else
-        ylim([-max(aceleracionRoll_filtrada) 1+max(aceleracionRoll_filtrada)])
+        ylim([-max(aceleracionRoll_filtrada) max(aceleracionRoll_filtrada)])
     end
     xlim([0 length(aceleracionRoll_filtrada)])
     subplot(2,3,3)
@@ -268,28 +299,48 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     if (abs(min(aceleracionYaw_filtrada)) > max(aceleracionYaw_filtrada))
         ylim([min(aceleracionYaw_filtrada) abs(min(aceleracionYaw_filtrada))])
     else
-        ylim([-max(aceleracionYaw_filtrada) 1+max(aceleracionYaw_filtrada)])
+        ylim([-max(aceleracionYaw_filtrada) max(aceleracionYaw_filtrada)])
     end
     
-    fft_aceleracionPitch_filtrada = fft(aceleracionPitch_filtrada, NFFT_senal)/numeroDatos;
-    fft_aceleracionRoll_filtrada = fft(aceleracionRoll_filtrada, NFFT_senal)/numeroDatos;
-    fft_aceleracionYaw_filtrada = fft(aceleracionYaw_filtrada, NFFT_senal)/numeroDatos;
+    fft_aceleracionPitch_filtrada = fft(aceleracionPitch_filtrada, numeroDatos);
+    fft_aceleracionRoll_filtrada = fft(aceleracionRoll_filtrada, numeroDatos);
+    fft_aceleracionYaw_filtrada = fft(aceleracionYaw_filtrada, numeroDatos);
+    
+    maximoValor = max([max(shift_amplitud_fft_aceleracionPitch_filtrada(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_aceleracionRoll_filtrada(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_aceleracionYaw_filtrada(longitud_fft/2:longitud_fft))]);
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_aceleracionPitch_filtrada(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionPitch_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Pitch filtrada')
     subplot(2,3,5)
-    plot(f,2*abs(fft_aceleracionRoll_filtrada(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionRoll_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Roll filtrada')
     subplot(2,3,6)
-    plot(f,2*abs(fft_aceleracionYaw_filtrada(1:NFFT_senal/2+1)))
+    plot(f,shift_amplitud_fft_aceleracionYaw_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Yaw filtrada')    
     
     
     
     
     
-    figure_posicion_velocidad_z = figure('position', [0, 0, 9999, 9999],'name','Posicion y velocidad en Z (Altura)')
+    figure_aceleraciones_angulares_filtradas = figure('position', [0, 0, 9999, 9999],'name','Posicion y velocidad en Z (Altura)')
     subplot(2,3,1)
     plot(posZ)
     title('Posicion en Z')
@@ -314,20 +365,37 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     xlim([0 length(velZ)])
     ylim([0 1+abs(max(velZ))])
     
-    fft_posZ = fft(posZ, NFFT_senal)/numeroDatos;
-    fft_posZ_filtrada = fft(posZ_filtrada, NFFT_senal)/numeroDatos;
-    fft_velZ = fft(velZ, NFFT_senal)/numeroDatos;
+    fft_posZ = fft(posZ, numeroDatos);
+    fft_posZ_filtrada = fft(posZ_filtrada, numeroDatos);
+    fft_velZ = fft(velZ, numeroDatos);
+    
+    maximoValor = max([max(shift_amplitud_fft_posZ(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_posZ_filtrada(longitud_fft/2:longitud_fft)), max(shift_amplitud_fft_velZ(longitud_fft/2:longitud_fft))]);
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_posZ(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_posZ)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Posicion en Z')
     subplot(2,3,5)
-    plot(f,2*abs(fft_posZ_filtrada(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_posZ_filtrada)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Posicion en Z filtrada')
     subplot(2,3,6)
-    plot(f,2*abs(fft_velZ(1:NFFT_senal/2+1)))
-    ylim([0 5])
+    plot(f,shift_amplitud_fft_velZ)
+    xlim([0 frecuenciaMuestreo/2])
+    if(maximoValor > 0)
+        ylim([0 maximoValor])
+    else
+        ylim([0 1])
+    end
     title('Velocidad en Z')    
 end
