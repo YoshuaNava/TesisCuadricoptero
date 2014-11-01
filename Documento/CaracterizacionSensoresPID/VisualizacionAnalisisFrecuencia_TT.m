@@ -329,5 +329,5 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     subplot(2,3,6)
     plot(f,2*abs(fft_velZ(1:NFFT_senal/2+1)))
     ylim([0 5])
-    title('Velocidad en Z')    
+    title('Velocidad en Z')
 end
