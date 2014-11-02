@@ -36,7 +36,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
         
     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales')
     subplot(2,3,1)
-    plot(aceleracionPitch)
+    plot(aceleracionPitch(1:30),'.')
     title('Pitch')
     if (abs(min(aceleracionPitch)) > max(aceleracionPitch))
         ylim([min(aceleracionPitch) abs(min(aceleracionPitch))])
@@ -45,7 +45,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     end
     xlim([0 length(aceleracionPitch)])
     subplot(2,3,2)
-    plot(aceleracionRoll)
+    plot(aceleracionRoll(1:30),'.')
     title('Roll')
     if (abs(min(aceleracionRoll)) > max(aceleracionRoll))
         ylim([min(aceleracionRoll) abs(min(aceleracionRoll))])
@@ -54,7 +54,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     end
     xlim([0 length(aceleracionRoll)])
     subplot(2,3,3)
-    plot(aceleracionYaw)
+    plot(aceleracionYaw(1:30),'.')
     title('Yaw')
     xlim([0 length(aceleracionYaw)])
     if (abs(min(aceleracionYaw)) > max(aceleracionYaw))
@@ -63,18 +63,18 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
         ylim([-max(aceleracionYaw) 1+max(aceleracionYaw)])
     end
     
-    fft_aceleracionPitch = fft(aceleracionPitch, NFFT_senal)/numeroDatos;
-    fft_aceleracionRoll = fft(aceleracionRoll, NFFT_senal)/numeroDatos;
-    fft_aceleracionYaw = fft(aceleracionYaw, NFFT_senal)/numeroDatos;
+    fft_aceleracionPitch = fft(aceleracionPitch(1:30), NFFT_senal)/numeroDatos;
+    fft_aceleracionRoll = fft(aceleracionRoll(1:30), NFFT_senal)/numeroDatos;
+    fft_aceleracionYaw = fft(aceleracionYaw(1:30), NFFT_senal)/numeroDatos;
     
     subplot(2,3,4)
-    plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)))
+    plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)),'.')
     title('Pitch')
     subplot(2,3,5)
-    plot(f,2*abs(fft_aceleracionRoll(1:NFFT_senal/2+1)))
+    plot(f,2*abs(fft_aceleracionRoll(1:NFFT_senal/2+1)),'.')
     title('Roll')
     subplot(2,3,6)
-    plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
+    plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)),'.')
     title('Yaw')
     
 
