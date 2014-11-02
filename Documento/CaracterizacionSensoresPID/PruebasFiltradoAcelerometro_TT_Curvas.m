@@ -136,7 +136,7 @@ function PruebasFiltradoAcelerometro_TT_Curvas(nombreArchivoCSV, frecuenciaMuest
     
     
     
-%     [b,a] = butter(10,10/(frecuenciaMuestreo/2),'low');
+%     [b,a] = butter(5,5/(frecuenciaMuestreo/2),'low');
 % %     fvtool(b,a);
 %     aceleracionPitch = filter(b,a, aceleracionPitch);
 %     aceleracionRoll = filter(b,a, aceleracionRoll);
@@ -183,11 +183,11 @@ function PruebasFiltradoAcelerometro_TT_Curvas(nombreArchivoCSV, frecuenciaMuest
 %     title('Yaw')
     
     
-%     [b,a] = butter(10,10/(frecuenciaMuestreo/2),'high');
+%     [b,a] = butter(10,20/(frecuenciaMuestreo/2),'high');
 %     aceleracionPitch = filter(b,a, aceleracionPitch);
 %     aceleracionRoll = filter(b,a, aceleracionRoll);
 %     aceleracionYaw = filter(b,a, aceleracionYaw);
-%     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro pasa altos 50Hz')
+%     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro pasa altos 20Hz')
 %     subplot(2,3,1)
 %     plot(aceleracionPitch)
 %     title('Pitch')
@@ -231,7 +231,7 @@ function PruebasFiltradoAcelerometro_TT_Curvas(nombreArchivoCSV, frecuenciaMuest
 
     a = 1;
     b = [1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20];
-    fvtool(b,a,'Fs',1000);
+%    fvtool(b,a,'Fs',1000);
     %b = [1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16];
     aceleracionPitch = filter(b,a, aceleracionPitch);
     aceleracionRoll = filter(b,a, aceleracionRoll);
