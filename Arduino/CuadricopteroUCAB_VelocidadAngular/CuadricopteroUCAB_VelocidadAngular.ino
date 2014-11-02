@@ -1,6 +1,7 @@
 
 #include <FiltroLP_Giroscopio.h>
 #include <FiltroLP_Acelerometro.h>
+#include <FiltroMediaMovil_Acelerometro.h>
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
@@ -46,7 +47,7 @@ double Z_previo = 0.0;
 //CODIGOS DE COMUNICACION:
 #define modoTelemetriaTotal 0
 #define DT_envioDatosEstado 50
-#define DT_envioDatosTelemetriaTotal 5
+#define DT_envioDatosTelemetriaTotal 30
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -75,11 +76,11 @@ unsigned char ack[4];
 #define G_ACC 0.015874
 #define K_COMP 0.93
 #define DT_sensor_altura 29
-#define DT_acelerometro 20
-#define DT_giroscopio 11
+#define DT_acelerometro 1
+#define DT_giroscopio 6
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 20
-#define DT_PID_velocidadAngular 10
+#define DT_PID_velocidadAngular 6
 
 L3G gyro;
 LSM303 compass;
@@ -145,7 +146,7 @@ double gananciaKalmanAcelerometro[3] = {
   0.0, 0.0, 0.0
 };
 FiltroLP_Giroscopio filtroVelocidadYPR [3];
-FiltroLP_Acelerometro filtroAceleracionYPR [3];
+FiltroMediaMovil_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
 long tiempoUltimoMuestreoGiroscopio = 0;
 long tiempoUltimoMuestreoAcelerometro = 0;
@@ -409,17 +410,13 @@ void FiltroComplementario() {
     A_aceleracionYPR[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
     A_aceleracionYPR[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-    A_aceleracionYPR_filtrada[0] = (double) (compass.a.z) * G_ACC;
-    A_aceleracionYPR_filtrada[1] = (double) (compass.a.y - A_offsetYPR[1]) * G_ACC;
-    A_aceleracionYPR_filtrada[2] = (double) (compass.a.x - A_offsetYPR[2]) * G_ACC;
 
-/*
     A_aceleracionYPR_filtrada[0] = filtroAceleracionYPR[0].step((double) A_aceleracionYPR[0]);
     A_aceleracionYPR_filtrada[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
     A_aceleracionYPR_filtrada[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
-*/
 
-    FiltroKalmanAceleracion();
+
+//    FiltroKalmanAceleracion();
 /*
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
@@ -434,10 +431,10 @@ void FiltroComplementario() {
     A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
     
     A_anguloYPR_filtrado[0] = 0;
-    A_anguloYPR_filtrado[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
+    A_anguloYPR_filtrado[1] = (double) atan2(A_aceleracionYPR_filtrada[1], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[2] * A_aceleracionYPR_filtrada[2]));
     A_anguloYPR_filtrado[1] = ToDeg(A_anguloYPR_filtrado[1]);
-    A_anguloYPR_filtrado[2] = (double) atan2(estimacionAcelerometro[2], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[1] * estimacionAcelerometro[1]));
-    A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);    
+    A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
+    A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);
     tiempoUltimoMuestreoAcelerometro = millis();
 
     anguloYPR[1] += (double) ((1 - K_COMP) * A_anguloYPR[1]);

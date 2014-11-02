@@ -1,4 +1,4 @@
-function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
+function PruebasFiltradoAcelerometro_TT_Curvas(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     anguloPitch = datosArchivo(:,2);
@@ -34,7 +34,7 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     
     
         
-    figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales')
+    figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales');
     subplot(2,3,1)
     plot(aceleracionPitch)
     title('Pitch')
@@ -63,9 +63,9 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
         ylim([-max(aceleracionYaw) 1+max(aceleracionYaw)])
     end
     
-    fft_aceleracionPitch = fft(aceleracionPitch(1:30), NFFT_senal)/numeroDatos;
-    fft_aceleracionRoll = fft(aceleracionRoll(1:30), NFFT_senal)/numeroDatos;
-    fft_aceleracionYaw = fft(aceleracionYaw(1:30), NFFT_senal)/numeroDatos;
+    fft_aceleracionPitch = fft(aceleracionPitch, NFFT_senal)/numeroDatos;
+    fft_aceleracionRoll = fft(aceleracionRoll, NFFT_senal)/numeroDatos;
+    fft_aceleracionYaw = fft(aceleracionYaw, NFFT_senal)/numeroDatos;
     
     subplot(2,3,4)
     plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)))
@@ -137,10 +137,11 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     
     
 %     [b,a] = butter(10,10/(frecuenciaMuestreo/2),'low');
+% %     fvtool(b,a);
 %     aceleracionPitch = filter(b,a, aceleracionPitch);
 %     aceleracionRoll = filter(b,a, aceleracionRoll);
 %     aceleracionYaw = filter(b,a, aceleracionYaw);
-%     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro pasa-bajos 10Hz')
+%     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro pasa-bajos 10Hz');
 %     subplot(2,3,1)
 %     plot(aceleracionPitch)
 %     title('Pitch')
@@ -226,14 +227,16 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
 %     subplot(2,3,6)
 %     plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
 %     title('Yaw')
-    
+
+
     a = 1;
-    %b = [1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20];
-    b = [1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16];
+    b = [1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20 1/20];
+    fvtool(b,a,'Fs',1000);
+    %b = [1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16 1/16];
     aceleracionPitch = filter(b,a, aceleracionPitch);
     aceleracionRoll = filter(b,a, aceleracionRoll);
     aceleracionYaw = filter(b,a, aceleracionYaw);
-    figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro mediana')
+    figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales filtro media movil')
     subplot(2,3,1)
     plot(aceleracionPitch)
     title('Pitch')
@@ -274,86 +277,93 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
     title('Yaw')
 
-
-    p_pitch = 0.6721;
-    q_pitch = 0;
-    r_pitch = 50;
-    k_pitch = 4.9086e-04;
-    aceleracionPitch_KF = [];
-    aceleracionPitch_KF(1) = 0;
     
-    p_roll = 0.6319;
-    q_roll = 0;
-    r_roll = 50;
-    k_roll = 4.8881e-04;
-    aceleracionRoll_KF = [];
-    aceleracionRoll_KF(1) = 0;
+    mean(aceleracionPitch)
+    mean(aceleracionRoll)
+    mean(aceleracionYaw)
+    std(aceleracionPitch)
+    std(aceleracionRoll)
+    std(aceleracionYaw)
 
-    p_yaw = 0.9676;
-    q_yaw = 0.1;
-    r_yaw = 50;
-    k_yaw = 0;
-    aceleracionYaw_KF = [];
-    aceleracionYaw_KF(1) = 0;
-    for i=1:numeroDatos
-       p_pitch = p_pitch + q_pitch;
-       k_pitch = p_pitch/(p_pitch + r_pitch);
-       aceleracionPitch_KF(i+1) = aceleracionPitch_KF(i) + k_pitch*(aceleracionPitch(i) - aceleracionPitch_KF(i));
-       p_pitch = (1-k_pitch)*p_pitch;
-       
-       p_roll = p_roll + q_roll;
-       k_roll = p_roll/(p_roll + r_roll);
-       aceleracionRoll_KF(i+1) = aceleracionRoll_KF(i) + k_roll*(aceleracionRoll(i) - aceleracionRoll_KF(i));
-       p_roll = (1-k_roll)*p_roll;
-
-       p_yaw = p_yaw + q_yaw;
-       k_yaw = p_yaw/(p_yaw + r_yaw);
-       aceleracionYaw_KF(i+1) = aceleracionYaw_KF(i) + k_yaw*(aceleracionYaw(i) - aceleracionYaw_KF(i));
-       p_yaw = (1-k_yaw)*p_yaw;
-    end
-    
-    aceleracionPitch = aceleracionPitch_KF;
-    aceleracionRoll = aceleracionRoll_KF;
-    aceleracionYaw = aceleracionYaw_KF;
-    figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales con filtro de Kalman')
-    subplot(2,3,1)
-    plot(aceleracionPitch)
-    title('Pitch')
-    if (abs(min(aceleracionPitch)) > max(aceleracionPitch))
-        ylim([min(aceleracionPitch) abs(min(aceleracionPitch))])
-    else
-        ylim([-max(aceleracionPitch) 1+max(aceleracionPitch)])
-    end
-    xlim([0 length(aceleracionPitch)])
-    subplot(2,3,2)
-    plot(aceleracionRoll)
-    title('Roll')
-    if (abs(min(aceleracionRoll)) > max(aceleracionRoll))
-        ylim([min(aceleracionRoll) abs(min(aceleracionRoll))])
-    else
-        ylim([-max(aceleracionRoll) 1+max(aceleracionRoll)])
-    end
-    xlim([0 length(aceleracionRoll)])
-    subplot(2,3,3)
-    plot(aceleracionYaw)
-    title('Yaw')
-    xlim([0 length(aceleracionYaw)])
-    if (abs(min(aceleracionYaw)) > max(aceleracionYaw))
-        ylim([min(aceleracionYaw) abs(min(aceleracionYaw))])
-    else
-        ylim([-max(aceleracionYaw) 1+max(aceleracionYaw)])
-    end
-    fft_aceleracionPitch = fft(aceleracionPitch, NFFT_senal)/numeroDatos;
-    fft_aceleracionRoll = fft(aceleracionRoll, NFFT_senal)/numeroDatos;
-    fft_aceleracionYaw = fft(aceleracionYaw, NFFT_senal)/numeroDatos;
-    subplot(2,3,4)
-    plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)))
-    title('Pitch')
-    subplot(2,3,5)
-    plot(f,2*abs(fft_aceleracionRoll(1:NFFT_senal/2+1)))
-    title('Roll')
-    subplot(2,3,6)
-    plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
-    title('Yaw')
+%     p_pitch = 0.6721;
+%     q_pitch = 0;
+%     r_pitch = 50;
+%     k_pitch = 4.9086e-04;
+%     aceleracionPitch_KF = [];
+%     aceleracionPitch_KF(1) = 0;
+%     
+%     p_roll = 0.6319;
+%     q_roll = 0;
+%     r_roll = 50;
+%     k_roll = 4.8881e-04;
+%     aceleracionRoll_KF = [];
+%     aceleracionRoll_KF(1) = 0;
+% 
+%     p_yaw = 0.9676;
+%     q_yaw = 0.1;
+%     r_yaw = 50;
+%     k_yaw = 0;
+%     aceleracionYaw_KF = [];
+%     aceleracionYaw_KF(1) = 0;
+%     for i=1:numeroDatos
+%        p_pitch = p_pitch + q_pitch;
+%        k_pitch = p_pitch/(p_pitch + r_pitch);
+%        aceleracionPitch_KF(i+1) = aceleracionPitch_KF(i) + k_pitch*(aceleracionPitch(i) - aceleracionPitch_KF(i));
+%        p_pitch = (1-k_pitch)*p_pitch;
+%        
+%        p_roll = p_roll + q_roll;
+%        k_roll = p_roll/(p_roll + r_roll);
+%        aceleracionRoll_KF(i+1) = aceleracionRoll_KF(i) + k_roll*(aceleracionRoll(i) - aceleracionRoll_KF(i));
+%        p_roll = (1-k_roll)*p_roll;
+% 
+%        p_yaw = p_yaw + q_yaw;
+%        k_yaw = p_yaw/(p_yaw + r_yaw);
+%        aceleracionYaw_KF(i+1) = aceleracionYaw_KF(i) + k_yaw*(aceleracionYaw(i) - aceleracionYaw_KF(i));
+%        p_yaw = (1-k_yaw)*p_yaw;
+%     end
+%     
+%     aceleracionPitch = aceleracionPitch_KF;
+%     aceleracionRoll = aceleracionRoll_KF;
+%     aceleracionYaw = aceleracionYaw_KF;
+%     figure_aceleraciones_angulares = figure('position', [0, 0, 9999, 9999],'name','Aceleraciones lineales con filtro de Kalman');
+%     subplot(2,3,1)
+%     plot(aceleracionPitch)
+%     title('Pitch')
+%     if (abs(min(aceleracionPitch)) > max(aceleracionPitch))
+%         ylim([min(aceleracionPitch) abs(min(aceleracionPitch))])
+%     else
+%         ylim([-max(aceleracionPitch) 1+max(aceleracionPitch)])
+%     end
+%     xlim([0 length(aceleracionPitch)])
+%     subplot(2,3,2)
+%     plot(aceleracionRoll)
+%     title('Roll')
+%     if (abs(min(aceleracionRoll)) > max(aceleracionRoll))
+%         ylim([min(aceleracionRoll) abs(min(aceleracionRoll))])
+%     else
+%         ylim([-max(aceleracionRoll) 1+max(aceleracionRoll)])
+%     end
+%     xlim([0 length(aceleracionRoll)])
+%     subplot(2,3,3)
+%     plot(aceleracionYaw)
+%     title('Yaw')
+%     xlim([0 length(aceleracionYaw)])
+%     if (abs(min(aceleracionYaw)) > max(aceleracionYaw))
+%         ylim([min(aceleracionYaw) abs(min(aceleracionYaw))])
+%     else
+%         ylim([-max(aceleracionYaw) 1+max(aceleracionYaw)])
+%     end
+%     fft_aceleracionPitch = fft(aceleracionPitch, NFFT_senal)/numeroDatos;
+%     fft_aceleracionRoll = fft(aceleracionRoll, NFFT_senal)/numeroDatos;
+%     fft_aceleracionYaw = fft(aceleracionYaw, NFFT_senal)/numeroDatos;
+%     subplot(2,3,4)
+%     plot(f,2*abs(fft_aceleracionPitch(1:NFFT_senal/2+1)))
+%     title('Pitch')
+%     subplot(2,3,5)
+%     plot(f,2*abs(fft_aceleracionRoll(1:NFFT_senal/2+1)))
+%     title('Roll')
+%     subplot(2,3,6)
+%     plot(f,2*abs(fft_aceleracionYaw(1:NFFT_senal/2+1)))
+%     title('Yaw')
 
 end
