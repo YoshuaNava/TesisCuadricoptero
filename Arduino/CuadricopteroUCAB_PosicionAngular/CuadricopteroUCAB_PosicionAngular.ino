@@ -247,8 +247,8 @@ void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_pAngular_Yaw.SetTunings(1, 0, 0);
-//   PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
-//   PID_vAngular_Roll.SetTunings(0.67, 0, 0.005); //P=0.6   //P=0.55
+   PID_pAngular_Pitch.SetTunings(1, 0, 0); //P=0.75   //P=0.55
+   PID_pAngular_Roll.SetTunings(1, 0, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
@@ -331,7 +331,7 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       CalcularAltura();
-//      PID_PosicionAngular();
+      PID_PosicionAngular();
       PID_VelocidadAngular();
       AplicarPWMmotores(velocidadBasePWM);
       EnviarMensajesPC();
@@ -360,7 +360,7 @@ void SecuenciaDeVuelo()
     FiltroComplementario();
     CalcularAltura();
 //    PIDAltura();
-//    PID_PosicionAngular();
+    PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
 /*        Serial.println("*************** Motores *****************");
@@ -988,8 +988,8 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        velocidadDeseadaYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        velocidadDeseadaYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;

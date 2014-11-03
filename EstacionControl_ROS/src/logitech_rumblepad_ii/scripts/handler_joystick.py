@@ -35,7 +35,7 @@ class HandlerJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO_COMANDO = 50
+        self.__MAXIMO_ANGULO_COMANDO = 30
         self.__VELOCIDAD_MAXIMA_PWM = 220
         self.__VELOCIDAD_BASE_PWM = 110
         self.__MAXIMA_ALTURA = 150
