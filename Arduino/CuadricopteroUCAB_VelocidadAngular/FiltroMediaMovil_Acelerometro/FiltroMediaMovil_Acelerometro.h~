@@ -3,7 +3,7 @@ class FiltroMediaMovil_Acelerometro
 	public:
 		FiltroMediaMovil_Acelerometro()
 		{
-			numeroVentanas = 20;
+			numeroVentanas = 2;
 			factorAmortiguacion =  1/((double) numeroVentanas);
 			for(i=0; i < numeroVentanas; i++)
 			{

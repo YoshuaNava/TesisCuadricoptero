@@ -246,8 +246,10 @@ void LSM303::enableDefault(void)
     writeAccReg(CTRL_REG4_A, 0x08);
 
     // 0x47 = 0b01000111
+    // 0b10010111 (normal mode); ODR = 1001 (1344 Hz ODR); Zen = Yen = Xen = 1 (all axes enabled)
     // ODR = 0100 (50 Hz ODR); LPen = 0 (normal mode); Zen = Yen = Xen = 1 (all axes enabled)
-    writeAccReg(CTRL_REG1_A, 0x47);
+    //writeAccReg(CTRL_REG1_A, 0x47);
+    writeAccReg(CTRL_REG1_A, 0b10010111);
 
     // Magnetometer
 
