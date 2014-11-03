@@ -46,7 +46,7 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
+#define modoTelemetriaTotal 0
 #define DT_envioDatosEstado 50
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
@@ -195,7 +195,7 @@ void setup() {
 
 
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
-  Serial.begin(115200);
+  Serial.begin(38400);
   Wire.begin();
 
   if (!gyro.init())
