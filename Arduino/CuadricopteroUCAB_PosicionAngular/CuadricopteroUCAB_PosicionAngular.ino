@@ -16,7 +16,7 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 220 //maximo PWM que puede enviar el arduino a los motores
+#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
 int velocidadBasePWM = 110;
 char modoEjecucion = '_';
 int motorDerecho = 0;
@@ -167,7 +167,7 @@ PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDese
 PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
-PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, DIRECT);
+PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
 PID PID_altura(&estimacionAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
 
 
@@ -246,9 +246,9 @@ void setup() {
 void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
-   PID_pAngular_Yaw.SetTunings(1, 0, 0);
-   PID_pAngular_Pitch.SetTunings(1, 0, 0); //P=0.75   //P=0.55
-   PID_pAngular_Roll.SetTunings(1, 0, 0); //P=0.6   //P=0.55
+   PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
+   PID_pAngular_Pitch.SetTunings(1, 0.05, 0); //P=0.75   //P=0.55
+   PID_pAngular_Roll.SetTunings(1, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
