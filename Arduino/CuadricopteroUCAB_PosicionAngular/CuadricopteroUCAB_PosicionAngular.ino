@@ -989,7 +989,7 @@ void RecibirComando()
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
                         anguloDeseadoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        anguloDeseadoYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[2] = -(comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;
