@@ -250,8 +250,8 @@ void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
-   PID_pAngular_Pitch.SetTunings(2, 0.05, 0); //P=0.75   //P=0.55
-   PID_pAngular_Roll.SetTunings(2, 0.05, 0); //P=0.6   //P=0.55
+   PID_pAngular_Pitch.SetTunings(1, 0.05, 0); //P=0.75   //P=0.55
+   PID_pAngular_Roll.SetTunings(1, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
@@ -969,7 +969,7 @@ void RecibirComando()
                     modoEjecucion = '_';
                     velocidadComandoYPR[1] = 0.0;
                     velocidadComandoYPR[2] = 0.0;
-                    //alturaDeseada = 0;
+                    alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
                   EnviarAcknowledge(CODIGO_ENCENDIDO);
