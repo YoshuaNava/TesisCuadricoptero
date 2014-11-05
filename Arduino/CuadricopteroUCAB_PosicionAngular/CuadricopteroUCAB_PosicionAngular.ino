@@ -47,7 +47,7 @@ double Z_previo = 0.0;
 
 //CODIGOS DE COMUNICACION:
 #define modoTelemetriaTotal 0
-#define DT_envioDatosEstado 50
+#define DT_envioDatosEstado 30
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
@@ -126,6 +126,9 @@ double anguloYPR_filtrado[3] = {
   0, 0, 0
 };
 double velocidadDeseadaYPR[3] = {
+  0, 0, 0
+};
+double velocidadComandoYPR[3] = {
   0, 0, 0
 };
 double correccionPWM_YPR[3] = {
@@ -360,7 +363,15 @@ void SecuenciaDeVuelo()
     FiltroComplementario();
     CalcularAltura();
 //    PIDAltura();
-    PID_PosicionAngular();
+    if((velocidadComandoYPR[1] == 0.0) && (velocidadComandoYPR[2] == 0.0))
+    {
+      PID_PosicionAngular();
+    }
+    else
+    {
+      velocidadDeseadaYPR[1] = velocidadComandoYPR[1];
+      velocidadDeseadaYPR[2] = velocidadComandoYPR[2];
+    }
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
 /*        Serial.println("*************** Motores *****************");
@@ -661,25 +672,25 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (anguloDeseadoYPR[1] >= 0)
+  if (velocidadDeseadaYPR[1] >= 0)
   {
-    mensajeEstado[8] = anguloDeseadoYPR[1];
+    mensajeEstado[8] = velocidadDeseadaYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(anguloDeseadoYPR[1]);
+    mensajeEstado[9] = abs(velocidadDeseadaYPR[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (anguloDeseadoYPR[2] >= 0)
+  if (velocidadDeseadaYPR[2] >= 0)
   {
-    mensajeEstado[10] = anguloDeseadoYPR[2];
+    mensajeEstado[10] = velocidadDeseadaYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(anguloDeseadoYPR[2]);
+    mensajeEstado[11] = abs(velocidadDeseadaYPR[2]);
     mensajeEstado[10] = 0;
   }
 
@@ -956,8 +967,8 @@ void RecibirComando()
                   if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
-                    anguloDeseadoYPR[1] = 0;
-                    anguloDeseadoYPR[2] = 0;
+                    velocidadDeseadaYPR[1] = 0.0;
+                    velocidadDeseadaYPR[2] = 0.0;
                     alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
@@ -988,8 +999,8 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        anguloDeseadoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        anguloDeseadoYPR[2] = -(comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        velocidadDeseadaYPR[1] = (comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        velocidadDeseadaYPR[2] = -(comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;
@@ -1018,66 +1029,6 @@ void EnviarAcknowledge(unsigned char codigoMensaje)
 }
 
 
-void RecibirComandoASCII()
-{
-  if (Serial.available() > 0)
-  {
-    char comando = Serial.read();
-    if (comando == 'T')
-    {
-      modoEjecucion = 'T';
-      Serial.println("ENCENDER!");
-    }
-    if (comando == '_')
-    {
-      modoEjecucion = '_';
-      Serial.println("APAGAR!");
-    }
-    if (comando == CODIGO_MOVIMIENTO)
-    {
-      int checksumCalculado = 0;
-      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
-      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
-      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
-
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoPitch_low = Serial.read();
-        anguloRecibidoPitch_high = Serial.read();
-        anguloRecibidoPitch = anguloRecibidoPitch_high * 256 + anguloRecibidoPitch_low;
-      }
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoRoll_low = Serial.read();
-        anguloRecibidoRoll_high = Serial.read();
-        anguloRecibidoRoll = anguloRecibidoRoll_high * 256 + anguloRecibidoRoll_low;
-      }
-      if (Serial.available() > 0)
-      {
-        checksumRecibido_low = Serial.read();
-        checksumRecibido_high = Serial.read();
-        checksumRecibido = checksumRecibido_high * 256 + checksumRecibido_low;
-      }
-
-      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
-
-      if (checksumRecibido == checksumCalculado)
-      {
-        anguloDeseadoYPR[0] = 0;
-        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
-        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
-        if (modoEjecucion == '_')
-        {
-          Serial.println("Angulos deseados en Pitch y Roll:");
-          Serial.println(anguloDeseadoYPR[1]);
-          Serial.println(anguloDeseadoYPR[2]);
-          Serial.println();
-        }
-      }
-    }
-  }
-
-}
 
 
 void ImprimirEstado()
