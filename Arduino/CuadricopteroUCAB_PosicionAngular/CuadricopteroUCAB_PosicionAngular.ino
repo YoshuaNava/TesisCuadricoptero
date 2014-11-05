@@ -250,8 +250,8 @@ void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
-   PID_pAngular_Pitch.SetTunings(1, 0.05, 0); //P=0.75   //P=0.55
-   PID_pAngular_Roll.SetTunings(1, 0.05, 0); //P=0.6   //P=0.55
+   PID_pAngular_Pitch.SetTunings(2, 0.05, 0); //P=0.75   //P=0.55
+   PID_pAngular_Roll.SetTunings(2, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
@@ -540,16 +540,16 @@ void FiltroKalmanAceleracion()
 
 void PID_PosicionAngular()
 {
-  PID_pAngular_Yaw.Compute();
+//  PID_pAngular_Yaw.Compute();
   PID_pAngular_Pitch.Compute();
-  PID_pAngular_Roll.Compute();
+//  PID_pAngular_Roll.Compute();
 }
 
 void PID_VelocidadAngular()
 {
-  PID_vAngular_Yaw.Compute();
+//  PID_vAngular_Yaw.Compute();
   PID_vAngular_Pitch.Compute();
-  PID_vAngular_Roll.Compute();
+//  PID_vAngular_Roll.Compute();
 }
 
 void PIDAltura()
@@ -611,8 +611,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
 
 
-  analogWrite(PUERTOMOTORDERECHO, motorDerecho);
-  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
+  analogWrite(PUERTOMOTORDERECHO, motorDerecho*0);
+  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo*0);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);
 }
@@ -967,9 +967,9 @@ void RecibirComando()
                   if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
-                    velocidadDeseadaYPR[1] = 0.0;
-                    velocidadDeseadaYPR[2] = 0.0;
-                    alturaDeseada = 0;
+                    velocidadComandoYPR[1] = 0.0;
+                    velocidadComandoYPR[2] = 0.0;
+                    //alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
                   EnviarAcknowledge(CODIGO_ENCENDIDO);
@@ -999,8 +999,8 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        velocidadDeseadaYPR[1] = (comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        velocidadDeseadaYPR[2] = -(comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        velocidadComandoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        velocidadComandoYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;

@@ -151,7 +151,9 @@ class HandlerJoystick:
                         if (estado_boton_R1 == 1):
                             self.comandoPitchEnviar = 0.0
                             self.comandoRollEnviar = 0.0
-                            self.comandoAltura = self.__VELOCIDAD_BASE_PWM
+	                    movimientoY_ruedaIzquierda = self.joystick_object.get_axis(self.__RUEDA_IZQUIERDA_y)
+                            self.comandoAltura = self.__VELOCIDAD_BASE_PWM + (self.__VELOCIDAD_MAXIMA_PWM - self.__VELOCIDAD_BASE_PWM)*(-1)*movimientoY_ruedaIzquierda
+#                            self.comandoAltura = self.__VELOCIDAD_BASE_PWM
                             self.comandoMovimientoEjecutado = True
 
                 
