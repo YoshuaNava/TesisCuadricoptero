@@ -96,7 +96,7 @@ def run():
     publisherTelemetria = rospy.Publisher('telemetria_total', TelemetriaTotal, queue_size=10)
     rospy.init_node('ManejadorPuertoSerial', anonymous=True)    
     frecuencia = rospy.Rate(1000)    
-    handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 115200)
+    handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 38400)
     handlerSerial.abrirPuerto()
     rospy.Subscriber("encendido_cuadricoptero", ComandoEncendido, callbackEnvioComandoEncendido)
     rospy.Subscriber("movimientos_cuadricoptero", ComandoMovimiento, callbackEnvioComandoMovimiento)

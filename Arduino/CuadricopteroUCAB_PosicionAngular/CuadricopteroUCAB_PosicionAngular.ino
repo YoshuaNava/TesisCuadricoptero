@@ -16,8 +16,8 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 230 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 110;
+#define PWM_MAXIMO 240 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 120;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -56,7 +56,7 @@ double Z_previo = 0.0;
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
 #define CODIGO_TELEMETRIA_TOTAL 8
-#define MAXIMO_ANGULO_COMANDO 30
+#define MAXIMO_ANGULO_COMANDO 45
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
 unsigned char comandoEncendidoRecibido;
@@ -661,25 +661,25 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (G_velocidadYPR[1] >= 0)
+  if (anguloDeseadoYPR[1] >= 0)
   {
-    mensajeEstado[8] = G_velocidadYPR[1];
+    mensajeEstado[8] = anguloDeseadoYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(G_velocidadYPR[1]);
+    mensajeEstado[9] = abs(anguloDeseadoYPR[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (G_velocidadYPR[2] >= 0)
+  if (anguloDeseadoYPR[2] >= 0)
   {
-    mensajeEstado[10] = G_velocidadYPR[2];
+    mensajeEstado[10] = anguloDeseadoYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(G_velocidadYPR[2]);
+    mensajeEstado[11] = abs(anguloDeseadoYPR[2]);
     mensajeEstado[10] = 0;
   }
 
