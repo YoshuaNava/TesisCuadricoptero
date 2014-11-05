@@ -250,8 +250,8 @@ void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
    PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
-   PID_pAngular_Pitch.SetTunings(1, 0.05, 0); //P=0.75   //P=0.55
-   PID_pAngular_Roll.SetTunings(1, 0.05, 0); //P=0.6   //P=0.55
+   PID_pAngular_Pitch.SetTunings(1.5, 0.05, 0); //P=0.75   //P=0.55
+   PID_pAngular_Roll.SetTunings(1.5, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
@@ -540,16 +540,16 @@ void FiltroKalmanAceleracion()
 
 void PID_PosicionAngular()
 {
-//  PID_pAngular_Yaw.Compute();
+  PID_pAngular_Yaw.Compute();
   PID_pAngular_Pitch.Compute();
-//  PID_pAngular_Roll.Compute();
+  PID_pAngular_Roll.Compute();
 }
 
 void PID_VelocidadAngular()
 {
-//  PID_vAngular_Yaw.Compute();
+  PID_vAngular_Yaw.Compute();
   PID_vAngular_Pitch.Compute();
-//  PID_vAngular_Roll.Compute();
+  PID_vAngular_Roll.Compute();
 }
 
 void PIDAltura()
@@ -611,8 +611,8 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
   }
 
 
-  analogWrite(PUERTOMOTORDERECHO, motorDerecho*0);
-  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo*0);
+  analogWrite(PUERTOMOTORDERECHO, motorDerecho);
+  analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
   analogWrite(PUERTOMOTORINFERIOR, motorTrasero);
 }
@@ -672,25 +672,25 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (velocidadDeseadaYPR[1] >= 0)
+  if (G_velocidadYPR[1] >= 0)
   {
-    mensajeEstado[8] = velocidadDeseadaYPR[1];
+    mensajeEstado[8] = G_velocidadYPR[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(velocidadDeseadaYPR[1]);
+    mensajeEstado[9] = abs(G_velocidadYPR[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (velocidadDeseadaYPR[2] >= 0)
+  if (G_velocidadYPR[2] >= 0)
   {
-    mensajeEstado[10] = velocidadDeseadaYPR[2];
+    mensajeEstado[10] = G_velocidadYPR[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(velocidadDeseadaYPR[2]);
+    mensajeEstado[11] = abs(G_velocidadYPR[2]);
     mensajeEstado[10] = 0;
   }
 
