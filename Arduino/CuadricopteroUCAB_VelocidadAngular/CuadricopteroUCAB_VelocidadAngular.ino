@@ -56,7 +56,7 @@ double Z_previo = 0.0;
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
 #define CODIGO_TELEMETRIA_TOTAL 8
-#define MAXIMO_ANGULO_COMANDO 45
+#define MAXIMO_ANGULO_COMANDO 70
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
 unsigned char comandoEncendidoRecibido;

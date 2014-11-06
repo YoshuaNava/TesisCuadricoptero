@@ -1,13 +1,12 @@
-ControllabilityObservability_KivrakExtendido()
+%ControllabilityObservability_KivrakExtendido()
 
 tF = 20;
 t = 0:dt:tF;
 numIteraciones = round(tF/dt);
-voltajeMaximoMotores = 11.1;
+voltajeMaximoMotores = 12.6;
 fE_vA = 0.01;
 fE_pA = 0.02;
-fE_vZ = 0.04;
-fE_pZ = 0.05;
+fE_pZ = 0.03;
 
 
 kP_pA = [2.0 2.0 2.0];
@@ -31,25 +30,16 @@ integral_vA = [0 0 0];
 derivada_vA = [0 0 0];
 pid_vA = [0 0 0];
 
-kP_pZ = 1;
+kP_pZ = 0;
 kI_pZ = 0;
 kD_pZ = 0;
-pZ_deseada = 10;
+pZ_deseada = 3;
 error_pZ(1) = 0;
 errorPrevio_pZ = 0;
 integral_pZ = 0;
 derivada_pZ = 0;
 pid_pZ = 0;
 
-kP_vZ = 3;
-kI_vZ = 0;
-kD_vZ = 0;
-vZ_deseada = 0;
-error_vZ(1) = 0;
-errorPrevio_vZ = 0;
-integral_vZ = 0;
-derivada_vZ = 0;
-pid_vZ = 0;
 
 u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
@@ -92,28 +82,22 @@ for i = 1:numIteraciones
     end
     
     if (mod(i*dt,fE_pZ) == 0)
-        error_pZ(i+1) = (pZ_deseada - pZ);
-        integral_pZ = integral_pZ + error_pZ(i+1);
-        derivada_pZ = error_pZ(i+1) - errorPrevio_pZ;
-        errorPrevio_pZ = error_pZ(i+1);
-        pid_pZ = kP_pZ*error_pZ(i+1) + kI_pZ*integral_pZ + kD_pZ*derivada_pZ;
+        error_pZ = (pZ_deseada - pZ);
+        integral_pZ = integral_pZ + error_pZ;
+        derivada_pZ = error_pZ - errorPrevio_pZ;
+        errorPrevio_pZ = error_pZ;
+        pid_pZ = kP_pZ*(error_pZ-vZ) + kI_pZ*integral_pZ + kD_pZ*derivada_pZ;
+        pid_pZ;
     end
     
-    if (mod(i*dt,fE_vZ) == 0)
-        error_vZ(i+1) = -(pid_pZ - vZ);
-        integral_vZ = integral_vZ + error_vZ(i+1);
-        derivada_vZ = error_vZ(i+1) - errorPrevio_vZ;
-        errorPrevio_vZ = error_vZ(i+1);
-        pid_vZ = kP_vZ*error_vZ(i+1) + kI_vZ*integral_vZ + kD_vZ*derivada_vZ;
-    end
     
     %pitch: u2 positivo, u4 negativo
     %roll: u1 positivo, u3 negativo
     %yaw: u2, u4 positivos; u1, u3 negativos
-    u(2, i) = pid_vA(1) + pid_vA(3) + pid_vZ;
-    u(4, i) = -pid_vA(1) + pid_vA(3) + pid_vZ;
-    u(3, i) = -pid_vA(2) - pid_vA(3) + pid_vZ;
-    u(1, i) = pid_vA(2) - pid_vA(3) + pid_vZ;
+    u(2, i) = pid_vA(1) + pid_vA(3) + pid_pZ;
+    u(4, i) = -pid_vA(1) + pid_vA(3) + pid_pZ;
+    u(3, i) = -pid_vA(2) - pid_vA(3) + pid_pZ;
+    u(1, i) = pid_vA(2) - pid_vA(3) + pid_pZ;
     if (u(1,i) > voltajeMaximoMotores)
         u(1,i) = voltajeMaximoMotores;
     end
@@ -127,6 +111,18 @@ for i = 1:numIteraciones
         u(4,i) = voltajeMaximoMotores;
     end
     
+    if (u(1,i) < 0)
+        u(1,i) = 0;
+    end
+    if (u(2,i) < 0)
+        u(2,i) = 0;
+    end
+    if (u(3,i) < 0)
+        u(3,i) = 0;
+    end
+    if (u(4,i) < 0)
+        u(4,i) = 0;
+    end
     
     x_dot(1:numEstados, i) = A*x(1:numEstados, i) + B*u(1:numEntradasControl, i);
     x(1:numEstados,i+1) = x(1:numEstados, i) + dt*x_dot(1:numEstados, i);

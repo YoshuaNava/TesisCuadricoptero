@@ -4,7 +4,7 @@ from handler_serial import HandlerSerial
 from comunicacion_serial.msg import *
 import rospy
 
-__MAXIMO_ANGULO_COMANDO = 45
+__MAXIMO_ANGULO_COMANDO = 70
 publisherEstado = None
 publisherTelemetria = None
 handlerSerial = None

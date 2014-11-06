@@ -1,4 +1,4 @@
-ControllabilityObservability_KivrakExtendido()
+%ControllabilityObservability_KivrakExtendido()
 
 tF = 20;
 t = 0:dt:tF;
@@ -31,10 +31,12 @@ integral_vA = [0 0 0];
 derivada_vA = [0 0 0];
 pid_vA = [0 0 0];
 
-kP_pZ = 1;
+kP_pZ = 0.05;
 kI_pZ = 0;
 kD_pZ = 0;
-pZ_deseada = 10;
+%pZ_deseada = 10;
+pZ_deseada = 1;
+
 error_pZ(1) = 0;
 errorPrevio_pZ = 0;
 integral_pZ = 0;
@@ -97,10 +99,7 @@ for i = 1:numIteraciones
         derivada_pZ = error_pZ(i+1) - errorPrevio_pZ;
         errorPrevio_pZ = error_pZ(i+1);
         pid_pZ = kP_pZ*error_pZ(i+1) + kI_pZ*integral_pZ + kD_pZ*derivada_pZ;
-    end
-    
-    if (mod(i*dt,fE_vZ) == 0)
-        error_vZ(i+1) = -(pid_pZ - vZ);
+        error_vZ(i+1) = -(pid_pZ + 2*derivada_pZ);
         integral_vZ = integral_vZ + error_vZ(i+1);
         derivada_vZ = error_vZ(i+1) - errorPrevio_vZ;
         errorPrevio_vZ = error_vZ(i+1);

@@ -76,3 +76,5 @@ C(7,7) = 0;
 C(8,8) = 0;
 C
 D = zeros(numEstados,numEntradasControl)
+
+dt = 0.0001;

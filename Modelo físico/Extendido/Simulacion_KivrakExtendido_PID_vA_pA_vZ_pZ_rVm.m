@@ -1,9 +1,8 @@
 ControllabilityObservability_KivrakExtendido()
 
 tF = 20;
-dt = 0.01;
 t = 0:dt:tF;
-numIteraciones = tF/dt;
+numIteraciones = round(tF/dt);
 voltajeMaximoMotores = 11.1;
 
 
@@ -151,4 +150,4 @@ plot(t,u)
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
 ylabel('Voltaje (V)')
-title('Señales de control')
+title('Seï¿½ales de control')

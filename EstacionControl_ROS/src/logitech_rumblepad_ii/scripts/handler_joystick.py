@@ -35,10 +35,11 @@ class HandlerJoystick:
         self.__CODIGO_MANTENER_ALTURA = '='
         self.__CODIGO_ENCENDER = 1
         self.__CODIGO_APAGAR = 0
-        self.__MAXIMO_ANGULO_COMANDO = 45
+        self.__MAXIMO_ANGULO_COMANDO = 70
         self.__VELOCIDAD_MAXIMA_PWM = 240
         self.__VELOCIDAD_BASE_PWM = 120
         self.__MAXIMA_ALTURA = 150
+        self.__FACTOR_EXPONENCIAL = 0.7
         
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
@@ -120,8 +121,10 @@ class HandlerJoystick:
                     if (movimientoX_ruedaDerecha != 0) or (movimientoY_ruedaDerecha != 0) or (movimientoY_ruedaIzquierda != 0):
                         #print 'Rueda Derecha, Posicion en x= %f' %movimientoX_ruedaDerecha
                         #print 'Rueda Derecha, Posicion en y= %f' %movimientoY_ruedaDerecha
-                        self.comandoPitch = movimientoY_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
-                        self.comandoRoll = movimientoX_ruedaDerecha*self.__MAXIMO_ANGULO_COMANDO
+                        exponencialPitch = ((1-self.__FACTOR_EXPONENCIAL)*movimientoY_ruedaDerecha) + (self.__FACTOR_EXPONENCIAL*movimientoY_ruedaDerecha**3)
+                        self.comandoPitch = exponencialPitch*self.__MAXIMO_ANGULO_COMANDO
+                        exponencialRoll = ((1-self.__FACTOR_EXPONENCIAL)*movimientoX_ruedaDerecha) + (self.__FACTOR_EXPONENCIAL*movimientoX_ruedaDerecha**3)
+                        self.comandoRoll = exponencialRoll*self.__MAXIMO_ANGULO_COMANDO
                         self.comandoAltura = self.__VELOCIDAD_BASE_PWM + (self.__VELOCIDAD_MAXIMA_PWM - self.__VELOCIDAD_BASE_PWM)*(-1)*movimientoY_ruedaIzquierda
                     
                         #print 'Comando de pitch= %f' %(self.comandoPitch)
