@@ -16,8 +16,8 @@
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
 #define PUERTOMOTORINFERIOR 10 //puerto de PWM del motor inferior
 #define PUERTOMOTORSUPERIOR 11 //puerto de PWM del motor superior
-#define PWM_MAXIMO 220 //maximo PWM que puede enviar el arduino a los motores
-int velocidadBasePWM = 110;
+#define PWM_MAXIMO 240 //maximo PWM que puede enviar el arduino a los motores
+int velocidadBasePWM = 120;
 char modoEjecucion = '_';
 int motorDerecho = 0;
 int motorIzquierdo = 0;
@@ -46,8 +46,8 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
-#define DT_envioDatosEstado 50
+#define modoTelemetriaTotal 0
+#define DT_envioDatosEstado 30
 #define DT_envioDatosTelemetriaTotal 5
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
@@ -56,7 +56,7 @@ double Z_previo = 0.0;
 #define CODIGO_ACK 6
 #define CODIGO_ESTADO 7
 #define CODIGO_TELEMETRIA_TOTAL 8
-#define MAXIMO_ANGULO_COMANDO 30
+#define MAXIMO_ANGULO_COMANDO 45
 unsigned char headerMensaje;
 unsigned char codigoRecibido;
 unsigned char comandoEncendidoRecibido;
@@ -131,21 +131,7 @@ double velocidadDeseadaYPR[3] = {
 double correccionPWM_YPR[3] = {
   0, 0, 0
 };
-double covarianzaProcesoFisicoAcelerometro[3] = {
-  0.1, 0.1, 0.1
-};
-double covarianzaRuidoSensorAcelerometro[3] = {
-  0.5925, 0.6905, 0.8495
-};
-double estimacionAcelerometro[3] = {
-  0.0, 0.0, 0.0
-};
-double covarianzaRuidoEstimacionAcelerometro[3] = {
-  35.6785, 38.5234, 44.4478
-};
-double gananciaKalmanAcelerometro[3] = {
-  0.0, 0.0, 0.0
-};
+
 FiltroMediaMovil_Giroscopio filtroVelocidadYPR [3];
 FiltroMediaMovil_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
@@ -167,7 +153,7 @@ PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDese
 PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
-PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, DIRECT);
+PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
 PID PID_altura(&estimacionAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
 
 
@@ -195,7 +181,7 @@ void setup() {
 
 
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
-  Serial.begin(115200);
+  Serial.begin(38400);
   Wire.begin();
 
   if (!gyro.init())
@@ -246,9 +232,9 @@ void setup() {
 void loop()
 {
    // Yaw-  P: 1.3  I: 0    D: 0
-   PID_pAngular_Yaw.SetTunings(1, 0, 0);
-//   PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
-//   PID_vAngular_Roll.SetTunings(0.67, 0, 0.005); //P=0.6   //P=0.55
+   PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
+//   PID_pAngular_Pitch.SetTunings(1.5, 0.05, 0); //P=0.75   //P=0.55
+//   PID_pAngular_Roll.SetTunings(1.5, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
    PID_vAngular_Pitch.SetTunings(0.65, 0, 0.005); //P=0.75   //P=0.55
@@ -331,7 +317,7 @@ void SecuenciaDeInicio()
       }
       FiltroComplementario();
       CalcularAltura();
-//      PID_PosicionAngular();
+      PID_PosicionAngular();
       PID_VelocidadAngular();
       AplicarPWMmotores(velocidadBasePWM);
       EnviarMensajesPC();
@@ -359,8 +345,8 @@ void SecuenciaDeVuelo()
     //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
-//    PIDAltura();
-//    PID_PosicionAngular();
+    //PIDAltura();
+    PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
 /*        Serial.println("*************** Motores *****************");
@@ -421,14 +407,6 @@ void FiltroComplementario() {
     A_aceleracionYPR_filtrada[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
 
 
-//    FiltroKalmanAceleracion();
-/*
-    A_anguloYPR[0] = 0;
-    A_anguloYPR[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
-    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-    A_anguloYPR[2] = (double) atan2(estimacionAcelerometro[2], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[1] * estimacionAcelerometro[1]));
-    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
-*/
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
@@ -441,12 +419,6 @@ void FiltroComplementario() {
     A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
     A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);
     tiempoUltimoMuestreoAcelerometro = millis();
-
-//    anguloYPR[1] += (double) ((1 - K_COMP) * A_anguloYPR[1]);
-//    anguloYPR[2] += (double) ((1 - K_COMP) * A_anguloYPR[2]);
-    
-//    anguloYPR_filtrado[1] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[1]);
-//   anguloYPR_filtrado[2] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[2]);
   }
 
   anguloYPR[0] = ToRad(anguloYPR[0]);
@@ -477,6 +449,8 @@ void FiltroComplementario() {
 }
 
 
+
+
 void CalcularAltura()
 {
   if (millis() - tiempoUltimoMuestreoAltura > DT_sensor_altura)
@@ -499,6 +473,8 @@ void CalcularAltura()
 }
 
 
+
+
 void FiltroKalmanAltura()
 {
   covarianzaRuidoEstimacionAltura = covarianzaRuidoEstimacionAltura + covarianzaProcesoFisicoAltura;
@@ -508,31 +484,17 @@ void FiltroKalmanAltura()
 }
 
 
-void FiltroKalmanAceleracion()
-{
-  covarianzaRuidoEstimacionAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] + covarianzaProcesoFisicoAcelerometro[0];
-  gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
-  estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR_filtrada[0] - estimacionAcelerometro[0]);
-  covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
-
-  covarianzaRuidoEstimacionAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] + covarianzaProcesoFisicoAcelerometro[1];
-  gananciaKalmanAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] / (covarianzaRuidoEstimacionAcelerometro[1] + covarianzaRuidoSensorAcelerometro[1]);
-  estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR_filtrada[1] - estimacionAcelerometro[1]);
-  covarianzaRuidoEstimacionAcelerometro[1] = (1 - gananciaKalmanAcelerometro[1]) * covarianzaRuidoEstimacionAcelerometro[1];
-
-  covarianzaRuidoEstimacionAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] + covarianzaProcesoFisicoAcelerometro[2];
-  gananciaKalmanAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] / (covarianzaRuidoEstimacionAcelerometro[2] + covarianzaRuidoSensorAcelerometro[2]);
-  estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR_filtrada[2] - estimacionAcelerometro[2]);
-  covarianzaRuidoEstimacionAcelerometro[2] = (1 - gananciaKalmanAcelerometro[2]) * covarianzaRuidoEstimacionAcelerometro[2];
-}
 
 
 void PID_PosicionAngular()
 {
   PID_pAngular_Yaw.Compute();
-  PID_pAngular_Pitch.Compute();
-  PID_pAngular_Roll.Compute();
+//  PID_pAngular_Pitch.Compute();
+//  PID_pAngular_Roll.Compute();
 }
+
+
+
 
 void PID_VelocidadAngular()
 {
@@ -540,6 +502,9 @@ void PID_VelocidadAngular()
   PID_vAngular_Pitch.Compute();
   PID_vAngular_Roll.Compute();
 }
+
+
+
 
 void PIDAltura()
 {
@@ -610,9 +575,6 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
 
 
 ///////////////////COMUNICACION/////////////////////////////////////////
-
-
-
 /*Procedimiento para enviar el estado del cuadricoptero
  Envia un paquete de 14 bytes
  posicion 0 = HEADER            (255)
@@ -696,6 +658,8 @@ void PrepararPaqueteMensajeEstado()
   }
   mensajeEstado[14] = (mensajeEstado[0] ^  mensajeEstado[1] ^   mensajeEstado[2] ^ mensajeEstado[3] ^ mensajeEstado[4] ^ mensajeEstado[5] ^ mensajeEstado[6] ^ mensajeEstado[7] ^ mensajeEstado[8] ^ mensajeEstado[9] ^ mensajeEstado[10] ^ mensajeEstado[11] ^ mensajeEstado[12] ^ mensajeEstado[13]); //CHECKSUM
 }
+
+
 
 
 void PrepararPaqueteMensajeTelemetriaTotal()
@@ -895,6 +859,8 @@ void PrepararPaqueteMensajeTelemetriaTotal()
 }
 
 
+
+
 void EnviarMensajesPC()
 {
   if (modoTelemetriaTotal == 0)
@@ -920,8 +886,9 @@ void EnviarMensajesPC()
 }
 
 
-/*recepcion de mensajes*/
 
+
+/*recepcion de mensajes*/
 void RecibirComando()
 {
   if (Serial.available() > 0)
@@ -956,8 +923,8 @@ void RecibirComando()
                   if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
-                    anguloDeseadoYPR[1] = 0;
-                    anguloDeseadoYPR[2] = 0;
+                    velocidadDeseadaYPR[1] = 0.0;
+                    velocidadDeseadaYPR[2] = 0.0;
                     alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
@@ -1008,6 +975,7 @@ void RecibirComando()
 }
 
 
+
 void EnviarAcknowledge(unsigned char codigoMensaje)
 {
   ack[0] = CODIGO_INICIO_MENSAJE;
@@ -1018,66 +986,6 @@ void EnviarAcknowledge(unsigned char codigoMensaje)
 }
 
 
-void RecibirComandoASCII()
-{
-  if (Serial.available() > 0)
-  {
-    char comando = Serial.read();
-    if (comando == 'T')
-    {
-      modoEjecucion = 'T';
-      Serial.println("ENCENDER!");
-    }
-    if (comando == '_')
-    {
-      modoEjecucion = '_';
-      Serial.println("APAGAR!");
-    }
-    if (comando == CODIGO_MOVIMIENTO)
-    {
-      int checksumCalculado = 0;
-      int anguloRecibidoPitch = 0, anguloRecibidoPitch_low = 0, anguloRecibidoPitch_high = 0;
-      int anguloRecibidoRoll = 0, anguloRecibidoRoll_low = 0, anguloRecibidoRoll_high = 0;
-      int checksumRecibido = 0, checksumRecibido_low = 0, checksumRecibido_high = 0;
-
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoPitch_low = Serial.read();
-        anguloRecibidoPitch_high = Serial.read();
-        anguloRecibidoPitch = anguloRecibidoPitch_high * 256 + anguloRecibidoPitch_low;
-      }
-      if (Serial.available() > 0)
-      {
-        anguloRecibidoRoll_low = Serial.read();
-        anguloRecibidoRoll_high = Serial.read();
-        anguloRecibidoRoll = anguloRecibidoRoll_high * 256 + anguloRecibidoRoll_low;
-      }
-      if (Serial.available() > 0)
-      {
-        checksumRecibido_low = Serial.read();
-        checksumRecibido_high = Serial.read();
-        checksumRecibido = checksumRecibido_high * 256 + checksumRecibido_low;
-      }
-
-      checksumCalculado = anguloRecibidoPitch + anguloRecibidoRoll;
-
-      if (checksumRecibido == checksumCalculado)
-      {
-        anguloDeseadoYPR[0] = 0;
-        anguloDeseadoYPR[1] = anguloRecibidoPitch - 90;
-        anguloDeseadoYPR[2] = anguloRecibidoRoll - 90;
-        if (modoEjecucion == '_')
-        {
-          Serial.println("Angulos deseados en Pitch y Roll:");
-          Serial.println(anguloDeseadoYPR[1]);
-          Serial.println(anguloDeseadoYPR[2]);
-          Serial.println();
-        }
-      }
-    }
-  }
-
-}
 
 
 void ImprimirEstado()

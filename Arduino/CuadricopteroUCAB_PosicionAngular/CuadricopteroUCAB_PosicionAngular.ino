@@ -128,26 +128,8 @@ double anguloYPR_filtrado[3] = {
 double velocidadDeseadaYPR[3] = {
   0, 0, 0
 };
-double velocidadComandoYPR[3] = {
-  0, 0, 0
-};
 double correccionPWM_YPR[3] = {
   0, 0, 0
-};
-double covarianzaProcesoFisicoAcelerometro[3] = {
-  0.1, 0.1, 0.1
-};
-double covarianzaRuidoSensorAcelerometro[3] = {
-  0.5925, 0.6905, 0.8495
-};
-double estimacionAcelerometro[3] = {
-  0.0, 0.0, 0.0
-};
-double covarianzaRuidoEstimacionAcelerometro[3] = {
-  35.6785, 38.5234, 44.4478
-};
-double gananciaKalmanAcelerometro[3] = {
-  0.0, 0.0, 0.0
 };
 FiltroMediaMovil_Giroscopio filtroVelocidadYPR [3];
 FiltroMediaMovil_Acelerometro filtroAceleracionYPR [3];
@@ -362,16 +344,8 @@ void SecuenciaDeVuelo()
     //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
-//    PIDAltura();
-    if((velocidadComandoYPR[1] == 0.0) && (velocidadComandoYPR[2] == 0.0))
-    {
-      PID_PosicionAngular();
-    }
-    else
-    {
-      velocidadDeseadaYPR[1] = velocidadComandoYPR[1];
-      velocidadDeseadaYPR[2] = velocidadComandoYPR[2];
-    }
+    //PIDAltura();
+    PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
 /*        Serial.println("*************** Motores *****************");
@@ -431,15 +405,6 @@ void FiltroComplementario() {
     A_aceleracionYPR_filtrada[1] = filtroAceleracionYPR[1].step((double) A_aceleracionYPR[1]);
     A_aceleracionYPR_filtrada[2] = filtroAceleracionYPR[2].step((double) A_aceleracionYPR[2]);
 
-
-//    FiltroKalmanAceleracion();
-/*
-    A_anguloYPR[0] = 0;
-    A_anguloYPR[1] = (double) atan2(estimacionAcelerometro[1], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[2] * estimacionAcelerometro[2]));
-    A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
-    A_anguloYPR[2] = (double) atan2(estimacionAcelerometro[2], sqrt(estimacionAcelerometro[0] * estimacionAcelerometro[0] + estimacionAcelerometro[1] * estimacionAcelerometro[1]));
-    A_anguloYPR[2] = ToDeg(A_anguloYPR[2]);
-*/
     A_anguloYPR[0] = 0;
     A_anguloYPR[1] = (double) atan2(A_aceleracionYPR[1], sqrt(A_aceleracionYPR[0] * A_aceleracionYPR[0] + A_aceleracionYPR[2] * A_aceleracionYPR[2]));
     A_anguloYPR[1] = ToDeg(A_anguloYPR[1]);
@@ -452,12 +417,6 @@ void FiltroComplementario() {
     A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
     A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);
     tiempoUltimoMuestreoAcelerometro = millis();
-
-//    anguloYPR[1] += (double) ((1 - K_COMP) * A_anguloYPR[1]);
-//    anguloYPR[2] += (double) ((1 - K_COMP) * A_anguloYPR[2]);
-    
-//    anguloYPR_filtrado[1] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[1]);
-//   anguloYPR_filtrado[2] += (double) ((1 - K_COMP) * A_anguloYPR_filtrado[2]);
   }
 
   anguloYPR[0] = ToRad(anguloYPR[0]);
@@ -519,23 +478,6 @@ void FiltroKalmanAltura()
 }
 
 
-void FiltroKalmanAceleracion()
-{
-  covarianzaRuidoEstimacionAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] + covarianzaProcesoFisicoAcelerometro[0];
-  gananciaKalmanAcelerometro[0] = covarianzaRuidoEstimacionAcelerometro[0] / (covarianzaRuidoEstimacionAcelerometro[0] + covarianzaRuidoSensorAcelerometro[0]);
-  estimacionAcelerometro[0] = estimacionAcelerometro[0] + gananciaKalmanAcelerometro[0] * (A_aceleracionYPR_filtrada[0] - estimacionAcelerometro[0]);
-  covarianzaRuidoEstimacionAcelerometro[0] = (1 - gananciaKalmanAcelerometro[0]) * covarianzaRuidoEstimacionAcelerometro[0];
-
-  covarianzaRuidoEstimacionAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] + covarianzaProcesoFisicoAcelerometro[1];
-  gananciaKalmanAcelerometro[1] = covarianzaRuidoEstimacionAcelerometro[1] / (covarianzaRuidoEstimacionAcelerometro[1] + covarianzaRuidoSensorAcelerometro[1]);
-  estimacionAcelerometro[1] = estimacionAcelerometro[1] + gananciaKalmanAcelerometro[1] * (A_aceleracionYPR_filtrada[1] - estimacionAcelerometro[1]);
-  covarianzaRuidoEstimacionAcelerometro[1] = (1 - gananciaKalmanAcelerometro[1]) * covarianzaRuidoEstimacionAcelerometro[1];
-
-  covarianzaRuidoEstimacionAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] + covarianzaProcesoFisicoAcelerometro[2];
-  gananciaKalmanAcelerometro[2] = covarianzaRuidoEstimacionAcelerometro[2] / (covarianzaRuidoEstimacionAcelerometro[2] + covarianzaRuidoSensorAcelerometro[2]);
-  estimacionAcelerometro[2] = estimacionAcelerometro[2] + gananciaKalmanAcelerometro[2] * (A_aceleracionYPR_filtrada[2] - estimacionAcelerometro[2]);
-  covarianzaRuidoEstimacionAcelerometro[2] = (1 - gananciaKalmanAcelerometro[2]) * covarianzaRuidoEstimacionAcelerometro[2];
-}
 
 
 void PID_PosicionAngular()
@@ -967,8 +909,8 @@ void RecibirComando()
                   if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
-                    velocidadComandoYPR[1] = 0.0;
-                    velocidadComandoYPR[2] = 0.0;
+                    anguloDeseadoYPR[1] = 0.0;
+                    anguloDeseadoYPR[2] = 0.0;
                     alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
@@ -999,8 +941,8 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        velocidadComandoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        velocidadComandoYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;
