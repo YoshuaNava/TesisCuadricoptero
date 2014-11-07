@@ -149,8 +149,8 @@ long tiempoUltimoEnvio = 0;
 
 
 PID PID_vAngular_Yaw(&G_velocidadYPR[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
-PID PID_vAngular_Pitch(&G_velocidadYPR[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
-PID PID_vAngular_Roll(&G_velocidadYPR[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
+PID PID_vAngular_Pitch(&G_velocidadYPR_filtrada[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
+PID PID_vAngular_Roll(&G_velocidadYPR_filtrada[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
@@ -237,8 +237,8 @@ void loop()
 //   PID_pAngular_Roll.SetTunings(1.5, 0.05, 0); //P=0.6   //P=0.55
 
    PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
-   PID_vAngular_Pitch.SetTunings(0.75, 0, 0.005); //P=0.75   //P=0.55
-   PID_vAngular_Roll.SetTunings(0.75, 0, 0.005); //P=0.6   //P=0.55
+   PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.005); //P=0.75   //P=0.55
+   PID_vAngular_Roll.SetTunings(0.95, 0.1, 0.005); //P=0.6   //P=0.55
    
 
   modoEjecucion = '_';
@@ -488,7 +488,7 @@ void FiltroKalmanAltura()
 
 void PID_PosicionAngular()
 {
-  PID_pAngular_Yaw.Compute();
+//  PID_pAngular_Yaw.Compute();
 //  PID_pAngular_Pitch.Compute();
 //  PID_pAngular_Roll.Compute();
 }
@@ -498,7 +498,7 @@ void PID_PosicionAngular()
 
 void PID_VelocidadAngular()
 {
-  PID_vAngular_Yaw.Compute();
+//  PID_vAngular_Yaw.Compute();
   PID_vAngular_Pitch.Compute();
   PID_vAngular_Roll.Compute();
 }
@@ -608,9 +608,9 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = anguloYPR_filtrado[1] + 90;
+  mensajeEstado[4] = velocidadDeseadaYPR[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = anguloYPR_filtrado[2] + 90;
+  mensajeEstado[5] = velocidadDeseadaYPR[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
@@ -623,25 +623,25 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[6] = 0;
   }
   /**VELOCIDAD PITCH**/
-  if (G_velocidadYPR[1] >= 0)
+  if (G_velocidadYPR_filtrada[1] >= 0)
   {
-    mensajeEstado[8] = G_velocidadYPR[1];
+    mensajeEstado[8] = G_velocidadYPR_filtrada[1];
     mensajeEstado[9] = 0;
   }
   else
   {
-    mensajeEstado[9] = abs(G_velocidadYPR[1]);
+    mensajeEstado[9] = abs(G_velocidadYPR_filtrada[1]);
     mensajeEstado[8] = 0;
   }
   /**VELOCIDAD ROLL**/
-  if (G_velocidadYPR[2] >= 0)
+  if (G_velocidadYPR_filtrada[2] >= 0)
   {
-    mensajeEstado[10] = G_velocidadYPR[2];
+    mensajeEstado[10] = G_velocidadYPR_filtrada[2];
     mensajeEstado[11] = 0;
   }
   else
   {
-    mensajeEstado[11] = abs(G_velocidadYPR[2]);
+    mensajeEstado[11] = abs(G_velocidadYPR_filtrada[2]);
     mensajeEstado[10] = 0;
   }
 
