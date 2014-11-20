@@ -1,4 +1,3 @@
-
 #include <FiltroLP_Giroscopio.h>
 #include <FiltroLP_Acelerometro.h>
 #include <FiltroMediaMovil_Acelerometro.h>
@@ -10,7 +9,7 @@
 #include <NewPing.h>
 
 
-//CONSTANTES y VARIABLES:
+/********************************************        CONSTANTES y VARIABLES        ********************************************/
 //MOTORES:
 #define PUERTOMOTORDERECHO 5 //puerto de PWM del motor derecho
 #define PUERTOMOTORIZQUIERDO 9 //puerto de PWM del motor izquierdo
@@ -24,25 +23,6 @@ int motorIzquierdo = 0;
 int motorDelantero = 0;
 int motorTrasero = 0;
 //FIN MOTORES
-
-//ULTRASONIDO:
-#define USPIN 15 //puerto de datos del ultradonido.
-#define ALTURA_MAXIMA 150
-#define INCREMENTO_ALTURA_COMANDO 5 ///////////////////////////// CAMBIAR A 5????
-NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
-unsigned int uS;
-double alturaDeseada = 0;
-double distancia = 0;
-double USAltura = 0; // Distancia medida por el sensor de ultrasonido
-double correccionAltura = 0;
-double covarianzaProcesoFisicoAltura = 0.1;
-double covarianzaRuidoSensorAltura = 10.0;
-double estimacionAltura = 0.0;
-double covarianzaRuidoEstimacionAltura = 3.0;
-double gananciaKalman = 0.0;
-double velocidad_Z = 0.0;
-double Z_previo = 0.0;
-//FIN ULTRASONIDO
 
 
 //CODIGOS DE COMUNICACION:
@@ -67,7 +47,29 @@ unsigned char checksum;
 unsigned char mensajeEstado[15];
 unsigned char mensajeTelemetriaTotal[42];
 unsigned char ack[4];
+long tiempoUltimoEnvio = 0;
 //FIN CODIGOS DE COMUNICACION
+
+
+//ULTRASONIDO:
+#define USPIN 15 //puerto de datos del ultradonido.
+#define ALTURA_MAXIMA 150
+#define INCREMENTO_ALTURA_COMANDO 5 ///////////////////////////// CAMBIAR A 5????
+NewPing sonar(USPIN, USPIN, ALTURA_MAXIMA);
+long tiempoUltimoMuestreoAltura = 0;
+unsigned int uS;
+double alturaDeseada = 0;
+double distancia = 0;
+double USAltura = 0; // Distancia medida por el sensor de ultrasonido
+double correccionAltura = 0;
+double covarianzaProcesoFisicoAltura = 0.1;
+double covarianzaRuidoSensorAltura = 10.0;
+double estimacionAltura = 0.0;
+double covarianzaRuidoEstimacionAltura = 3.0;
+double gananciaKalman = 0.0;
+double velocidad_Z = 0.0;
+double Z_previo = 0.0;
+//FIN ULTRASONIDO
 
 
 //IMU
@@ -82,7 +84,6 @@ unsigned char ack[4];
 #define DT_PID_altura 50
 #define DT_PID_posicionAngular 20
 #define DT_PID_velocidadAngular 6
-
 L3G gyro;
 LSM303 compass;
 char report[80];
@@ -131,23 +132,16 @@ double velocidadDeseadaYPR[3] = {
 double correccionPWM_YPR[3] = {
   0, 0, 0
 };
-
 FiltroMediaMovil_Giroscopio filtroVelocidadYPR [3];
 FiltroMediaMovil_Acelerometro filtroAceleracionYPR [3];
 double DT = 0;
 long tiempoUltimoMuestreoGiroscopio = 0;
 long tiempoUltimoMuestreoAcelerometro = 0;
+long tiempoUltimoMuestreoAngulos = 0;
 //FIN IMU
 
-//VARIABLES GLOBALES:
-long tiempoUltimoMuestreoAngulos = 0;
-long tiempoUltimoMuestreoAltura = 0;
-long tiempoUltimoEnvio = 0;
 
-
-
-
-
+//SISTEMAS DE CONTROL PID
 PID PID_vAngular_Yaw(&G_velocidadYPR[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
 PID PID_vAngular_Pitch(&G_velocidadYPR_filtrada[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
 PID PID_vAngular_Roll(&G_velocidadYPR_filtrada[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
@@ -155,6 +149,8 @@ PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDes
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
 PID PID_altura(&estimacionAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
+//FIN PID
+/********************************************        FIN DE CONSTANTES y VARIABLES        ********************************************/
 
 
 void setup() {
@@ -165,7 +161,6 @@ void setup() {
   TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM10);
   TCCR1B = _BV(CS11) | _BV(CS10) | _BV(WGM12);
   ///////////////////////////////////////////
-
 
   // Configuracion de los puertos para sensores, motores y bandera de encendido//
   pinMode(LED_ENCENDIDO, OUTPUT);
@@ -179,7 +174,6 @@ void setup() {
   analogWrite(PUERTOMOTORINFERIOR, 0);
   //////////////////////////////////////////////////////////
  
-
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
   if (modoTelemetriaTotal == 1)
   {
@@ -189,18 +183,17 @@ void setup() {
   {
     Serial.begin(38400);
   }
-  
   Wire.begin();
-
   if (!gyro.init())
   {
     Serial.println("Failed to autodetect gyro type!");
     while (1);
   }
-
   gyro.enableDefault();
   compass.init();
   compass.enableDefault();
+  CalcularOffsetGiroscopio();
+//  CalcularOffsetAcelerometro();
   /////////////////////////////////////////////////////////////////////////////
 
   // Parametros de los Algoritmos PID //
@@ -211,7 +204,6 @@ void setup() {
   PID_vAngular_Pitch.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
   PID_altura.SetSampleTime(DT_PID_altura);
-
   PID_pAngular_Yaw.SetOutputLimits(-180.0, 180.0);
   PID_pAngular_Pitch.SetOutputLimits(-180.0, 180.0);
   PID_pAngular_Roll.SetOutputLimits(-180.0, 180.0);
@@ -219,7 +211,6 @@ void setup() {
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_altura.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
-
   PID_pAngular_Yaw.SetMode(AUTOMATIC);
   PID_pAngular_Pitch.SetMode(AUTOMATIC);
   PID_pAngular_Roll.SetMode(AUTOMATIC);
@@ -227,9 +218,12 @@ void setup() {
   PID_vAngular_Pitch.SetMode(AUTOMATIC);
   PID_vAngular_Roll.SetMode(AUTOMATIC);
   PID_altura.SetMode(AUTOMATIC);
+  PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
+  PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
+  PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.005);
+  PID_vAngular_Roll.SetTunings(0.95, 0.1, 0.005);
   //////////////////////////////////////
-  CalcularOffsetGiroscopio();
-//  CalcularOffsetAcelerometro();
+
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
   tiempoUltimoMuestreoAngulos = micros();
   tiempoUltimoMuestreoAltura = millis();
@@ -237,50 +231,13 @@ void setup() {
   ///////////////////////////////////////////////////////////////////////////////////
 }
 
+
 void loop()
 {
-   // Yaw-  P: 1.3  I: 0    D: 0
-   PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
-//   PID_pAngular_Pitch.SetTunings(1.5, 0.05, 0); //P=0.75   //P=0.55
-//   PID_pAngular_Roll.SetTunings(1.5, 0.05, 0); //P=0.6   //P=0.55
-
-   PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
-   PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.005); //P=0.75   //P=0.55
-   PID_vAngular_Roll.SetTunings(0.95, 0.1, 0.005); //P=0.6   //P=0.55
-   
-
   modoEjecucion = '_';
   RecibirComando();
-  //RecibirComandoASCII();
   SecuenciaDeInicio();
   SecuenciaDeVuelo();
-}
-
-void CalcularOffsetGiroscopio() {
-  int numMuestras = 500;
-  for (int n = 0; n < numMuestras ; n++) {
-    gyro.read();
-    G_offsetYPR[0] += gyro.g.z;
-    G_offsetYPR[1] += gyro.g.x;
-    G_offsetYPR[2] += gyro.g.y;
-  }
-  G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
-  G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
-  G_offsetYPR [2] = G_offsetYPR[2] / numMuestras;
-}
-
-
-void CalcularOffsetAcelerometro() {
-  int numMuestras = 500;
-  for (int n = 0; n < numMuestras ; n++) {
-    compass.read();
-    A_offsetYPR[0] += compass.a.z;
-    A_offsetYPR[1] += compass.a.y;
-    A_offsetYPR[2] += compass.a.x;
-  }
-  A_offsetYPR [0] = A_offsetYPR[0] / numMuestras;
-  A_offsetYPR [1] = A_offsetYPR[1] / numMuestras;
-  A_offsetYPR [2] = A_offsetYPR[2] / numMuestras;
 }
 
 
@@ -291,15 +248,13 @@ void SecuenciaDeInicio()
   {
     FiltroComplementario();
     CalcularAltura();
-    EnviarMensajesPC();
+    EnviarMensajesTelemetriaPC();
     RecibirComando();
-    //RecibirComandoASCII();
     anguloDeseadoYPR[1] = 0;
     anguloDeseadoYPR[2] = 0;
     alturaDeseada = 0;
     i++;
   }
-
 
   i = 0;
   if (modoEjecucion != '_')
@@ -328,9 +283,8 @@ void SecuenciaDeInicio()
       PID_PosicionAngular();
       PID_VelocidadAngular();
       AplicarPWMmotores(velocidadBasePWM);
-      EnviarMensajesPC();
+      EnviarMensajesTelemetriaPC();
       RecibirComando();
-      //RecibirComandoASCII();
       i++;
       delay(1);
     }
@@ -350,28 +304,47 @@ void SecuenciaDeVuelo()
   while (modoEjecucion != '_')
   {
     RecibirComando();
-    //RecibirComandoASCII();
     FiltroComplementario();
     CalcularAltura();
     //PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
-/*        Serial.println("*************** Motores *****************");
-     Serial.println(motorDerecho);
-     Serial.println(motorIzquierdo);
-     Serial.println(motorDelantero);
-     Serial.println(motorTrasero);
-     Serial.println(correccionPWM_YPR[0]);
-     Serial.println(correccionPWM_YPR[1]);
-     Serial.println(correccionPWM_YPR[2]);
-     Serial.println();*/
-    EnviarMensajesPC();
+    EnviarMensajesTelemetriaPC();
   }
 }
 
 
+void CalcularOffsetGiroscopio() {
+  int numMuestras = 500;
+  for (int n = 0; n < numMuestras ; n++) {
+    gyro.read();
+    G_offsetYPR[0] += gyro.g.z;
+    G_offsetYPR[1] += gyro.g.x;
+    G_offsetYPR[2] += gyro.g.y;
+  }
+  G_offsetYPR [0] = G_offsetYPR[0] / numMuestras;
+  G_offsetYPR [1] = G_offsetYPR[1] / numMuestras;
+  G_offsetYPR [2] = G_offsetYPR[2] / numMuestras;
+}
 
+void CalcularOffsetAcelerometro() {
+  int numMuestras = 500;
+  for (int n = 0; n < numMuestras ; n++) {
+    compass.read();
+    A_offsetYPR[0] += compass.a.z;
+    A_offsetYPR[1] += compass.a.y;
+    A_offsetYPR[2] += compass.a.x;
+  }
+  A_offsetYPR [0] = A_offsetYPR[0] / numMuestras;
+  A_offsetYPR [1] = A_offsetYPR[1] / numMuestras;
+  A_offsetYPR [2] = A_offsetYPR[2] / numMuestras;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      PROCEDIMIENTOS PARA ESTIMAR LA POSICION ANGULAR MEDIANTE FILTRO COMPLEMENTARIO      /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void FiltroComplementario() {
   gyro.read();
   compass.read();
@@ -389,11 +362,6 @@ void FiltroComplementario() {
     G_velocidadYPR_filtrada[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
 
     tiempoUltimoMuestreoGiroscopio = millis();
-/*
-    anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR_filtrada[0] * DT);
-    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR_filtrada[1] * DT));
-    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR_filtrada[2] * DT));
-*/
     anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
     anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
     anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
@@ -458,7 +426,15 @@ void FiltroComplementario() {
 
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      PROCEDIMIENTOS PARA CALCULAR LA ALTURA DEL CUADRICOPTERO      /////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+  * En CalcularAltura() se calcula la distancia del sensor ultrasonico al suelo emitiendo un pulso, y calculando el tiempo de respuesta del mismo. 
+    Conociendo previamente la velocidad del sonido, puede calcularse la distancia que recorrió la onda, ida y vuelta. El procedimiento se apoya en
+    la libreria NewPing para Arduino, que utiliza rutinas con temporizadores.
+  * En FiltroKalmanAltura() se estima la distancia real del sensor ultrasonico al suelo mediante un filtro de Kalman de primer orden.
+*/
 void CalcularAltura()
 {
   if (millis() - tiempoUltimoMuestreoAltura > DT_sensor_altura)
@@ -473,16 +449,10 @@ void CalcularAltura()
       mensajeEstado[8] = estimacionAltura;
       velocidad_Z = estimacionAltura - Z_previo;
       Z_previo = estimacionAltura;
-      //    Serial.print(USAltura);
-      //    Serial.println("cm");
     }
     tiempoUltimoMuestreoAltura = millis();
   }
 }
-
-
-
-
 void FiltroKalmanAltura()
 {
   covarianzaRuidoEstimacionAltura = covarianzaRuidoEstimacionAltura + covarianzaProcesoFisicoAltura;
@@ -493,27 +463,21 @@ void FiltroKalmanAltura()
 
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      RUTINAS PARA EJECUTAR LOS PID DE POSICION ANGULAR, VELOCIDAD ANGULAR Y ALTURA      /////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PID_PosicionAngular()
 {
   PID_pAngular_Yaw.Compute();
 //  PID_pAngular_Pitch.Compute();
 //  PID_pAngular_Roll.Compute();
 }
-
-
-
-
 void PID_VelocidadAngular()
 {
   PID_vAngular_Yaw.Compute();
   PID_vAngular_Pitch.Compute();
   PID_vAngular_Roll.Compute();
 }
-
-
-
-
 void PIDAltura()
 {
   PID_altura.Compute();
@@ -521,6 +485,12 @@ void PIDAltura()
 
 
 
+/////////////////////////////////////////      RUTINA DE APLICACION DE PWM A LOS MOTORES      /////////////////////////////////////////
+// Valida el estado de la variable modoEjecucion:
+//      * Si es igual a '_', envía PWM=0 a todos los puertos.
+//      * Si es igual a 'T', se calcula el valor de PWM a enviar a los motores a partir de la velocidad base del PWM establecida y las
+//        salidas de los sistemas de control PID de velocidad angular y altura.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AplicarPWMmotores(int velocidadMotoresPWM)
 {
   if (modoEjecucion == '_')
@@ -537,7 +507,6 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
     motorDelantero = velocidadMotoresPWM + correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
     motorTrasero = velocidadMotoresPWM - correccionPWM_YPR[1] - correccionPWM_YPR[0] + correccionAltura;
   }
-
 
   if (motorDelantero > PWM_MAXIMO)
   {
@@ -572,7 +541,6 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
     motorIzquierdo = 0;
   }
 
-
   analogWrite(PUERTOMOTORDERECHO, motorDerecho);
   analogWrite(PUERTOMOTORIZQUIERDO, motorIzquierdo);
   analogWrite(PUERTOMOTORSUPERIOR, motorDelantero);
@@ -581,30 +549,30 @@ void AplicarPWMmotores(int velocidadMotoresPWM)
 
 
 
-
-///////////////////COMUNICACION/////////////////////////////////////////
-/*Procedimiento para enviar el estado del cuadricoptero
- Envia un paquete de 14 bytes
- posicion 0 = HEADER            (255)
- posicion 1 = CODIGO DE MENSAJE (7)
- posicion 2 = POSICION ANGULAR YAW (Valor positivo o == 0)
- posicion 3 = POSICION ANGULAR YAW (Valor negativo)
- posicion 4 = POSICION ANGULAR PITCH
- posicion 5 = POSICION ANGULAR ROLL
- posicion 6 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
- posicion 7 = VELOCIDAD ANGULAR YAW (Valor negativo)
- posicion 8 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
- posicion 9 = VELOCIDAD ANGULAR PITCH (Valor negativo)
- posicion 10 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
- posicion 11 = VELOCIDAD ANGULAR ROLL (Valor negativo)
- posicion 12 = ALTURA
- posicion 13 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 9)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      RUTINA DE PREPARACION DEL PAQUETE DE MENSAJE DE ESTADO      /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Procedimiento para preparar paquetes de mensaje de estado. (14 bytes)
+   posicion 0 = HEADER            (255)
+   posicion 1 = CODIGO DE MENSAJE (7)
+   posicion 2 = POSICION ANGULAR YAW (Valor positivo o == 0)
+   posicion 3 = POSICION ANGULAR YAW (Valor negativo)
+   posicion 4 = POSICION ANGULAR PITCH
+   posicion 5 = POSICION ANGULAR ROLL
+   posicion 6 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
+   posicion 7 = VELOCIDAD ANGULAR YAW (Valor negativo)
+   posicion 8 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
+   posicion 9 = VELOCIDAD ANGULAR PITCH (Valor negativo)
+   posicion 10 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
+   posicion 11 = VELOCIDAD ANGULAR ROLL (Valor negativo)
+   posicion 12 = ALTURA
+   posicion 13 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 12)
  */
 void PrepararPaqueteMensajeEstado()
 {
   mensajeEstado[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeEstado[1] = CODIGO_ESTADO; //Codigo del mensaje
-  /**POSICION YAW**/
+
   if (anguloYPR_filtrado[0] >= 0)
   {
     mensajeEstado[2] = anguloYPR_filtrado[0];
@@ -615,11 +583,9 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[3] = abs(anguloYPR_filtrado[0]);
     mensajeEstado[2] = 0;
   }
-  /**POSICION PICH**/
   mensajeEstado[4] = anguloYPR_filtrado[1] + 90;
-  /**POSICION ROLL**/
   mensajeEstado[5] = anguloYPR_filtrado[2] + 90;
-  /**VELOCIDAD YAW**/
+
   if (G_velocidadYPR[0] >= 0)
   {
     mensajeEstado[6] = G_velocidadYPR[0];
@@ -630,7 +596,6 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[7] = abs(G_velocidadYPR[0]);
     mensajeEstado[6] = 0;
   }
-  /**VELOCIDAD PITCH**/
   if (G_velocidadYPR_filtrada[1] >= 0)
   {
     mensajeEstado[8] = G_velocidadYPR_filtrada[1];
@@ -641,7 +606,6 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[9] = abs(G_velocidadYPR_filtrada[1]);
     mensajeEstado[8] = 0;
   }
-  /**VELOCIDAD ROLL**/
   if (G_velocidadYPR_filtrada[2] >= 0)
   {
     mensajeEstado[10] = G_velocidadYPR_filtrada[2];
@@ -668,13 +632,57 @@ void PrepararPaqueteMensajeEstado()
 }
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      RUTINA DE PREPARACION DEL PAQUETE DE MENSAJE DE TELEMETRIA TOTAL     /////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Procedimiento para preparar paquetes de mensaje de telemetria total.  (42 bytes)
+   posicion 0 = HEADER            (255)
+   posicion 1 = CODIGO DE MENSAJE (7)
+   posicion 2 = POSICION ANGULAR YAW (Valor positivo o == 0)
+   posicion 3 = POSICION ANGULAR YAW (Valor negativo)
+   posicion 4 = POSICION ANGULAR PITCH (Valor positivo o == 0)
+   posicion 5 = POSICION ANGULAR PITCH (Valor negativo)
+   posicion 6 = POSICION ANGULAR ROLL (Valor positivo o == 0)
+   posicion 7 = POSICION ANGULAR ROLL (Valor negativo)
+   posicion 8 = VELOCIDAD ANGULAR YAW (Valor positivo o == 0)
+   posicion 9 = VELOCIDAD ANGULAR YAW (Valor negativo)
+   posicion 10 = VELOCIDAD ANGULAR PITCH (Valor positivo o == 0)
+   posicion 11 = VELOCIDAD ANGULAR PITCH (Valor negativo)
+   posicion 12 = VELOCIDAD ANGULAR ROLL (Valor positivo o == 0)
+   posicion 13 = VELOCIDAD ANGULAR ROLL (Valor negativo)
+   posicion 14 = VELOCIDAD ANGULAR YAW FILTRADA (Valor positivo o == 0)
+   posicion 15 = VELOCIDAD ANGULAR YAW FILTRADA (Valor negativo)
+   posicion 16 = VELOCIDAD ANGULAR PITCH FILTRADA (Valor positivo o == 0)
+   posicion 17 = VELOCIDAD ANGULAR PITCH FILTRADA (Valor negativo)
+   posicion 18 = VELOCIDAD ANGULAR ROLL FILTRADA (Valor positivo o == 0)
+   posicion 19 = VELOCIDAD ANGULAR ROLL FILTRADA (Valor negativo)
+   posicion 20 = ACELERACION LINEAL Z (Valor positivo o == 0)
+   posicion 21 = ACELERACION LINEAL Z (Valor negativo)
+   posicion 22 = ACELERACION LINEAL Y (Valor positivo o == 0)
+   posicion 23 = ACELERACION LINEAL Y (Valor negativo)
+   posicion 24 = ACELERACION LINEAL X (Valor positivo o == 0)
+   posicion 25 = ACELERACION LINEAL X (Valor negativo)
+   posicion 26 = ACELERACION LINEAL Z FILTRADA (Valor positivo o == 0)
+   posicion 27 = ACELERACION LINEAL Z FILTRADA (Valor negativo)
+   posicion 28 = ACELERACION LINEAL Y FILTRADA (Valor positivo o == 0)
+   posicion 29 = ACELERACION LINEAL Y FILTRADA (Valor negativo)
+   posicion 30 = ACELERACION LINEAL X FILTRADA (Valor positivo o == 0)
+   posicion 31 = ACELERACION LINEAL X FILTRADA (Valor negativo)
+   posicion 32 = ALTURA - POSICION EN Z
+   posicion 33 = ALTURA FILTRADA - POSICION EN Z FILTRADA 
+   posicion 34 = VELOCIDAD EN Z (Valor positivo o == 0)
+   posicion 35 = VELOCIDAD EN Z (Valor negativo)
+   posicion 36 = PWM MOTOR DELANTERO
+   posicion 37 = PWM MOTOR TRASERO
+   posicion 38 = PWM MOTOR DERECHO
+   posicion 39 = PWM MOTOR IZQUIERDO
+   posicion 40 = ESTADO DE ENCENDIDO DE MOTORES
+   posicion 41 = CHECKSUM (HECHO CON XOR DE LOS BYTES 0 AL 40)
+ */
 void PrepararPaqueteMensajeTelemetriaTotal()
 {
   mensajeTelemetriaTotal[0] = CODIGO_INICIO_MENSAJE; //HEADER
   mensajeTelemetriaTotal[1] = CODIGO_TELEMETRIA_TOTAL; //Codigo del mensaje
-  /**POSICION YAW**/
   if (anguloYPR_filtrado[0] >= 0)
   {
     mensajeTelemetriaTotal[2] = anguloYPR_filtrado[0];
@@ -706,7 +714,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[6] = 0;
   }
 
-  /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
     mensajeTelemetriaTotal[8] = G_velocidadYPR[0];
@@ -717,7 +724,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[9] = abs(G_velocidadYPR[0]);
     mensajeTelemetriaTotal[8] = 0;
   }
-  /**VELOCIDAD PITCH**/
   if (G_velocidadYPR[1] >= 0)
   {
     mensajeTelemetriaTotal[10] = G_velocidadYPR[1];
@@ -728,7 +734,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[11] = abs(G_velocidadYPR[1]);
     mensajeTelemetriaTotal[10] = 0;
   }
-  /**VELOCIDAD ROLL**/
   if (G_velocidadYPR[2] >= 0)
   {
     mensajeTelemetriaTotal[12] = G_velocidadYPR[2];
@@ -740,7 +745,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[12] = 0;
   }
 
-  /**VELOCIDAD YAW**/
   if (G_velocidadYPR_filtrada[0] >= 0)
   {
     mensajeTelemetriaTotal[14] = G_velocidadYPR_filtrada[0];
@@ -751,7 +755,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[15] = abs(G_velocidadYPR_filtrada[0]);
     mensajeTelemetriaTotal[14] = 0;
   }
-  /**VELOCIDAD PITCH**/
   if (G_velocidadYPR_filtrada[1] >= 0)
   {
     mensajeTelemetriaTotal[16] = G_velocidadYPR_filtrada[1];
@@ -762,7 +765,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[17] = abs(G_velocidadYPR_filtrada[1]);
     mensajeTelemetriaTotal[16] = 0;
   }
-  /**VELOCIDAD ROLL**/
   if (G_velocidadYPR_filtrada[2] >= 0)
   {
     mensajeTelemetriaTotal[18] = G_velocidadYPR_filtrada[2];
@@ -854,7 +856,6 @@ void PrepararPaqueteMensajeTelemetriaTotal()
   mensajeTelemetriaTotal[38] = motorDerecho;
   mensajeTelemetriaTotal[39] = motorIzquierdo;
   
-  //  mensajeEstado[12] = alturaDeseada;
   if (modoEjecucion == 'T')
   {
     mensajeTelemetriaTotal[40] = 1;
@@ -868,16 +869,21 @@ void PrepararPaqueteMensajeTelemetriaTotal()
 
 
 
-
-void EnviarMensajesPC()
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      PROCEDIMIENTO PARA ENVIAR MENSAJES DE TELEMETRIA A LA PC      /////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Se valida el estado de la bandera modoTelemetriaTotal.
+    * Si modoTelemetriaTotal==0, se envian mensajes de estado.
+    * Si modoTelemetriaTotal==1, se envian mensajes de telemetria total.
+*/
+void EnviarMensajesTelemetriaPC()
 {
   if (modoTelemetriaTotal == 0)
   {
     if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
     {
-      //ImprimirEstado();
       PrepararPaqueteMensajeEstado();
-      Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 14 BYTES
+      Serial.write(mensajeEstado, 14);//ENVIAR EL PAQUETE DE 14 BYTES
       tiempoUltimoEnvio = millis();
     }
   }
@@ -885,7 +891,6 @@ void EnviarMensajesPC()
   {
     if (millis() - tiempoUltimoEnvio >= DT_envioDatosTelemetriaTotal)
     {
-      //ImprimirEstado();
       PrepararPaqueteMensajeTelemetriaTotal();
       Serial.write(mensajeTelemetriaTotal, 42);//ENVIAR EL PAQUETE DE 42 BYTES
       tiempoUltimoEnvio = millis();
@@ -895,8 +900,21 @@ void EnviarMensajesPC()
 
 
 
-
-/*recepcion de mensajes*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      PROCEDIMIENTO PARA RECIBIR MENSAJES DESDE LA PC      /////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Se lee el puerto serial, y se verifica, de forma sucesiva que:
+    1) El primer dato recibido sea un char de codigo 255 (Header de los mensajes del protocolo).
+    2) El valor del segundo dato recibido (Codigo del mensaje), a partir de lo cual se recibe:
+        a) Comando de encendido/apagado (Codigo==0).
+        b) Comando de movimiento (Codigo==1).
+    3) Se realizar un checksum con todos los datos recibidos, y se compara con el ultimo dato recibido en cada caso (Checksum recibido).
+    4) Si el checksum recibido es igual al checksum calculado, el mensaje ha llegado correctamente, y se ejecuta el comando modificando
+       las variables modoEjecucion, velocidadDeseadaYPR y velocidadBasePWM segun corresponda. Si se recibio un mensaje de encendido, se
+       envia un mensaje de acknowledge a la PC.
+  Si en algun momento no se recibe un mensaje, o si el checksum recibido no coincide con el checksum calculado, se detiene la recepcion
+  del mensaje, y la ejecucion del procedimiento llega a su fin.
+*/
 void RecibirComando()
 {
   if (Serial.available() > 0)
@@ -984,6 +1002,11 @@ void RecibirComando()
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////      PROCEDIMIENTO PARA ENVIAR MENSAJE DE ACKNOWLEDGE A LA PC      /////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*  Se prepara y envia un mensaje de acknowledge, cuyo contenido viene dado por codigoMensaje.
+*/
 void EnviarAcknowledge(unsigned char codigoMensaje)
 {
   ack[0] = CODIGO_INICIO_MENSAJE;
@@ -991,30 +1014,4 @@ void EnviarAcknowledge(unsigned char codigoMensaje)
   ack[2] = codigoMensaje;
   ack[3] = (ack[0] ^ ack[1] ^ ack[2]);
   Serial.write(ack, 4);
-}
-
-
-
-
-void ImprimirEstado()
-{
-  if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
-  {
-    Serial.println('Y');
-    Serial.println(int(anguloYPR[0]));
-    Serial.println('P');
-    Serial.println(int(anguloYPR[1]));
-    Serial.println('R');
-    Serial.println(int(anguloYPR[2]));
-    Serial.println('y');
-    Serial.println(int(G_velocidadYPR_filtrada[0]));
-    Serial.println('p');
-    Serial.println(int(G_velocidadYPR_filtrada[1]));
-    Serial.println('r');
-    Serial.println(int(G_velocidadYPR_filtrada[2]));
-    Serial.println('A');
-    Serial.println(int(USAltura));
-    //    Serial.println(correccionAltura);
-    tiempoUltimoEnvio = millis();
-  }
 }
