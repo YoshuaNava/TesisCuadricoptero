@@ -11,6 +11,7 @@ handlerSerial = None
 tiempoInicioEjecucion = 0
 __CODIGO_MENSAJE_ESTADO = 7
 __CODIGO_MENSAJE_TELEMETRIA_TOTAL = 8
+__MODO_TELEMETRIA_TOTAL = 1
 
 def callbackEnvioComandoEncendido(mensaje):
     #rospy.loginfo(rospy.get_caller_id()+"I heard %s",data)
@@ -31,18 +32,6 @@ def secuenciaRecepcion():
 	if (handlerSerial.mensajesRecibidos == 1):
 	    tiempoInicioEjecucion = rospy.get_rostime()
         if (handlerSerial.ultimoComandoRecibido == __CODIGO_MENSAJE_ESTADO):
-            """
-            print "Estado del cuadricoptero:"
-            print "Angulo de Yaw = " + str(handlerSerial.posicionYaw)
-            print "Angulo de Pitch = " + str(handlerSerial.posicionPitch)
-            print "Angulo de Roll = " + str(handlerSerial.posicionRoll)
-            print "Velocidad de Yaw = " + str(handlerSerial.velocidadYaw)
-            print "Velocidad de Pitch = " + str(handlerSerial.velocidadPitch)
-            print "Velocidad de Roll = " + str(handlerSerial.velocidadRoll)
-            print "Altura = " + str(handlerSerial.altura)
-            print "Mensajes recibidos = " + str(handlerSerial.mensajesEstadoRecibidos)
-            print "\n"
-            """
             estado = EstadoCuadricoptero()
             estado.tiempoEjecucion = rospy.get_rostime() - tiempoInicioEjecucion
             estado.anguloPitch = handlerSerial.anguloPitch
@@ -95,8 +84,11 @@ def run():
     publisherEstado = rospy.Publisher('estado_cuadricoptero', EstadoCuadricoptero, queue_size=10)
     publisherTelemetria = rospy.Publisher('telemetria_total', TelemetriaTotal, queue_size=10)
     rospy.init_node('ManejadorPuertoSerial', anonymous=True)    
-    frecuencia = rospy.Rate(1000)    
-    handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 38400)
+    frecuencia = rospy.Rate(1000)
+    if (__MODO_TELEMETRIA_TOTAL == 1):
+        handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 115200)
+    else:
+        handlerSerial = HandlerSerial(nombrePuerto = "/dev/ttyUSB0", tasaBaudios = 38400)
     handlerSerial.abrirPuerto()
     rospy.Subscriber("encendido_cuadricoptero", ComandoEncendido, callbackEnvioComandoEncendido)
     rospy.Subscriber("movimientos_cuadricoptero", ComandoMovimiento, callbackEnvioComandoMovimiento)

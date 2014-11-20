@@ -46,9 +46,9 @@ double Z_previo = 0.0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 0
-#define DT_envioDatosEstado 30
+#define modoTelemetriaTotal 1
 #define DT_envioDatosTelemetriaTotal 5
+#define DT_envioDatosEstado 30
 #define LED_ENCENDIDO 13
 #define CODIGO_INICIO_MENSAJE 255
 #define CODIGO_ENCENDIDO 0
@@ -178,10 +178,18 @@ void setup() {
   analogWrite(PUERTOMOTORSUPERIOR, 0);
   analogWrite(PUERTOMOTORINFERIOR, 0);
   //////////////////////////////////////////////////////////
-
+ 
 
   // Inicializacion de la comunicacion Serial, I2C y acelerometro/giroscopio //
-  Serial.begin(38400);
+  if (modoTelemetriaTotal == 1)
+  {
+    Serial.begin(115200);
+  }
+  else
+  {
+    Serial.begin(38400);
+  }
+  
   Wire.begin();
 
   if (!gyro.init())
@@ -488,7 +496,7 @@ void FiltroKalmanAltura()
 
 void PID_PosicionAngular()
 {
-//  PID_pAngular_Yaw.Compute();
+  PID_pAngular_Yaw.Compute();
 //  PID_pAngular_Pitch.Compute();
 //  PID_pAngular_Roll.Compute();
 }
@@ -498,7 +506,7 @@ void PID_PosicionAngular()
 
 void PID_VelocidadAngular()
 {
-//  PID_vAngular_Yaw.Compute();
+  PID_vAngular_Yaw.Compute();
   PID_vAngular_Pitch.Compute();
   PID_vAngular_Roll.Compute();
 }
@@ -608,9 +616,9 @@ void PrepararPaqueteMensajeEstado()
     mensajeEstado[2] = 0;
   }
   /**POSICION PICH**/
-  mensajeEstado[4] = velocidadDeseadaYPR[1] + 90;
+  mensajeEstado[4] = anguloYPR_filtrado[1] + 90;
   /**POSICION ROLL**/
-  mensajeEstado[5] = velocidadDeseadaYPR[2] + 90;
+  mensajeEstado[5] = anguloYPR_filtrado[2] + 90;
   /**VELOCIDAD YAW**/
   if (G_velocidadYPR[0] >= 0)
   {
