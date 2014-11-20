@@ -9,10 +9,11 @@ fE_pA = 0.02;
 fE_pZ = 0.03;
 
 
-kP_pA = [2.0 2.0 2.0];
+kP_pA = [1.0 1.0 1.0]*1.5;
 kI_pA = [0 0 0];
 kD_pA = [0 0 0];
-pA_deseada = [10 5 16];
+%pA_deseada = [10 5 16];
+pA_deseada = [0 0 0];
 error_pA = [0 0 0];
 errorPrevio_pA = [0 0 0];
 integral_pA = [0 0 0];
@@ -20,7 +21,7 @@ derivada_pA = [0 0 0];
 pid_pA = [0 0 0];
 
 
-kP_vA = [2.0 2.0 2.0];
+kP_vA = [1.0 1.0 1.0]*5.5;
 kI_vA = [0 0 0];
 kD_vA = [0 0 0];
 vA_deseada = [0 0 0];
@@ -30,9 +31,9 @@ integral_vA = [0 0 0];
 derivada_vA = [0 0 0];
 pid_vA = [0 0 0];
 
-kP_pZ = 0;
+kP_pZ = 1;
 kI_pZ = 0;
-kD_pZ = 0;
+kD_pZ = 1;
 pZ_deseada = 3;
 error_pZ(1) = 0;
 errorPrevio_pZ = 0;
@@ -44,7 +45,9 @@ pid_pZ = 0;
 u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
 x = zeros(numEstados, numIteraciones+1);
-x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
+%x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
+x(1:numEstados,1) = [0 0 0 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
+W = zeros(1, numIteraciones+1);
 y = zeros(numEstados, numIteraciones+1);
 
 for i = 1:numIteraciones
@@ -55,8 +58,9 @@ for i = 1:numIteraciones
     aPitch = y(4, i);
     aRoll = y(5, i);
     aYaw = y(6, i);
-    vZ = y(9, i);
-    pZ = y(10, i);
+    %vZ = y(9, i);
+%    pZ = y(10, i);
+    pZ = W(1, i);
     
     if (mod(i*dt,fE_pA) == 0)
         error_pA(1) = pA_deseada(1) - aPitch;
@@ -86,8 +90,8 @@ for i = 1:numIteraciones
         integral_pZ = integral_pZ + error_pZ;
         derivada_pZ = error_pZ - errorPrevio_pZ;
         errorPrevio_pZ = error_pZ;
-        pid_pZ = kP_pZ*(error_pZ-vZ) + kI_pZ*integral_pZ + kD_pZ*derivada_pZ;
-        pid_pZ;
+        pid_pZ = kP_pZ*error_pZ + kI_pZ*integral_pZ + kD_pZ*derivada_pZ;
+        pid_pZ
     end
     
     
@@ -98,6 +102,10 @@ for i = 1:numIteraciones
     u(4, i) = -pid_vA(1) + pid_vA(3) + pid_pZ;
     u(3, i) = -pid_vA(2) - pid_vA(3) + pid_pZ;
     u(1, i) = pid_vA(2) - pid_vA(3) + pid_pZ;
+%     u(2, i) = pid_vA(1) + pid_vA(3);
+%     u(4, i) = -pid_vA(1) + pid_vA(3);
+%     u(3, i) = -pid_vA(2) - pid_vA(3);
+%     u(1, i) = pid_vA(2) - pid_vA(3);
     if (u(1,i) > voltajeMaximoMotores)
         u(1,i) = voltajeMaximoMotores;
     end
@@ -126,6 +134,9 @@ for i = 1:numIteraciones
     
     x_dot(1:numEstados, i) = A*x(1:numEstados, i) + B*u(1:numEntradasControl, i);
     x(1:numEstados,i+1) = x(1:numEstados, i) + dt*x_dot(1:numEstados, i);
+    W(1,i+1) = W(1,i) + dt*x(9,i+1);
+    x(7,i+1) = 0;
+    x(8,i+1) = 0;
     if (x(10,i+1) < 0)
         x(10,i+1) = 0;
     end
@@ -150,7 +161,8 @@ xlabel('Tiempo (s)')
 ylabel('Velocidad (m/s)')
 title('Velocidades lineales')
 figure()
-plot(t,x(10,:))
+%plot(t,x(10,:))
+plot(t,W(1,:))
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
 ylabel('Distancia (m)')
