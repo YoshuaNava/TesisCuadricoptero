@@ -483,6 +483,7 @@ void CalcularAltura()
       mensajeEstado[8] = estimacionAltura;
       U_velocidad_Z = estimacionAltura - U_Z_previo;
       U_Z_previo = estimacionAltura;
+      velocidad_Z = (U_velocidad_Z + A_velocidad_Z)/2;
     }
     tiempoUltimoMuestreoAltura = millis();
   }
