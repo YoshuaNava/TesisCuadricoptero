@@ -67,8 +67,11 @@ double covarianzaRuidoSensorAltura = 10.0;
 double estimacionAltura = 0.0;
 double covarianzaRuidoEstimacionAltura = 3.0;
 double gananciaKalman = 0.0;
+double U_velocidad_Z = 0.0;
+double U_Z_previo = 0.0;
+double A_velocidad_Z = 0.0;
 double velocidad_Z = 0.0;
-double Z_previo = 0.0;
+double velocidadDeseadaZ = 0.0;
 //FIN ULTRASONIDO
 
 
@@ -81,15 +84,9 @@ double Z_previo = 0.0;
 #define DT_sensor_altura 29
 #define DT_acelerometro 1
 #define DT_giroscopio 6
-#define DT_PID_altura 50
-#define DT_PID_posicionAngular 20
-#define DT_PID_velocidadAngular 6
 L3G gyro;
 LSM303 compass;
-char report[80];
-double yaw_offset = 0;
-double pitch_offset = 0;
-double roll_offset = 0;
+int numMuestras;
 double G_offsetYPR [3] = {
   0, 0, 0
 };
@@ -120,9 +117,6 @@ double A_anguloYPR[3] = {
 double A_anguloYPR_filtrado[3] = {
   0, 0, 0
 };
-double anguloYPR[3] = {
-  0, 0, 0
-};
 double anguloYPR_filtrado[3] = {
   0, 0, 0
 };
@@ -142,13 +136,19 @@ long tiempoUltimoMuestreoAngulos = 0;
 
 
 //SISTEMAS DE CONTROL PID
+#define DT_PID_velZ 20
+#define DT_PID_posZ 50
+#define DT_PID_posicionAngular 20
+#define DT_PID_velocidadAngular 6
 PID PID_vAngular_Yaw(&G_velocidadYPR[0], &correccionPWM_YPR[0], &velocidadDeseadaYPR[0], 0, 0, 0, DIRECT);
 PID PID_vAngular_Pitch(&G_velocidadYPR_filtrada[1], &correccionPWM_YPR[1], &velocidadDeseadaYPR[1], 0, 0, 0, DIRECT);
 PID PID_vAngular_Roll(&G_velocidadYPR_filtrada[2], &correccionPWM_YPR[2], &velocidadDeseadaYPR[2], 0, 0, 0, DIRECT);
 PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
-PID PID_altura(&estimacionAltura, &correccionAltura, &alturaDeseada, 0, 0, 0, DIRECT);
+PID PID_posZ(&estimacionAltura, &velocidadDeseadaZ, &alturaDeseada, 0, 0, 0, DIRECT);
+PID PID_velZ(&velocidad_Z, &correccionAltura, &velocidadDeseadaZ, 0, 0, 0, DIRECT);
+byte i;
 //FIN PID
 /********************************************        FIN DE CONSTANTES y VARIABLES        ********************************************/
 
@@ -203,21 +203,24 @@ void setup() {
   PID_vAngular_Yaw.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Pitch.SetSampleTime(DT_PID_velocidadAngular);
   PID_vAngular_Roll.SetSampleTime(DT_PID_velocidadAngular);
-  PID_altura.SetSampleTime(DT_PID_altura);
+  PID_posZ.SetSampleTime(DT_PID_posZ);
+  PID_posZ.SetSampleTime(DT_PID_velZ);
   PID_pAngular_Yaw.SetOutputLimits(-180.0, 180.0);
   PID_pAngular_Pitch.SetOutputLimits(-180.0, 180.0);
   PID_pAngular_Roll.SetOutputLimits(-180.0, 180.0);
   PID_vAngular_Yaw.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Pitch.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_vAngular_Roll.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
-  PID_altura.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
+  PID_posZ.SetOutputLimits(-50, 50);
+  PID_velZ.SetOutputLimits(-PWM_MAXIMO, PWM_MAXIMO);
   PID_pAngular_Yaw.SetMode(AUTOMATIC);
   PID_pAngular_Pitch.SetMode(AUTOMATIC);
   PID_pAngular_Roll.SetMode(AUTOMATIC);
   PID_vAngular_Yaw.SetMode(AUTOMATIC);
   PID_vAngular_Pitch.SetMode(AUTOMATIC);
   PID_vAngular_Roll.SetMode(AUTOMATIC);
-  PID_altura.SetMode(AUTOMATIC);
+  PID_posZ.SetMode(AUTOMATIC);
+  PID_velZ.SetMode(AUTOMATIC);
   PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
   PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
   PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.005);
@@ -260,7 +263,7 @@ void loop()
 void SecuenciaDeInicio()
 {
   //Ciclo para realizar muestreo y telemetria del cuadricoptero de forma constante, en espera de comandos de encendido de motores desde la PC.
-  int i = 0;
+  i = 0;
   while (i < 50)
   {
     FiltroComplementario();
@@ -348,7 +351,7 @@ void SecuenciaDeVuelo()
   Se realizan 500 muestreos del giroscopio y se calcula la media de los mismos, la cual representa el offset del sensor debido a las condiciones iniciales de voltaje de alimentacion y temperatura.
 */
 void CalcularOffsetGiroscopio() {
-  int numMuestras = 500;
+  numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
     gyro.read();
     G_offsetYPR[0] += gyro.g.z;
@@ -368,7 +371,7 @@ void CalcularOffsetGiroscopio() {
   Se realizan 500 muestreos del acelerometro y se calcula la media de los mismos, la cual representa el offset del sensor debido a la inclinacion del mismo sobre el chasis del cuadricoptero.
 */
 void CalcularOffsetAcelerometro() {
-  int numMuestras = 500;
+  numMuestras = 500;
   for (int n = 0; n < numMuestras ; n++) {
     compass.read();
     A_offsetYPR[0] += compass.a.z;
@@ -406,9 +409,6 @@ void FiltroComplementario() {
     G_velocidadYPR_filtrada[2] = filtroVelocidadYPR [2].step ((double) G_velocidadYPR[2]);
 
     tiempoUltimoMuestreoGiroscopio = millis();
-    anguloYPR[0] = (double) (anguloYPR[0] + G_velocidadYPR[0] * DT);
-    anguloYPR[1] = (double) (K_COMP * (anguloYPR[1] + G_velocidadYPR[1] * DT) + (1 - K_COMP) * A_anguloYPR[1]);
-    anguloYPR[2] = (double) (K_COMP * (anguloYPR[2] + G_velocidadYPR[2] * DT) + (1 - K_COMP) * A_anguloYPR[2]);
 
     anguloYPR_filtrado[0] = (double) (anguloYPR_filtrado[0] + G_velocidadYPR_filtrada[0] * DT);
     anguloYPR_filtrado[1] = (double) (K_COMP * (anguloYPR_filtrado[1] + G_velocidadYPR_filtrada[1] * DT) + (1 - K_COMP) * A_anguloYPR_filtrado[1]);
@@ -438,20 +438,10 @@ void FiltroComplementario() {
     A_anguloYPR_filtrado[1] = ToDeg(A_anguloYPR_filtrado[1]);
     A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
     A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);
+    
+    A_velocidad_Z = A_velocidad_Z + A_aceleracionYPR_filtrada[0]*DT;
     tiempoUltimoMuestreoAcelerometro = millis();
   }
-
-  anguloYPR[0] = ToRad(anguloYPR[0]);
-  anguloYPR[0] = (double) atan2(sin(anguloYPR[0]), cos(anguloYPR[0]));
-  anguloYPR[0] = ToDeg(anguloYPR[0]);
-
-  anguloYPR[1] = ToRad(anguloYPR[1]);
-  anguloYPR[1] = (double) atan2(sin(anguloYPR[1]), cos(anguloYPR[1]));
-  anguloYPR[1] = ToDeg(anguloYPR[1]);
-
-  anguloYPR[2] = ToRad(anguloYPR[2]);
-  anguloYPR[2] = (double) atan2(sin(anguloYPR[2]), cos(anguloYPR[2]));
-  anguloYPR[2] = ToDeg(anguloYPR[2]);
 
   anguloYPR_filtrado[0] = ToRad(anguloYPR_filtrado[0]);
   anguloYPR_filtrado[0] = (double) atan2(sin(anguloYPR_filtrado[0]), cos(anguloYPR_filtrado[0]));
@@ -486,13 +476,13 @@ void CalcularAltura()
     uS = sonar.ping();
     distancia = (double) (uS / US_ROUNDTRIP_CM);
 
-    if ((distancia > 0) && (distancia < ALTURA_MAXIMA))
+    if ((distancia >= 0) && (distancia < ALTURA_MAXIMA))
     {
       USAltura = distancia;
       FiltroKalmanAltura();
       mensajeEstado[8] = estimacionAltura;
-      velocidad_Z = estimacionAltura - Z_previo;
-      Z_previo = estimacionAltura;
+      U_velocidad_Z = estimacionAltura - U_Z_previo;
+      U_Z_previo = estimacionAltura;
     }
     tiempoUltimoMuestreoAltura = millis();
   }
@@ -524,7 +514,8 @@ void PID_VelocidadAngular()
 }
 void PIDAltura()
 {
-  PID_altura.Compute();
+  PID_velZ.Compute();
+  PID_posZ.Compute();
 }
 
 
@@ -885,14 +876,14 @@ void PrepararPaqueteMensajeTelemetriaTotal()
 //  mensajeTelemetriaTotal[32] = USAltura;
   mensajeTelemetriaTotal[32] = velocidadBasePWM;
   mensajeTelemetriaTotal[33] = estimacionAltura;
-  if (velocidad_Z >= 0)
+  if (U_velocidad_Z >= 0)
   {
-    mensajeTelemetriaTotal[34] = velocidad_Z;
+    mensajeTelemetriaTotal[34] = U_velocidad_Z;
     mensajeTelemetriaTotal[35] = 0;
   }
   else
   {
-    mensajeTelemetriaTotal[35] = abs(velocidad_Z);
+    mensajeTelemetriaTotal[35] = abs(U_velocidad_Z);
     mensajeTelemetriaTotal[34] = 0;
   }
   mensajeTelemetriaTotal[36] = motorDelantero;
