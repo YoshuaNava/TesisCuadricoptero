@@ -2,9 +2,9 @@ Parametros()
 Ixx = inercia(1,1)
 Iyy = inercia(2,2)
 Izz = inercia(3,3)
-Ixx = 0.0142;
-Iyy = 0.0142;
-Izz = 0.0071;
+% Ixx = 0.0142;
+% Iyy = 0.0142;
+% Izz = 0.0071;
 longitudEje =  0.47;
 L = longitudEje/2;
 masa = 0.6;

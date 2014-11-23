@@ -483,7 +483,8 @@ void CalcularAltura()
       mensajeEstado[8] = estimacionAltura;
       U_velocidad_Z = estimacionAltura - U_Z_previo;
       U_Z_previo = estimacionAltura;
-      velocidad_Z = (U_velocidad_Z + A_velocidad_Z)/2;
+      //velocidad_Z = (U_velocidad_Z + A_velocidad_Z)/2;
+      velocidad_Z = A_velocidad_Z;
     }
     tiempoUltimoMuestreoAltura = millis();
   }
@@ -919,7 +920,7 @@ void EnviarMensajesTelemetriaPC()
     if (millis() - tiempoUltimoEnvio >= DT_envioDatosEstado)
     {
       PrepararPaqueteMensajeEstado();
-      Serial.write(mensajeEstado, 14);//ENVIAR EL PAQUETE DE 14 BYTES
+      Serial.write(mensajeEstado, 15);//ENVIAR EL PAQUETE DE 15 BYTES
       tiempoUltimoEnvio = millis();
     }
   }

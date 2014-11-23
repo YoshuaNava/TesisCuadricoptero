@@ -1,4 +1,4 @@
-ControllabilityObservability_KivrakExtendido()
+%ControllabilityObservability_KivrakExtendido()
 
 tF = 20;
 t = 0:dt:tF;
@@ -10,7 +10,7 @@ fE_vZ = 0.04;
 fE_pZ = 0.05;
 
 
-kP_pA = [2.0 2.0 2.0];
+kP_pA = [1.0 1.0 1.0];
 kI_pA = [0 0 0];
 kD_pA = [0 0 0];
 pA_deseada = [10 5 16];
@@ -127,7 +127,6 @@ for i = 1:numIteraciones
         u(4,i) = voltajeMaximoMotores;
     end
     
-    
     x_dot(1:numEstados, i) = A*x(1:numEstados, i) + B*u(1:numEntradasControl, i);
     x(1:numEstados,i+1) = x(1:numEstados, i) + dt*x_dot(1:numEstados, i);
     if (x(10,i+1) < 0)
@@ -136,24 +135,28 @@ for i = 1:numIteraciones
 end
 
 figure()
+subplot(2,2,1)
 plot(t,x(1:3,:))
 axis([0 tF -100 100])
 xlabel('Tiempo (s)')
 ylabel('Velocidad angular (grados/s)')
-title('Velocidades angulares')
-figure()
+title('Velocidades angulares en Yaw, Pitch y Roll')
+%figure()
+subplot(2,2,2)
 plot(t,x(4:6,:))
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
 ylabel('Angulo (grados)')
 title('Angulos de Yaw, Pitch y Roll')
-figure()
-plot(t,x(7:9,:))
+%figure()
+subplot(2,2,3)
+plot(t,x(9,:))
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
 ylabel('Velocidad (m/s)')
-title('Velocidades lineales')
-figure()
+title('Velocidad lineal en Z')
+%figure()
+subplot(2,2,4)
 plot(t,x(10,:))
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
