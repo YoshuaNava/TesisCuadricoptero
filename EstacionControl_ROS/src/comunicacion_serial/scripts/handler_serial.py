@@ -8,6 +8,7 @@ from threading import Thread
 
 class HandlerSerial:
     def __init__(self, nombrePuerto, tasaBaudios):
+		#################################CONSTANTES############################
         self.__CODIGO_INICIO_MENSAJE = 255        
         self.__CODIGO_MENSAJE_ENCENDIDO = 0
         self.__CODIGO_MENSAJE_COMANDO = 1
@@ -15,7 +16,7 @@ class HandlerSerial:
         self.__CODIGO_MENSAJE_ESTADO = 7
         self.__CODIGO_MENSAJE_TELEMETRIA_TOTAL = 8
         
-
+		#################################VARIABLES#############################
         self.anguloYaw = 0
         self.anguloPitch = 0
         self.anguloRoll = 0        
@@ -27,15 +28,15 @@ class HandlerSerial:
         self.G_Yaw_filtrada = 0;
         self.G_Pitch_filtrada = 0;
         self.G_Roll_filtrada = 0;
-        self.Ax = 0;
-        self.Ay = 0;
-        self.Az = 0;
+        self.Ax = 0;						#Aceleracion Cruda en el eje X
+        self.Ay = 0;						#Aceleracion Cruda en el eje Y
+        self.Az = 0;						#Aceleracion_Cruda en el eje Z
         self.Ax_filtrada = 0;
         self.Ay_filtrada = 0;
         self.Az_filtrada = 0;
-        self.posZ = 0
+        self.posZ = 0;						#Altura
         self.posZ_filtrada = 0;
-        self.velZ = 0;
+        self.velZ = 0;						#Velocidad_Altura
         self.motorDelantero = 0;
         self.motorTrasero = 0;
         self.motorDerecho = 0;
@@ -49,15 +50,26 @@ class HandlerSerial:
                 
         self.puertoSerial = serial.Serial(port=self.nombrePuerto, baudrate=self.tasaBaudios, timeout=0.05)
 
-
+	#################################PROCEDIMIENTOS Y FUNCIONES#################################
+	
     def abrirPuerto(self):
         self.puertoSerial = serial.Serial(self.nombrePuerto, self.tasaBaudios)
     
         
     def cerrarPuerto(self):
         self.puertoSerial.close()
-            
-            
+		
+        ##########################################################################
+        ##ENVIA EL MENSAJE DE MOVIMIENTOS EN EL CUADRICOPTERO					##
+		##########################################################################
+		##MENSAJE:																##
+		##	posicion 1		header: __codigo_inicio_mensaje (255)				##
+		##	posicion 2		codigo del mensaje: __codigo_mensaje_comando (1)	##
+		##	posicion 3		comando pitch: velocidad angular deseada en pitch	##
+		##	posicion 4		comando roll: velocidad angular deseada en roll		##
+		##	posicion 5		comando altura: velocidad angular deseada en altura	##
+		##	posicion 6		checksum: xor de contenido de mensaje				##
+		########################################################################## 
     def enviarComandoMovimiento(self, comandoPitch, comandoRoll, comandoAltura):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_COMANDO ^ int(comandoPitch) ^ int(comandoRoll) ^ int(comandoAltura)
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_COMANDO) + chr(int(comandoPitch)) + chr(int(comandoRoll)) + chr(int(comandoAltura)) + chr(checksum)
@@ -65,8 +77,15 @@ class HandlerSerial:
         """for i in range(6):
             print (ord(paquete[i]))"""
         
-
-        
+        ##########################################################################
+        ##PROCEDIMIENTO PARA ENVIAR MENSAJES DE ENCENDIDO O APAGADO DE MOTORES	##
+		##########################################################################
+		##MENSAJE:																##
+		##	posicion 1	header: __codigo_inicio_mensaje (255)					##
+		##	posicion 2	codigo del mensaje: __CODIGO_MENSAJE_ENCENDIDO (0)		##
+		##	posicion 3	comando: Comando de motores APAGAR (0) ENCENDER(1)		##
+		##	posicion 4	checksum: xor de contenido de mensaje					##
+		##########################################################################
     def enviarComandoEncendido(self, comando):
         checksum = self.__CODIGO_INICIO_MENSAJE ^ self.__CODIGO_MENSAJE_ENCENDIDO ^ comando
         paquete = chr(self.__CODIGO_INICIO_MENSAJE) + chr(self.__CODIGO_MENSAJE_ENCENDIDO) + chr(comando) + chr(checksum)
@@ -75,6 +94,22 @@ class HandlerSerial:
         """        for i in range(4):  
             print (ord(paquete[i]))"""
 
+        ##############################################################################################################################################
+        ##PROCEDIMIENTO PARA RECIBIR MENSAJES DE TELEMETRIA Y ACK            																		##
+		##############################################################################################################################################
+		##Se lee el puerto serial, y se verifica, de forma sucesiva que:																			##
+ 		##   1) El primer dato recibido sea un char de codigo 255 (Header de los mensajes del protocolo).											##
+ 		##   2) El valor del segundo dato recibido (Codigo del mensaje), a partir de lo cual se recibe:												##
+ 		##       a) Mensaje ACK (Codigo==6).																										##
+ 		##       b) Mensaje de estado (Codigo==7).																									##
+		##		 b) Mensaje de telemetria total (Codigo==8).																						##
+ 		##   3) Se realiza un checksum con todos los datos recibidos, y se compara con el ultimo dato recibido en cada caso (Checksum recibido).	##
+ 		##   4) Si el checksum recibido es igual al checksum calculado, el mensaje ha llegado correctamente, y se ejecuta el comando modificando	##
+ 		##      las variables modoEjecucion, velocidadDeseadaYPR y velocidadBasePWM segun corresponda. Si se recibio un mensaje de encendido, se	##
+ 		##      envia un mensaje de acknowledge a la PC.																							##
+ 		## Si en algun momento no se recibe un mensaje, o si el checksum recibido no coincide con el checksum calculado, se detiene la recepcion	##
+ 		## del mensaje, y la ejecucion del procedimiento llega a su fin.																			##
+ 		##############################################################################################################################################
         
             
     def recibirComandos(self):
@@ -285,7 +320,12 @@ class HandlerSerial:
                     else:
                         return False
 
-
+		##########################################################################
+        ##PROCEDIMIENTO CONVERTIR DE CARACTER A UN NUMERO						##
+		##########################################################################
+		##Recibe un caracter y retorna su valor en ASCII (entre 0 y 255)		##
+		##en caso de error retorna 1000											##
+		##########################################################################
     def cardinalCaracter_Validar(self, caracter):
         if(len(caracter) > 0):
             if((ord(caracter) >= 0) and (ord(caracter) <= 255)):

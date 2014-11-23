@@ -4,25 +4,41 @@ from handler_serial import HandlerSerial
 from comunicacion_serial.msg import *
 import rospy
 
-__MAXIMO_ANGULO_COMANDO = 70
-publisherEstado = None
-publisherTelemetria = None
-handlerSerial = None
-tiempoInicioEjecucion = 0
+#####################################################VARIABLES Y CONSTANTES##########################
+__MAXIMO_ANGULO_COMANDO = 70 
 __CODIGO_MENSAJE_ESTADO = 7
 __CODIGO_MENSAJE_TELEMETRIA_TOTAL = 8
 __MODO_TELEMETRIA_TOTAL = 1
+tiempoInicioEjecucion = 0
+publisherEstado = None
+publisherTelemetria = None
+handlerSerial = None
+
+
+###############################################################################################################################################################
+######################################PROCEDIMIENTO DE ENVIO DE SENAL DE ENCENDIDO O APAGADO DE MOTORES########################################################
+###############################################################################################################################################################
+#Envia el comando para encender o apagar motores por el serial del XBee
 
 def callbackEnvioComandoEncendido(mensaje):
     #rospy.loginfo(rospy.get_caller_id()+"I heard %s",data)
     global handlerSerial
     handlerSerial.enviarComandoEncendido(mensaje.encendido)
     
-    
+###############################################################################################################################################################
+##########################################PROCEDIMIENTO DE ENVIO DE SENAL DE MOVIMIENTO DE MOTORES#############################################################
+###############################################################################################################################################################
+#Envia comandos de movimientos (pitch,roll y altura) por el serial de Xbee
+
 def callbackEnvioComandoMovimiento(mensaje):
     #rospy.loginfo(rospy.get_caller_id()+"I heard %s",data)
     global handlerSerial
     handlerSerial.enviarComandoMovimiento(mensaje.comandoPitch + __MAXIMO_ANGULO_COMANDO, mensaje.comandoRoll + __MAXIMO_ANGULO_COMANDO, mensaje.comandoAltura)
+
+
+###############################################################################################################################################################
+##########################################PROCEDIMIENTO DE RECEPCION DE MENSAJES #############################################################
+###############################################################################################################################################################
 
 
 def secuenciaRecepcion():
