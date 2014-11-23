@@ -12,7 +12,6 @@ import pygame.display
 import pygame.joystick
 import time
 from threading import Thread
-#import ModuloSerial as Serial
 
 
 
@@ -20,14 +19,15 @@ from threading import Thread
 class HandlerJoystick:
 
     def __init__(self):
-        self.__BOTON_2 = 1
-        self.__BOTON_4 = 3
+	###########################CONSTANTES###########################
+        self.__BOTON_2 = 1				#ENCENDER MOTORES
+        self.__BOTON_4 = 3				#APAGAR MOTORES
         self.__BOTON_5 = 4
-        self.__BOTON_6 = 5
+        self.__BOTON_6 = 5				#CONSIGNAS EN 0
         self.__BOTON_7 = 6
-        self.__RUEDA_DERECHA_x = 2
-        self.__RUEDA_DERECHA_y = 3
-        self.__RUEDA_IZQUIERDA_x = 0
+        self.__RUEDA_DERECHA_x = 2		#CONTROL DE PITCH
+        self.__RUEDA_DERECHA_y = 3		#CONTROL DE YAW
+        self.__RUEDA_IZQUIERDA_x = 0	#CONTROL VELOCIDAD BASE PWM
         self.__RUEDA_IZQUIERDA_y = 1        
 
         self.__CODIGO_AUMENTAR_ALTURA = '+'
@@ -40,7 +40,7 @@ class HandlerJoystick:
         self.__VELOCIDAD_BASE_PWM = 120
         self.__MAXIMA_ALTURA = 150
         self.__FACTOR_EXPONENCIAL = 0.7
-        
+    ###########################VARIABLES###########################    
         self.comandoPitch = 0.0
         self.comandoRoll = 0.0
         self.comandoAltura = self.__VELOCIDAD_BASE_PWM
@@ -53,7 +53,9 @@ class HandlerJoystick:
 
             
     
-
+		###########################################################################
+        ##DETECTA EL JOYSTICK IMPRIME LA INFORMACION Y RETORNA EL OBJETO JOYSTICK##
+		###########################################################################
     def detectarJoystick(self):
         pygame.joystick.init() #initialize joystick module
         pygame.joystick.get_init() #verify initialization (boolean)    
@@ -88,7 +90,16 @@ class HandlerJoystick:
     
     
 
-    
+		##############################################################################################################################################
+        ##HILO DE EJECUCION DEL JOYSTICK							         																		##
+		##############################################################################################################################################
+		## Busca el control de joystick y a patir de alli maneja los siguientes eventos de manera separada:                                         ##
+ 		##          1)Rueda derecha: maneja movimientos en pitch(rueda derecha x) y en roll (rueda derecha y)                                       ##
+ 		##          2)Rueda izquierda: maneja las velocidades en altura                                                                             ##
+ 		##          3)Botorn 2: envia senal de encendido al cuadricoptero                                                                           ##
+ 		##          4)boton 4: envia senal de apagado al cuadricoptero                                                                              ##
+		##          5)boton 6 (R1): Envia 0 a las consignas de pitch y roll                                                                         ##
+ 		##############################################################################################################################################
     def run(self):        
         pygame.display.init()        
         pygame.event.pump()
