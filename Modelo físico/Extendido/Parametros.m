@@ -16,24 +16,6 @@ alturaCajaCentral = 0.1;
 anchuraCajaCentral = 0.09;
 radioMotor = diametroMotor/2;
 
-
-%%%%%   Calculo de momentos de inercia %%%%%
-
-% InerciaCentroEjesXY = (masaCentral * longitudEje^2)/12 + (masaCentral * diametroEje^2)/2;
-% InerciaCentroEjeZ = (masaCentral * longitudEje^2)/6;
-% InerciaMotorEjesXY = (masaMotor * (diametroMotor/2)^2)/4 + (masaMotor * (alturaMotor)^2)/3;
-% InerciaMotorEjeZ = (masaMotor * (diametroMotor/2)^2)/2 + (masaMotor * (longitudEje/2)^2);
-% InerciaBateriaEjesXY = (masaCentral * (alturaCajaCentral^2 + anchuraCajaCentral^2))/12;
-% InerciaBateriaEjeZ = (masaCentral * 2*anchuraCajaCentral^2)/12;
-% 
-% 
-% InerciaTotalEjesXY = InerciaCentroEjesXY + InerciaMotorEjesXY + InerciaBateriaEjesXY
-% InerciaTotalEjeZ = InerciaCentroEjeZ + InerciaMotorEjeZ + InerciaBateriaEjeZ
-
-
-
-
-
 %%MATRIZ DE INERCIA%%
     %%PITCH%%
         %%MOTORES SOBRE EL EJE(para un motor)%%

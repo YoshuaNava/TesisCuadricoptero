@@ -10,10 +10,10 @@ fE_vZ = 0.04;
 fE_pZ = 0.05;
 
 
-kP_pA = [1.0 1.0 1.0];
+kP_pA = [0 0 1.0];
 kI_pA = [0 0 0];
 kD_pA = [0 0 0];
-pA_deseada = [10 5 16];
+pA_deseada = [0 0 0];
 error_pA = [0 0 0];
 errorPrevio_pA = [0 0 0];
 integral_pA = [0 0 0];
@@ -24,14 +24,14 @@ pid_pA = [0 0 0];
 kP_vA = [5.0 5.0 5.0];
 kI_vA = [0 0 0];
 kD_vA = [0 0 0];
-vA_deseada = [0 0 0];
+vA_deseada = [-10 20 0];
 error_vA = [0 0 0];
 errorPrevio_vA = [0 0 0];
 integral_vA = [0 0 0];
 derivada_vA = [0 0 0];
 pid_vA = [0 0 0];
 
-kP_pZ = 1;
+kP_pZ = 0;
 kI_pZ = 0;
 kD_pZ = 0;
 pZ_deseada = 10;
@@ -41,7 +41,7 @@ integral_pZ = 0;
 derivada_pZ = 0;
 pid_pZ = 0;
 
-kP_vZ = 3;
+kP_vZ = 0;
 kI_vZ = 0;
 kD_vZ = 0;
 vZ_deseada = 0;
@@ -54,7 +54,7 @@ pid_vZ = 0;
 u = zeros(numEntradasControl, numIteraciones+1);
 x_dot = zeros(numEstados, numIteraciones+1);
 x = zeros(numEstados, numIteraciones+1);
-x(1:numEstados,1) = [10 15 5 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
+x(1:numEstados,1) = [0 0 10 0 0 0 0 0 0 1];  %p, q, r, pitch, roll, yaw, u, v, w
 y = zeros(numEstados, numIteraciones+1);
 
 for i = 1:numIteraciones
@@ -80,8 +80,8 @@ for i = 1:numIteraciones
         pid_pA(3) = kP_pA(3)*error_pA(3) + kI_pA(3)*integral_pA(3) + kD_pA(3)*derivada_pA(3);
     end
     if (mod(i*dt,fE_vA) == 0)
-        error_vA(1) = pid_pA(1) - vPitch;
-        error_vA(2) = pid_pA(2) - vRoll;
+        error_vA(1) = vA_deseada(1) - vPitch;
+        error_vA(2) = vA_deseada(2) - vRoll;
         error_vA(3) = pid_pA(3) - vYaw;
         integral_vA = integral_vA + error_vA;
         derivada_vA = error_vA - errorPrevio_vA;
@@ -135,7 +135,7 @@ for i = 1:numIteraciones
 end
 
 figure()
-subplot(2,2,1)
+subplot(2,1,1)
 plot(t,x(1:3,:))
 axis([0 tF -100 100])
 xlabel('Tiempo (s)')
@@ -143,29 +143,13 @@ ylabel('Velocidad angular (grados/s)')
 title('Velocidades angulares en Yaw, Pitch y Roll')
 legend('Pitch','Roll','Yaw');
 %figure()
-subplot(2,2,2)
-plot(t,x(4:6,:))
+subplot(2,1,2)
+plot(t,x(6,:))
 axis([0 tF -20 20])
 xlabel('Tiempo (s)')
 ylabel('Angulo (grados)')
-title('Angulos de Yaw, Pitch y Roll')
-legend('Pitch','Roll','Yaw');
-%figure()
-subplot(2,2,3)
-plot(t,x(9,:))
-axis([0 tF -20 20])
-xlabel('Tiempo (s)')
-ylabel('Velocidad (m/s)')
-title('Velocidad lineal en Z')
-legend('VelZ');
-%figure()
-subplot(2,2,4)
-plot(t,x(10,:))
-axis([0 tF -20 20])
-xlabel('Tiempo (s)')
-ylabel('Distancia (m)')
-title('Altura (Z)')
-legend('PosZ');
+title('Angulo de Yaw')
+legend('Yaw');
 figure()
 plot(t,u)
 axis([0 tF -20 20])
