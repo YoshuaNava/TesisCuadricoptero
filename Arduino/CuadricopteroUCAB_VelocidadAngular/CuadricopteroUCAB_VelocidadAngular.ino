@@ -69,6 +69,7 @@ double covarianzaRuidoEstimacionAltura = 3.0;
 double gananciaKalman = 0.0;
 double U_velocidad_Z = 0.0;
 double U_Z_previo = 0.0;
+double Az_sinG = 0.0;
 double A_velocidad_Z = 0.0;
 double velocidad_Z = 0.0;
 double velocidadDeseadaZ = 0.0;
@@ -439,7 +440,10 @@ void FiltroComplementario() {
     A_anguloYPR_filtrado[2] = (double) atan2(A_aceleracionYPR_filtrada[2], sqrt(A_aceleracionYPR_filtrada[0] * A_aceleracionYPR_filtrada[0] + A_aceleracionYPR_filtrada[1] * A_aceleracionYPR_filtrada[1]));
     A_anguloYPR_filtrado[2] = ToDeg(A_anguloYPR_filtrado[2]);
     
-    A_velocidad_Z = A_velocidad_Z + A_aceleracionYPR_filtrada[0]*DT;
+//    A_velocidad_Z = (double) (A_velocidad_Z + 9.81*(A_aceleracionYPR[0]-sqrt(1-sin(A_anguloYPR_filtrado[1])*sin(A_anguloYPR_filtrado[1])-sin(A_anguloYPR_filtrado[2])*sin(A_anguloYPR_filtrado[2])))*DT);
+    //A_velocidad_Z = (double) (9.81*(A_aceleracionYPR[0]-sqrt(1-sin(anguloYPR_filtrado[1])*sin(anguloYPR_filtrado[1])-sin(anguloYPR_filtrado[2])*sin(anguloYPR_filtrado[2])))*DT);
+    Az_sinG = (double) (9.81*(A_aceleracionYPR[0]-sqrt(1-sin(anguloYPR_filtrado[1])*sin(anguloYPR_filtrado[1])-sin(anguloYPR_filtrado[2])*sin(anguloYPR_filtrado[2]))));
+    A_velocidad_Z = (double) (A_velocidad_Z + Az_sinG);
     tiempoUltimoMuestreoAcelerometro = millis();
   }
 
@@ -878,14 +882,14 @@ void PrepararPaqueteMensajeTelemetriaTotal()
 //  mensajeTelemetriaTotal[32] = USAltura;
   mensajeTelemetriaTotal[32] = velocidadBasePWM;
   mensajeTelemetriaTotal[33] = estimacionAltura;
-  if (U_velocidad_Z >= 0)
+  if (velocidad_Z >= 0)
   {
-    mensajeTelemetriaTotal[34] = U_velocidad_Z;
+    mensajeTelemetriaTotal[34] = velocidad_Z;
     mensajeTelemetriaTotal[35] = 0;
   }
   else
   {
-    mensajeTelemetriaTotal[35] = abs(U_velocidad_Z);
+    mensajeTelemetriaTotal[35] = abs(velocidad_Z);
     mensajeTelemetriaTotal[34] = 0;
   }
   mensajeTelemetriaTotal[36] = motorDelantero;
