@@ -1,0 +1,13 @@
+Portada y eso: 4
+Planteamiento del problema: 6
+Marco referencial: 12
+Metodología: 3
+Desarrollo: 35
+Resultados: 2
+Conclusiones y recomendaciones: 4
+SUMA: 66
+
+
+Apéndices y anexos: 62
+
+TOTAL: 128
