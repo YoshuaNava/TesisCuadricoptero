@@ -5,7 +5,7 @@ Metodología: 3
 Desarrollo: 37
 Resultados: 2
 Conclusiones y recomendaciones: 4
-SUMA: 67
+SUMA: 69
 
 
 Apéndices y anexos: 84
