@@ -65,6 +65,7 @@ double correccionAltura = 0;
 double covarianzaProcesoFisicoAltura = 0.1;
 double covarianzaRuidoSensorAltura = 10.0;
 double estimacionAltura = 0.0;
+double alturaSuelo = 0.0;
 double covarianzaRuidoEstimacionAltura = 3.0;
 double gananciaKalman = 0.0;
 double U_velocidad_Z = 0.0;
@@ -147,7 +148,7 @@ PID PID_vAngular_Roll(&G_velocidadYPR_filtrada[2], &correccionPWM_YPR[2], &veloc
 PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDeseadoYPR[0], 0, 0, 0, DIRECT);
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
-PID PID_posZ(&estimacionAltura, &velocidadDeseadaZ, &alturaDeseada, 0, 0, 0, DIRECT);
+PID PID_posZ(&alturaSuelo, &velocidadDeseadaZ, &alturaDeseada, 0, 0, 0, DIRECT);
 PID PID_velZ(&velocidad_Z, &correccionAltura, &velocidadDeseadaZ, 0, 0, 0, DIRECT);
 byte i;
 //FIN PID
@@ -484,7 +485,8 @@ void CalcularAltura()
     {
       USAltura = distancia;
       FiltroKalmanAltura();
-      mensajeEstado[8] = estimacionAltura;
+      alturaSuelo = estimacionAltura*sqrt(1 - sqrt(sin(anguloYPR_filtrado[1])*sin(anguloYPR_filtrado[1]) + sin(anguloYPR_filtrado[2])*sin(anguloYPR_filtrado[2])));
+      mensajeEstado[8] = alturaSuelo;
       U_velocidad_Z = estimacionAltura - U_Z_previo;
       U_Z_previo = estimacionAltura;
       //velocidad_Z = (U_velocidad_Z + A_velocidad_Z)/2;
@@ -881,7 +883,7 @@ void PrepararPaqueteMensajeTelemetriaTotal()
 
 //  mensajeTelemetriaTotal[32] = USAltura;
   mensajeTelemetriaTotal[32] = velocidadBasePWM;
-  mensajeTelemetriaTotal[33] = estimacionAltura;
+  mensajeTelemetriaTotal[33] = alturaSuelo;
   if (velocidad_Z >= 0)
   {
     mensajeTelemetriaTotal[34] = velocidad_Z;
