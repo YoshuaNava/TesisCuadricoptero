@@ -2,10 +2,10 @@ Portada y eso: 5
 Planteamiento del problema: 6
 Marco referencial: 12
 Metodología: 3
-Desarrollo: 36
+Desarrollo: 35
 Resultados: 2
 Conclusiones y recomendaciones: 4
-SUMA: 68
+SUMA: 67
 
 
 Apéndices y anexos: 62
