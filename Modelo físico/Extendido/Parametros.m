@@ -19,25 +19,25 @@ radioMotor = diametroMotor/2;
 %%MATRIZ DE INERCIA%%
     %%PITCH%%
         %%MOTORES SOBRE EL EJE(para un motor)%%
-        inerciaPitch(1) = 1/12*(masaMotor)*((3*(radioMotor/2))^2+alturaMotor^2);
+        inerciaPitch(1) = 1/12*(masaMotor)*((3*(radioMotor))^2+alturaMotor^2);
         %%MOTORES EN EJE OPUESTO (para un motor)%%
-        inerciaPitch(2) = 1/12*(masaMotor)*((3*(radioMotor/2))^2+alturaMotor^2)+(masaMotor*longitudEje);
+        inerciaPitch(2) = 1/12*(masaMotor)*((3*(radioMotor))^2+alturaMotor^2)+(masaMotor*(longitudEje/2));
         %%CAJA CENTRAL%%
         inerciaPitch(3) = 1/12 * (masaCentral+masaBaseAnime+masaChasisCircuitos) * (alturaCajaCentral^2+anchuraCajaCentral^2);
         %%TOTAL INERCIA PITCH%%
         inercia(1,1)= 2*inerciaPitch(1)+2*inerciaPitch(2) + inerciaPitch(3);
     %%ROLL%%
         %%MOTORES SOBRE EL EJE(para un motor)%%
-        inerciaRoll(1) = 1/12*(masaMotor)*((3*(radioMotor/2))^2+alturaMotor^2);
+        inerciaRoll(1) = 1/12*(masaMotor)*((3*(radioMotor))^2+alturaMotor^2);
         %%MOTORES EN EJE OPUESTO (para un motor)%%
-        inerciaRoll(2) = 1/12*(masaMotor)*((3*(radioMotor/2))^2+alturaMotor^2)+(masaMotor*longitudEje);
+        inerciaRoll(2) = 1/12*(masaMotor)*((3*(radioMotor))^2+alturaMotor^2)+(masaMotor*(longitudEje/2));
         %%CAJA CENTRAL%%
         inerciaRoll(3) = 1/12 * (masaCentral+masaBaseAnime+masaChasisCircuitos) * (alturaCajaCentral^2+anchuraCajaCentral^2);
         %%TOTAL INERCIA ROLL%%
         inercia(2,2)= 2*inerciaRoll(1)+2*inerciaRoll(2) + inerciaRoll(3);
      %%YAW%%
         %%PARA CADA MOTOR%%
-        inerciaYaw(1) = 1/12*(masaMotor)*((3*(radioMotor/2))^2+alturaMotor^2)+(masaMotor*longitudEje);
+        inerciaYaw(1) = 1/12*(masaMotor)*((3*(radioMotor))^2+alturaMotor^2)+(masaMotor*longitudEje);
         %%CAJA CENTRAL%%
         inerciaYaw(2) = 1/12 * (masaCentral+masaBaseAnime+masaChasisCircuitos) * (anchuraCajaCentral^2+anchuraCajaCentral^2);
         
