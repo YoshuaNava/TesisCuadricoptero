@@ -83,7 +83,7 @@ double velocidadDeseadaZ = 0.0;
 #define G_GYRO 0.00875
 #define G_ACC 0.015874
 #define K_COMP 0.97
-#define DT_sensor_altura 29
+#define DT_sensor_altura 35
 #define DT_acelerometro 1
 #define DT_giroscopio 6
 L3G gyro;
@@ -138,7 +138,7 @@ long tiempoUltimoMuestreoAngulos = 0;
 
 
 //SISTEMAS DE CONTROL PID
-#define DT_PID_velZ 20
+#define DT_PID_velZ 40
 #define DT_PID_posZ 50
 #define DT_PID_posicionAngular 20
 #define DT_PID_velocidadAngular 6
@@ -149,7 +149,7 @@ PID PID_pAngular_Yaw(&anguloYPR_filtrado[0], &velocidadDeseadaYPR[0], &anguloDes
 PID PID_pAngular_Pitch(&anguloYPR_filtrado[1], &velocidadDeseadaYPR[1], &anguloDeseadoYPR[1], 0, 0, 0, DIRECT);
 PID PID_pAngular_Roll(&anguloYPR_filtrado[2], &velocidadDeseadaYPR[2], &anguloDeseadoYPR[2], 0, 0, 0, REVERSE);
 PID PID_posZ(&estimacionAltura, &velocidadDeseadaZ, &alturaDeseada, 0, 0, 0, DIRECT);
-PID PID_velZ(&velocidad_Z, &correccionAltura, &velocidadDeseadaZ, 0, 0, 0, DIRECT);
+PID PID_velZ(&U_velocidad_Z, &correccionAltura, &velocidadDeseadaZ, 0, 0, 0, DIRECT);
 byte i;
 //FIN PID
 /********************************************        FIN DE CONSTANTES y VARIABLES        ********************************************/
@@ -224,13 +224,13 @@ void setup() {
   PID_posZ.SetMode(AUTOMATIC);
   PID_velZ.SetMode(AUTOMATIC);
   PID_pAngular_Yaw.SetTunings(1, 0.01, 0);
-  PID_pAngular_Pitch.SetTunings(0, 0, 0);
-  PID_pAngular_Roll.SetTunings(0, 0, 0);
+  PID_pAngular_Pitch.SetTunings(0.4, 0, 0);
+  PID_pAngular_Roll.SetTunings(0.4, 0, 0);
   PID_vAngular_Yaw.SetTunings(0.4, 0, 0);
   PID_vAngular_Pitch.SetTunings(0.95, 0.01, 0.005);
   PID_vAngular_Roll.SetTunings(0.95, 0.1, 0.005);
   PID_posZ.SetTunings(0, 0, 0);
-  PID_velZ.SetTunings(0, 0, 0);
+  PID_velZ.SetTunings(1, 0, 0);
   //////////////////////////////////////
 
   // Inicio de conteo para manejo de frecuencia de envio de datos y DT de muestreo //
@@ -340,7 +340,7 @@ void SecuenciaDeVuelo()
     RecibirComando();
     FiltroComplementario();
     CalcularAltura();
-    //PIDAltura();
+    PIDAltura();
     PID_PosicionAngular();
     PID_VelocidadAngular();
     AplicarPWMmotores(velocidadBasePWM);
@@ -513,8 +513,8 @@ void FiltroKalmanAltura()
 void PID_PosicionAngular()
 {
   PID_pAngular_Yaw.Compute();
-//  PID_pAngular_Pitch.Compute();
-//  PID_pAngular_Roll.Compute();
+  PID_pAngular_Pitch.Compute();
+  PID_pAngular_Roll.Compute();
 }
 void PID_VelocidadAngular()
 {
@@ -524,8 +524,8 @@ void PID_VelocidadAngular()
 }
 void PIDAltura()
 {
-  PID_velZ.Compute();
-  PID_posZ.Compute();
+//  PID_posZ.Compute();
+//  PID_velZ.Compute();
 }
 
 
@@ -883,8 +883,8 @@ void PrepararPaqueteMensajeTelemetriaTotal()
     mensajeTelemetriaTotal[30] = 0;
   }
 
-  mensajeTelemetriaTotal[32] = USAltura;
-//  mensajeTelemetriaTotal[32] = velocidadBasePWM;
+//  mensajeTelemetriaTotal[32] = USAltura;
+  mensajeTelemetriaTotal[32] = velocidadBasePWM;
   mensajeTelemetriaTotal[33] = estimacionAltura;
   if (velocidad_Z >= 0)
   {
@@ -994,8 +994,8 @@ void RecibirComando()
                   if (comandoEncendidoRecibido == 0)
                   {
                     modoEjecucion = '_';
-                    velocidadDeseadaYPR[1] = 0.0;
-                    velocidadDeseadaYPR[2] = 0.0;
+                    anguloDeseadoYPR[1] = 0.0;
+                    anguloDeseadoYPR[2] = 0.0;
                     alturaDeseada = 0;
                     digitalWrite(LED_ENCENDIDO, LOW);
                   }
@@ -1026,8 +1026,8 @@ void RecibirComando()
                     {
                       if ((abs(comandoPitch - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO) && (abs(comandoRoll - MAXIMO_ANGULO_COMANDO) < MAXIMO_ANGULO_COMANDO))
                       {
-                        velocidadDeseadaYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
-                        velocidadDeseadaYPR[2] = (comandoRoll - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[1] = -(comandoPitch - MAXIMO_ANGULO_COMANDO);
+                        anguloDeseadoYPR[2] = -(comandoRoll - MAXIMO_ANGULO_COMANDO);
                         if (comandoAltura <= PWM_MAXIMO)
                         {
                           velocidadBasePWM = comandoAltura;
