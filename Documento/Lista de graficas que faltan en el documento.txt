@@ -1,13 +1,2 @@
-  Demostración del ruido del acelerómetro mediante una gráfica
-  Gráfica que demuestre la deriva en el tiempo del estimado de ángulo mediante integración numérica de datos del giroscopio
-  Gráfica que demuestre precisión y estabilidad del ángulo calculado con el filtro complementario
-  Gráfica que demuestre estabilidad del estimado de ángulo ante ruido, por ejemplo, con el cuadricóptero inmovilizado, pero con las hélices girando a alta velocidad.
-  Gráfico de respuesta en frecuencia del sensor ultrasónico
+Gráfico de respuesta en frecuencia del sensor ultrasónico
   Gráfico de las mediciones del sensor ultrasónico sin filtro y con filtro
-  Captura de pantalla de rqt_graph que muestre todos los paquetes desarrollados en ejecución, y el paso de mensajes entre ellos.
-  Imagen que ilustre cómo es la visualización de datos con rpt_plot, en la que se vean velocidades y posiciones angulares con distinta amplitud.
-
-  
-  Pruebas:
-  * Rendimiento de los sistemas de control en simulación.
-  
