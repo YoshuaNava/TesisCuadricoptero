@@ -386,7 +386,9 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     end
     xlim([0 length(posZ)])
     subplot(2,3,2)
-    plot(posZ_filtrada)
+    plot(posZ)
+    hold
+    plot(posZ_filtrada,'r')
     title('Posicion en Z filtrada')
     xlabel('Tiempo (s)')
     ylabel('Posicion (cm)')
@@ -415,7 +417,9 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     xlabel('Frecuencia (Hz)')
     ylabel('Amplitud (cm)')
     subplot(2,3,5)
-    plot(f,2*abs(fft_posZ_filtrada(1:NFFT_senal/2+1)))
+    plot(f,2*abs(fft_posZ(1:NFFT_senal/2+1)))
+    hold
+    plot(f,2*abs(fft_posZ_filtrada(1:NFFT_senal/2+1)),'r')
     ylim([0 5])
     title('Posicion en Z filtrada')
     xlabel('Frecuencia (Hz)')
@@ -426,4 +430,44 @@ function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
     title('Velocidad en Z')
     xlabel('Frecuencia (Hz)')
     ylabel('Amplitud (cm/s)')
+    
+%     figure()
+%     plot(f,2*abs(fft_posZ(1:NFFT_senal/2+1)))
+%     hold
+%     plot(f,2*abs(fft_posZ_filtrada(1:NFFT_senal/2+1)),'r')
+%     ylim([0 5])
+%     title('Posicion en Z filtrada')
+%     xlabel('Frecuencia (Hz)')
+%     ylabel('Amplitud (cm)')
+%     legend('Señal original','Señal filtrada');
+%     
+%     figure()
+%     plot(posZ)
+%     hold
+%     plot(posZ_filtrada,'r')
+%     title('Posicion en Z filtrada')
+%     xlabel('Tiempo (s)')
+%     ylabel('Posicion (cm)')
+%     if (abs(min(posZ_filtrada)) > max(posZ_filtrada))
+%         ylim([min(posZ) abs(min(posZ))])
+%     else
+%         ylim([-max(posZ) 1+max(posZ)])
+%     end
+%     xlim([0 length(posZ_filtrada)])
+%     legend('Señal original','Señal filtrada');
+% 
+%     figure()
+%     subplot(2,1,1)
+%     plot(velZ)
+%     title('Velocidad en Z')
+%     xlabel('Tiempo (s)')
+%     ylabel('Posicion (cm/s)')
+%     xlim([0 length(velZ)])
+%     ylim([0 1+abs(max(velZ))])
+%     subplot(2,1,2)
+%     plot(f,2*abs(fft_velZ(1:NFFT_senal/2+1)))
+%     ylim([0 5])
+%     title('Velocidad en Z')
+%     xlabel('Frecuencia (Hz)')
+%     ylabel('Amplitud (cm/s)')
 end

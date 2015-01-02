@@ -1,4 +1,4 @@
-function VisualizacionAnalisisFrecuencia(nombreArchivoCSV, frecuenciaMuestreo)
+function PruebaFiltradoAcelerometro_TT(nombreArchivoCSV, frecuenciaMuestreo)
     datosArchivo = csvread(nombreArchivoCSV, 1, 0);
     numeroDatos = size(datosArchivo,1);
     anguloPitch = datosArchivo(:,2);
