@@ -26,7 +26,7 @@ int motorTrasero = 0;
 
 
 //CODIGOS DE COMUNICACION:
-#define modoTelemetriaTotal 1
+#define modoTelemetriaTotal 0
 #define DT_envioDatosTelemetriaTotal 5
 #define DT_envioDatosEstado 30
 #define LED_ENCENDIDO 13

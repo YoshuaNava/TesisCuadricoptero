@@ -8,7 +8,7 @@ import rospy
 __MAXIMO_ANGULO_COMANDO = 70 
 __CODIGO_MENSAJE_ESTADO = 7
 __CODIGO_MENSAJE_TELEMETRIA_TOTAL = 8
-__MODO_TELEMETRIA_TOTAL = 1
+__MODO_TELEMETRIA_TOTAL = 0
 tiempoInicioEjecucion = 0
 publisherEstado = None
 publisherTelemetria = None
