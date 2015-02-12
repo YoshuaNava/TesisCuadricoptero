@@ -3,7 +3,7 @@ function AnalisisSistemasControl(nombreArchivoCSV)
     numeroDatos = size(datosArchivo,1);
     anguloPitch = datosArchivo(:,2);
     anguloRoll = datosArchivo(:,3);
-    anguloYaw = datosArchivo(1500:2000,4);
+    anguloYaw = datosArchivo(:,4);
     velocidadPitch = datosArchivo(:,5);
     velocidadRoll = datosArchivo(:,6);
     velocidadYaw = datosArchivo(1000:1500,7);
